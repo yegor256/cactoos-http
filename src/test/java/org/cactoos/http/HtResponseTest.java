@@ -23,12 +23,16 @@
  */
 package org.cactoos.http;
 
+import java.io.IOException;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.takes.http.FtRemote;
+import org.takes.tk.TkText;
 
 /**
- * Test case for {@link Response}.
+ * Test case for {@link HtResponse}.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
@@ -36,13 +40,20 @@ import org.junit.Test;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class ResponseTest {
+public final class HtResponseTest {
 
     @Test
-    public void worksFine() {
-        MatcherAssert.assertThat(
-            1,
-            Matchers.equalTo(1)
+    public void worksFine() throws IOException {
+        new FtRemote(new TkText("Hello, world!")).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtResponse(
+                        new HtWire(home),
+                        "GET / HTTP/1.1"
+                    )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200 OK")
+            )
         );
     }
 

@@ -46,16 +46,36 @@ We are well aware of competitors
 
 ## How to use
 
+`Ht` stands for `HTTP`. We are not using `Http` just in order to look
+a bit different than all other libraries.
+
 To make a simple HTTP GET request and read its body:
 
 ```java
 String body = new TextOf(
-  new BodyOf(
-    new DefaultResponse(
-      new JdkRequest("http://www.google.com")
+  new HtBodyOf(
+    new HtResponse(
+      "http://www.google.com",
+      "GET / HTTP/1.1"
     )
-  ).asString()
+  )
+).asString();
+```
+
+This one sends a PUT request with a multi-part form and
+reads back some headers and the response code (mind the usage of `StickyInput`):
+
+```java
+Input head = new StickyInput(
+  new HtHead(
+    new HtResponse(
+      new HtHost("www.example.com"),
+      "GET / HTTP/1.1"
+    )
+  )
 );
+int status = HtStatus(head).intValue();
+Map<String, String> headers = new HtHeaders(head);
 ```
 
 ## Questions

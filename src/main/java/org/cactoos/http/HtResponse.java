@@ -24,6 +24,11 @@
 
 package org.cactoos.http;
 
+import java.io.IOException;
+import java.io.InputStream;
+import org.cactoos.Input;
+import org.cactoos.io.InputOf;
+
 /**
  * Response.
  *
@@ -31,5 +36,39 @@ package org.cactoos.http;
  * @version $Id$
  * @since 0.1
  */
-public final class Response {
+public final class HtResponse implements Input {
+
+    /**
+     * The wire.
+     */
+    private final HtWire wire;
+
+    /**
+     * HTTP request.
+     */
+    private final Input request;
+
+    /**
+     * Ctor.
+     * @param wre The wire
+     * @param req The request
+     */
+    public HtResponse(final HtWire wre, final String req) {
+        this(wre, new InputOf(req));
+    }
+
+    /**
+     * Ctor.
+     * @param wre The wire
+     * @param req The request
+     */
+    public HtResponse(final HtWire wre, final Input req) {
+        this.wire = wre;
+        this.request = req;
+    }
+
+    @Override
+    public InputStream stream() throws IOException {
+        return this.wire.send(this.request).stream();
+    }
 }
