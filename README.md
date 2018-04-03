@@ -53,7 +53,7 @@ To make a simple HTTP GET request and read its body:
 
 ```java
 String body = new TextOf(
-  new HtBodyOf(
+  new HtBody(
     new HtResponse(
       "http://www.google.com",
       "GET / HTTP/1.1"
@@ -69,7 +69,7 @@ reads back some headers and the response code (mind the usage of `StickyInput`):
 Input head = new StickyInput(
   new HtHead(
     new HtResponse(
-      new HtHost("www.example.com"),
+      new HtWire("www.example.com"),
       "GET / HTTP/1.1"
     )
   )

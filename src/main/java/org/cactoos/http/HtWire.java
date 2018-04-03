@@ -68,6 +68,15 @@ public final class HtWire {
     /**
      * Ctor.
      * @param addr The address of the server
+     */
+    public HtWire(final String addr) {
+        // @checkstyle MagicNumber (1 line)
+        this(addr, 80);
+    }
+
+    /**
+     * Ctor.
+     * @param addr The address of the server
      * @param tcp The TCP port
      */
     public HtWire(final String addr, final int tcp) {
