@@ -24,6 +24,7 @@
 package org.cactoos.http;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
@@ -31,7 +32,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link HtHeaders}.
+ * Test case for {@link HtStatus}.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
@@ -39,12 +40,12 @@ import org.junit.Test;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtHeadersTest {
+public final class HtStatusTest {
 
     @Test
-    public void takesHeadersOutOfHttpResponse() throws IOException {
+    public void takesStatusOutOfHttpResponse() throws IOException {
         MatcherAssert.assertThat(
-            new HtHeaders(
+            new HtStatus(
                 new HtHead(
                     new InputOf(
                         new JoinedText(
@@ -57,11 +58,8 @@ public final class HtHeadersTest {
                         )
                     )
                 )
-            ),
-            Matchers.hasEntry(
-                Matchers.equalTo("content-type"),
-                Matchers.equalTo("text/plain")
-            )
+            ).intValue(),
+            Matchers.equalTo(HttpURLConnection.HTTP_OK)
         );
     }
 

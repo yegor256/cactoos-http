@@ -32,7 +32,7 @@ import org.cactoos.map.MapEnvelope;
 import org.cactoos.text.TextOf;
 
 /**
- * Head of HTTP response.
+ * Headers of HTTP response.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$

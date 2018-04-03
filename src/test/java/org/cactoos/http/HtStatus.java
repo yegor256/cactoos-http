@@ -21,48 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.cactoos.http;
 
-import java.io.IOException;
-import org.cactoos.io.InputOf;
-import org.cactoos.text.JoinedText;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.cactoos.Input;
+import org.cactoos.scalar.NumberEnvelope;
+import org.cactoos.text.TextOf;
 
 /**
- * Test case for {@link HtHeaders}.
+ * Status of HTTP response.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtHeadersTest {
+public final class HtStatus extends NumberEnvelope {
 
-    @Test
-    public void takesHeadersOutOfHttpResponse() throws IOException {
-        MatcherAssert.assertThat(
-            new HtHeaders(
-                new HtHead(
-                    new InputOf(
-                        new JoinedText(
-                            "",
-                            "HTTP/1.1 200 OK\n\r",
-                            "Content-type: text/plain\n\r",
-                            "\n\r",
-                            "Hello, dude!\n",
-                            "How are you?"
-                        )
-                    )
-                )
-            ),
-            Matchers.hasEntry(
-                Matchers.equalTo("content-type"),
-                Matchers.equalTo("text/plain")
-            )
-        );
+    /**
+     * Serialization marker.
+     */
+    private static final long serialVersionUID = -5892731788828504127L;
+
+    /**
+     * Ctor.
+     * @param rsp Response
+     */
+    public HtStatus(final Input rsp) {
+        super(() -> Double.parseDouble(
+            // @checkstyle MagicNumber (1 line)
+            new TextOf(rsp).asString().split("\n\r")[0].split(" ", 3)[1]
+        ));
     }
 
 }
