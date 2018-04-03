@@ -25,50 +25,23 @@
 package org.cactoos.http;
 
 import java.io.IOException;
-import java.io.InputStream;
 import org.cactoos.Input;
-import org.cactoos.io.InputOf;
 
 /**
- * Response.
+ * Wire.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public final class HtResponse implements Input {
+public interface Wire {
 
     /**
-     * The wire.
+     * Send and read result.
+     * @param input The source of data
+     * @return The stream to read from
+     * @throws IOException If fails
      */
-    private final Wire wire;
+    Input send(Input input) throws IOException;
 
-    /**
-     * HTTP request.
-     */
-    private final Input request;
-
-    /**
-     * Ctor.
-     * @param wre The wire
-     * @param req The request
-     */
-    public HtResponse(final Wire wre, final String req) {
-        this(wre, new InputOf(req));
-    }
-
-    /**
-     * Ctor.
-     * @param wre The wire
-     * @param req The request
-     */
-    public HtResponse(final Wire wre, final Input req) {
-        this.wire = wre;
-        this.request = req;
-    }
-
-    @Override
-    public InputStream stream() throws IOException {
-        return this.wire.send(this.request).stream();
-    }
 }

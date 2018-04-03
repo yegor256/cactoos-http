@@ -40,7 +40,7 @@ import org.cactoos.io.InputOf;
  * @version $Id$
  * @since 0.1
  */
-public final class HtWire {
+public final class HtWire implements Wire {
 
     /**
      * Buffer length.
@@ -84,12 +84,7 @@ public final class HtWire {
         this.port = tcp;
     }
 
-    /**
-     * Send and read result.
-     * @param input The source of data
-     * @return The stream to read from
-     * @throws IOException If fails
-     */
+    @Override
     public Input send(final Input input) throws IOException {
         try (final Socket socket = new Socket(this.address, this.port);
             final InputStream source = input.stream();
