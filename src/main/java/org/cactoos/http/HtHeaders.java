@@ -21,45 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.cactoos.http;
 
-import java.io.IOException;
-import org.cactoos.io.InputOf;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import org.cactoos.Input;
+import org.cactoos.map.MapEnvelope;
 import org.cactoos.text.TextOf;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link HtBody}.
+ * Head of HTTP response.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtBodyTest {
+public final class HtHeaders extends MapEnvelope<String, String> {
 
-    @Test
-    public void takesBodyOutOfHttpResponse() throws IOException {
-        MatcherAssert.assertThat(
-            new TextOf(
-                new HtBody(
-                    new InputOf(
-                        String.join(
-                            "",
-                            "HTTP/1.1 200 OK\n\r",
-                            "Content-type: text/plain\n\r",
-                            "\n\r",
-                            "Hello, dude!\n",
-                            "How are you?"
-                        )
-                    )
-                )
-            ).asString(),
-            Matchers.equalTo("Hello, dude!\nHow are you?")
-        );
+    /**
+     * Ctor.
+     * @param rsp Response
+     */
+    public HtHeaders(final Input rsp) {
+        super(() -> {
+            final String[] lines = new TextOf(rsp).asString().split("\n\r");
+            final Map<String, String> map = new HashMap<>(lines.length - 1);
+            for (int idx = 1; idx < lines.length; ++idx) {
+                final String[] parts = lines[idx].split(":", 2);
+                map.put(
+                    parts[0].trim().toLowerCase(Locale.ENGLISH),
+                    parts[1].trim()
+                );
+            }
+            return map;
+        });
     }
 
 }

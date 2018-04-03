@@ -25,13 +25,12 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import org.cactoos.io.InputOf;
-import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link HtBody}.
+ * Test case for {@link HtHeaders}.
  *
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
@@ -39,13 +38,13 @@ import org.junit.Test;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtBodyTest {
+public final class HtHeadersTest {
 
     @Test
-    public void takesBodyOutOfHttpResponse() throws IOException {
+    public void takesHeadersOutOfHttpResponse() throws IOException {
         MatcherAssert.assertThat(
-            new TextOf(
-                new HtBody(
+            new HtHeaders(
+                new HtHead(
                     new InputOf(
                         String.join(
                             "",
@@ -57,8 +56,11 @@ public final class HtBodyTest {
                         )
                     )
                 )
-            ).asString(),
-            Matchers.equalTo("Hello, dude!\nHow are you?")
+            ),
+            Matchers.hasEntry(
+                Matchers.equalTo("content-type"),
+                Matchers.equalTo("text/plain")
+            )
         );
     }
 
