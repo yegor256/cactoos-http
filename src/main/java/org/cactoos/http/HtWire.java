@@ -98,11 +98,7 @@ public final class HtWire implements Wire {
                 }
                 ous.write(buf, 0, len);
             }
-            return new InputOf(
-                new BytesOf(
-                    new InputOf(ins)
-                ).asBytes()
-            );
+            return new InputOf(new BytesOf(ins).asBytes());
         }
     }
 
