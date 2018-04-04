@@ -42,11 +42,11 @@ public final class HtHeaders extends MapEnvelope<String, String> {
 
     /**
      * Ctor.
-     * @param rsp Response
+     * @param head Response head part
      */
-    public HtHeaders(final Input rsp) {
+    public HtHeaders(final Input head) {
         super(() -> {
-            final String[] lines = new TextOf(rsp).asString().split("\n\r");
+            final String[] lines = new TextOf(head).asString().split("\n\r");
             final Map<String, String> map = new HashMap<>(lines.length - 1);
             for (int idx = 1; idx < lines.length; ++idx) {
                 final String[] parts = lines[idx].split(":", 2);
