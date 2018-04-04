@@ -57,7 +57,7 @@ public final class HtResponseTest {
                         ).asString()
                     )
                 ).asString(),
-                Matchers.containsString("HTTP/1.1 200 OK")
+                Matchers.containsString("HTTP/1.1 200 ")
             )
         );
     }
