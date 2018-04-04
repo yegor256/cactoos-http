@@ -36,6 +36,12 @@ import org.cactoos.text.TextOf;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
+ * @todo #1:30min The implementation of method stream() is less than
+ *  effective, because it reads the entire content of the response, turning
+ *  it into text and then splitting. What if the content is binary and
+ *  can't be converted to string? What if the content is super big
+ *  and must be presented as an stream, not a piece of text. Let's fix
+ *  it.
  */
 public final class HtBody implements Input {
 
