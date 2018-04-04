@@ -44,7 +44,7 @@ public final class HtCookies extends MapEnvelope<String, String> {
     public HtCookies(final Input rsp) {
         super(() -> {
             final Map<String, String> result = new HashMap<>();
-            final String cookie = new HtHeaders(rsp).get("cookie");
+            final String cookie = new HtHeaders(rsp).get("set-cookie");
             for (final String item : cookie.split(";\\s+")) {
                 final String[] entry = item.split("=", 2);
                 result.put(entry[0], entry[1]);

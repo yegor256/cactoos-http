@@ -49,7 +49,7 @@ public final class HtCookiesTest {
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
-                            "Cookie: path=/; domain=.google.com",
+                            "Set-Cookie: path=/; domain=.google.com",
                             "",
                             "Hello, dude!",
                             "How are you?"
