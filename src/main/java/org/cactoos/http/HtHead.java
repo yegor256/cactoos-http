@@ -60,7 +60,7 @@ public final class HtHead implements Input {
     @Override
     public InputStream stream() throws IOException {
         return new InputOf(
-            new TextOf(this.response).asString().split("\n\r\n\r")[0]
+            new TextOf(this.response).asString().split("\r\n\r\n")[0]
         ).stream();
     }
 }

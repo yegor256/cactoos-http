@@ -48,11 +48,11 @@ public final class HtHeadersTest {
                 new HtHead(
                     new InputOf(
                         new JoinedText(
+                            "\r\n",
+                            "HTTP/1.1 200 OK",
+                            "Content-type: text/plain",
                             "",
-                            "HTTP/1.1 200 OK\n\r",
-                            "Content-type: text/plain\n\r",
-                            "\n\r",
-                            "Hello, dude!\n",
+                            "Hello, dude!",
                             "How are you?"
                         )
                     )

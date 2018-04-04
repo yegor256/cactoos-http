@@ -26,6 +26,7 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
 
@@ -47,6 +48,31 @@ public final class HtResponse implements Input {
      * HTTP request.
      */
     private final Input request;
+
+    /**
+     * Ctor.
+     * @param uri Target URI
+     * @since 0.1
+     */
+    public HtResponse(final String uri) {
+        this(URI.create(uri));
+    }
+
+    /**
+     * Ctor.
+     * @param uri Target URI
+     * @since 0.1
+     */
+    public HtResponse(final URI uri) {
+        this(
+            new HtWire(uri),
+            String.format(
+                "GET %s HTTP/1.1\r\nHost:%s",
+                uri.getQuery() == null ? "/" : uri.getQuery(),
+                uri.getHost()
+            )
+        );
+    }
 
     /**
      * Ctor.

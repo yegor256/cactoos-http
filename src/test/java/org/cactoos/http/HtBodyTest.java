@@ -49,17 +49,17 @@ public final class HtBodyTest {
                 new HtBody(
                     new InputOf(
                         new JoinedText(
+                            "\r\n",
+                            "HTTP/1.1 200 OK",
+                            "Content-type: text/plain",
                             "",
-                            "HTTP/1.1 200 OK\n\r",
-                            "Content-type: text/plain\n\r",
-                            "\n\r",
-                            "Hello, dude!\n",
+                            "Hello, dude!",
                             "How are you?"
                         )
                     )
                 )
             ).asString(),
-            Matchers.equalTo("Hello, dude!\nHow are you?")
+            Matchers.equalTo("Hello, dude!\r\nHow are you?")
         );
     }
 

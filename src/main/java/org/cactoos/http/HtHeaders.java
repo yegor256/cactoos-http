@@ -46,7 +46,7 @@ public final class HtHeaders extends MapEnvelope<String, String> {
      */
     public HtHeaders(final Input head) {
         super(() -> {
-            final String[] lines = new TextOf(head).asString().split("\n\r");
+            final String[] lines = new TextOf(head).asString().split("\r\n");
             final Map<String, String> map = new HashMap<>(lines.length - 1);
             for (int idx = 1; idx < lines.length; ++idx) {
                 final String[] parts = lines[idx].split(":", 2);

@@ -53,7 +53,7 @@ public final class HtStatus extends NumberEnvelope {
     public HtStatus(final Input head) {
         super(() -> Double.parseDouble(
             // @checkstyle MagicNumber (1 line)
-            new TextOf(head).asString().split("\n\r")[0].split(" ", 3)[1]
+            new TextOf(head).asString().split("\r\n")[0].split(" ", 3)[1]
         ));
     }
 

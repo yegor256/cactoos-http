@@ -61,7 +61,7 @@ public final class HtBody implements Input {
     @Override
     public InputStream stream() throws IOException {
         return new InputOf(
-            new TextOf(this.response).asString().split("\n\r\n\r")[1]
+            new TextOf(this.response).asString().split("\r\n\r\n")[1]
         ).stream();
     }
 }

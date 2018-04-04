@@ -24,6 +24,7 @@
 package org.cactoos.http;
 
 import java.io.IOException;
+import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -49,8 +50,24 @@ public final class HtResponseTest {
                 new TextOf(
                     new HtResponse(
                         new HtWire(home),
-                        "GET / HTTP/1.1"
+                        new JoinedText(
+                            "\r\n",
+                            "GET / HTTP/1.1",
+                            String.format("Host:%s", home.getHost())
+                        ).asString()
                     )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200 OK")
+            )
+        );
+    }
+
+    @Test
+    public void worksFineByUri() throws IOException {
+        new FtRemote(new TkText("Hello, dude!")).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtResponse(home)
                 ).asString(),
                 Matchers.containsString("HTTP/1.1 200 OK")
             )
