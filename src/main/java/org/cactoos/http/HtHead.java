@@ -36,6 +36,11 @@ import org.cactoos.text.TextOf;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
+ * @todo #1:30min The implementation of method stream() is rather
+ *  ineffective and defective. What if the content of the HTTP response
+ *  is too big? Or is binary and can't be represented as a string?
+ *  Instead of turning it into a string we must deal with a stream
+ *  of bytes.
  */
 public final class HtHead implements Input {
 
