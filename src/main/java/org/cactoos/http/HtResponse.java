@@ -68,6 +68,7 @@ public final class HtResponse implements Input {
             new HtWire(uri),
             String.format(
                 "GET %s HTTP/1.1\r\nHost:%s",
+                // @checkstyle AvoidInlineConditionalsCheck (1 line)
                 uri.getQuery() == null ? "/" : uri.getQuery(),
                 uri.getHost()
             )
