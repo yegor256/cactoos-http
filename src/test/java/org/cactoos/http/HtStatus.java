@@ -24,7 +24,8 @@
 
 package org.cactoos.http;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.cactoos.Input;
 import org.cactoos.scalar.NumberEnvelope;
 
@@ -51,21 +52,12 @@ public final class HtStatus extends NumberEnvelope {
      * @param head Response head part
      */
     public HtStatus(final Input head) {
-        super(() -> {
-            final InputStream stream = head.stream();
-            final StringBuilder line = new StringBuilder();
-            while (true) {
-                final int cur = stream.read();
-                if (cur == '\n') {
-                    break;
-                }
-                line.append((char) cur);
-            }
-            return Double.parseDouble(
-                // @checkstyle MagicNumber (1 line)
-                line.toString().split(" ", 3)[1]
-            );
-        });
+        super(() -> Double.parseDouble(
+            // @checkstyle MagicNumber (1 line)
+            new BufferedReader(
+                new InputStreamReader(head.stream())
+            ).readLine().split(" ", 3)[1]
+        ));
     }
 
 }
