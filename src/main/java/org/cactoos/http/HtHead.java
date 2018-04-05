@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
-import org.cactoos.text.TextOf;
 
 /**
  * Head of HTTP response.
@@ -45,6 +44,10 @@ import org.cactoos.text.TextOf;
 public final class HtHead implements Input {
 
     /**
+     * Buffer length.
+     */
+    private static final int LENGTH = 16384;
+    /**
      * Response.
      */
     private final Input response;
@@ -58,9 +61,32 @@ public final class HtHead implements Input {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public InputStream stream() throws IOException {
-        return new InputOf(
-            new TextOf(this.response).asString().split("\r\n\r\n")[0]
-        ).stream();
+        final InputStream stream = this.response.stream();
+        final byte[] buf = new byte[HtHead.LENGTH];
+        byte[] head = new byte[0];
+        while (true) {
+            final int len = stream.read(buf);
+            if (len < 0) {
+                break;
+            }
+            //@checkstyle MagicNumberCheck (10 lines)
+            int tail = 3;
+            while (tail < len) {
+                if (buf[tail] == '\n' && buf[tail - 1] == '\r'
+                    && buf[tail - 2] == '\n' && buf[tail - 3] == '\r') {
+                    tail = tail - 3;
+                    break;
+                }
+                ++tail;
+            }
+            final byte[] temp = new byte[head.length];
+            System.arraycopy(head, 0, temp, 0, head.length);
+            head = new byte[temp.length + tail];
+            System.arraycopy(temp, 0, head, 0, temp.length);
+            System.arraycopy(buf, 0, head, temp.length, tail);
+        }
+        return new InputOf(head).stream();
     }
 }
