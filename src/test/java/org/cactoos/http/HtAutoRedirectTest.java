@@ -25,6 +25,7 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URI;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
@@ -38,10 +39,10 @@ import org.takes.http.FtRemote;
 import org.takes.rs.RsText;
 import org.takes.rs.RsWithHeader;
 import org.takes.rs.RsWithStatus;
+import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtAutoRedirect}.
- *
  * @author Vedran Vatavuk (123vgv@gmail.com)
  * @version $Id$
  * @since 0.1
@@ -51,24 +52,75 @@ import org.takes.rs.RsWithStatus;
 public final class HtAutoRedirectTest {
 
     @Test
-    public void redirectsRequestAutomaticaly() throws Exception {
+    public void redirectsRequestAutomatically() throws Exception {
         HtAutoRedirectTest.remote().exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtAutoRedirect(
                         new HtResponse(
                             new HtWire(home),
-                            new JoinedText(
-                                "\r\n",
-                                "GET / HTTP/1.1",
-                                String.format("Host:%s", home.getHost())
-                            ).asString()
+                            HtAutoRedirectTest.requestInput(home)
                         )
                     )
                 ).asString(),
                 Matchers.containsString("HTTP/1.1 200 ")
             )
         );
+    }
+
+    @Test
+    public void noRedirectionOnStatusOk() throws Exception {
+        new FtRemote(new TkText("Hello, world!")).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtAutoRedirect(
+                        new HtResponse(
+                            new HtWire(home),
+                            HtAutoRedirectTest.requestInput(home)
+                        )
+                    )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200 OK")
+            )
+        );
+    }
+
+    @Test
+    public void returnsErrorResponseForNoLocation() throws Exception {
+        new FtRemote(
+            new Take() {
+                @Override
+                public Response act(final Request req) {
+                    // @checkstyle MagicNumber (1 line)
+                    return new RsWithStatus(new RsText(), 300);
+                }
+            }).exec(
+                home -> MatcherAssert.assertThat(
+                    new TextOf(
+                        new HtAutoRedirect(
+                            new HtResponse(
+                                new HtWire(home),
+                                HtAutoRedirectTest.requestInput(home)
+                            )
+                        )
+                    ).asString(),
+                    Matchers.containsString("HTTP/1.1 300 ")
+                )
+        );
+    }
+
+    /**
+     * Request input.
+     * @param home Uri
+     * @return String Request as string
+     * @throws IOException If fails
+     */
+    private static String requestInput(final URI home) throws IOException {
+        return new JoinedText(
+            "\r\n",
+            "GET / HTTP/1.1",
+            String.format("Host:%s", home.getHost())
+        ).asString();
     }
 
     /**
@@ -83,7 +135,7 @@ public final class HtAutoRedirectTest {
             new BkBasic(
                 new HtAutoRedirectTest.TkRedirect(
                     String.format(
-                        "http://localhost:%s/test",
+                        "Location: http://localhost:%s/test",
                         skt.getLocalPort()
                     )
                 )
@@ -111,7 +163,7 @@ public final class HtAutoRedirectTest {
         /**
          * Location url.
          */
-        private final String location;
+        private final String header;
 
         /**
          * Number of attempts.
@@ -123,7 +175,7 @@ public final class HtAutoRedirectTest {
          * @param destination Destination url
          */
         TkRedirect(final String destination) {
-            this.location = destination;
+            this.header = destination;
             this.attempts = 0;
         }
 
@@ -134,7 +186,7 @@ public final class HtAutoRedirectTest {
                 response = new RsWithHeader(
                     // @checkstyle MagicNumber (1 line)
                     new RsWithStatus(new RsText(), 301),
-                    String.format("Location: %s", this.location)
+                    this.header
                 );
                 this.attempts += 1;
             } else {
