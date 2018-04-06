@@ -95,6 +95,22 @@ SOFTWARE.
     </dependency>
   </dependencies>
   <build>
+    <testResources>
+      <testResource>
+        <filtering>true</filtering>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <excludes>
+          <exclude>org/cactoos/http/keystore</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <filtering>false</filtering>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <includes>
+          <include>org/cactoos/http/keystore</include>
+        </includes>
+      </testResource>
+    </testResources>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -102,6 +118,19 @@ SOFTWARE.
           <configuration>
             <source>1.8</source>
             <target>1.8</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.21.0</version>
+          <configuration>
+            <systemPropertyVariables>
+              <javax.net.ssl.keyStore>${project.build.directory}/test-classes/org/cactoos/http/keystore</javax.net.ssl.keyStore>
+              <javax.net.ssl.keyStorePassword>abc123</javax.net.ssl.keyStorePassword>
+              <javax.net.ssl.trustStore>${project.build.directory}/test-classes/org/cactoos/http/keystore</javax.net.ssl.trustStore>
+              <javax.net.ssl.trustStorePassword>abc123</javax.net.ssl.trustStorePassword>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
       </plugins>

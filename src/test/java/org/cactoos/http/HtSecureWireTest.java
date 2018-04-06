@@ -23,12 +23,12 @@
  */
 package org.cactoos.http;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import org.cactoos.Scalar;
+import org.cactoos.Input;
+import org.cactoos.io.InputOf;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
@@ -50,19 +50,32 @@ import org.takes.tk.TkText;
 public final class HtSecureWireTest {
 
     @Test
-    public void worksFineWithSsl() throws Exception {
+    public void worksFineThroughSsl() throws Exception {
         HtSecureWireTest.secure(new TkText("Hello, world!")).exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtResponse(
                         new HtSecureWire(
-                            HtSecureWireTest.sslSocket(home.getPort())
+                            home.getHost(), home.getPort()
                         ),
-                        new JoinedText(
-                            "\r\n",
-                            "GET / HTTP/1.1",
-                            String.format("Host:%s", home.getHost())
-                        ).asString()
+                        new HtSecureWireTest.Request(home.getHost())
+                    )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200")
+            )
+        );
+    }
+
+    @Test
+    public void worksFineByUriThroughSsl() throws Exception {
+        HtSecureWireTest.secure(new TkText()).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtResponse(
+                        new HtSecureWire(
+                            home
+                        ),
+                        new HtSecureWireTest.Request(home.getHost())
                     )
                 ).asString(),
                 Matchers.containsString("HTTP/1.1 200 OK")
@@ -76,40 +89,44 @@ public final class HtSecureWireTest {
      * @return FtRemote Front
      * @throws Exception If fails
      */
-    private static FtRemote secure(final Take take) throws Exception {
-        final SSLServerSocketFactory factory = HtSecureWireTest.context()
-            .getServerSocketFactory();
-        final SSLServerSocket skt =
-            (SSLServerSocket) factory.createServerSocket(0);
-        skt.setEnabledCipherSuites(skt.getSupportedCipherSuites());
+    private static FtRemote secure(final Take take)
+        throws Exception {
+        final ServerSocket skt = SSLServerSocketFactory.getDefault()
+            .createServerSocket(0);
         return new FtRemote(new BkBasic(take), skt);
     }
 
     /**
-     * Cretes an instance of ssl context.
-     * @return SSLContext Context
-     * @throws Exception If fails
+     * Request input.
      */
-    private static SSLContext context() throws Exception {
-        final SSLContext ctx = SSLContext.getInstance("TLSv1.2");
-        ctx.init(null, null, null);
-        return ctx;
+    private static final class Request implements Input {
+
+        /**
+         * Host domain.
+         */
+        private final String host;
+
+        /**
+         * Ctor.
+         * @param domain Host domain
+         */
+        Request(final String domain) {
+            this.host = domain;
+        }
+
+        @Override
+        public InputStream stream() throws IOException {
+            final String delimiter = "\r\n";
+            return new InputOf(
+                new JoinedText(
+                    delimiter,
+                    "GET / HTTP/1.1",
+                    String.format("Host: %s", this.host),
+                    "Connection: close",
+                    delimiter
+                )
+            ).stream();
+        }
     }
 
-    /**
-     * Creates ssl socket as a scalar.
-     * @param port Port
-     * @return Scalar Ssl socket
-     */
-    private static Scalar<SSLSocket> sslSocket(final int port) {
-        return () -> {
-            final SSLSocketFactory factory = HtSecureWireTest.context()
-                .getSocketFactory();
-            final SSLSocket skt = (SSLSocket) factory.createSocket(
-                "localhost", port
-            );
-            skt.setEnabledCipherSuites(skt.getSupportedCipherSuites());
-            return skt;
-        };
-    }
 }
