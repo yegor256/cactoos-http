@@ -51,7 +51,7 @@ public final class HtSecureWireTest {
 
     @Test
     public void worksFineThroughSsl() throws Exception {
-        HtSecureWireTest.secure(new TkText("Hello, world!")).exec(
+        HtSecureWireTest.secure(new TkText("Hello, world!"), 0).exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtResponse(
@@ -68,7 +68,7 @@ public final class HtSecureWireTest {
 
     @Test
     public void worksFineByUriThroughSsl() throws Exception {
-        HtSecureWireTest.secure(new TkText()).exec(
+        HtSecureWireTest.secure(new TkText(), 0).exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtResponse(
@@ -83,16 +83,34 @@ public final class HtSecureWireTest {
         );
     }
 
+    @Test
+    public void worksFineByAddressThroughSsl() throws Exception {
+        // @checkstyle MagicNumber (1 line)
+        HtSecureWireTest.secure(new TkText(), 443).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtResponse(
+                        new HtSecureWire(
+                            home.getHost()
+                        ),
+                        new HtSecureWireTest.Request(home.getHost())
+                    )
+                ).asString(),
+                Matchers.containsString("200 OK")
+            )
+        );
+    }
+
     /**
      * Creates an instance of secure Front.
      * @param take Take
      * @return FtRemote Front
      * @throws Exception If fails
      */
-    private static FtRemote secure(final Take take)
+    private static FtRemote secure(final Take take, final int port)
         throws Exception {
         final ServerSocket skt = SSLServerSocketFactory.getDefault()
-            .createServerSocket(0);
+            .createServerSocket(port);
         return new FtRemote(new BkBasic(take), skt);
     }
 
