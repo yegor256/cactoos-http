@@ -37,6 +37,7 @@ import org.junit.Test;
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtCookiesTest {
 
     @Test
@@ -61,4 +62,25 @@ public final class HtCookiesTest {
         );
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void incorrectHttpResponseCookie() {
+        MatcherAssert.assertThat(
+            new HtCookies(
+                new HtHead(
+                    new InputOf(
+                        new JoinedText(
+                            "\r\n",
+                            "HTTP/1.1 200 OK",
+                            "Content-type: text/plain",
+                            "Set-Cookie: path=/; 123; domain=.google.com",
+                            "",
+                            "Hello, dude!",
+                            "How are you?"
+                        )
+                    )
+                )
+            ).get("domain"),
+            Matchers.equalTo(".google.com")
+        );
+    }
 }
