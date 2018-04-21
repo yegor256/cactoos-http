@@ -22,39 +22,34 @@
  * SOFTWARE.
  */
 
-package org.cactoos.http;
+package org.cactoos.http.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import org.cactoos.Input;
-import org.cactoos.http.io.SkipInput;
-import org.cactoos.io.BytesOf;
+import java.util.Arrays;
+import org.cactoos.http.io.SkipInput.BoundedByteBuffer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Head of HTTP response.
+ * Test case for {@link SkipInput.BoundedByteBuffer}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @author Victor Noel (victor.noel@crazydwarves.org)
  * @version $Id$
  * @since 0.1
+ * @checkstyle JavadocMethodCheck (500 lines)
  */
-public final class HtBody implements Input {
+public final class SkipInputBoundedByteBufferTest {
 
-    /**
-     * Response.
-     */
-    private final Input response;
-
-    /**
-     * Ctor.
-     * @param rsp Response
-     */
-    public HtBody(final Input rsp) {
-        this.response = rsp;
-    }
-
-    @Override
-    public InputStream stream() throws IOException {
-        return new SkipInput(this.response, new BytesOf("\r\n\r\n")).stream();
+    @Test
+    public void onlyKeepsTheLastNBytes() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        final int[] bytes = new int[] {1, 2, 3, 4, 5, 6, 7, 8 };
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            // @checkstyle MagicNumberCheck (1 line)
+            buffer.isEqualsTo(new byte[] {5, 6, 7, 8 }),
+            Matchers.is(true)
+        );
     }
 }

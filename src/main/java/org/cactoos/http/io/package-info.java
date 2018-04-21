@@ -22,39 +22,11 @@
  * SOFTWARE.
  */
 
-package org.cactoos.http;
-
-import java.io.IOException;
-import java.io.InputStream;
-import org.cactoos.Input;
-import org.cactoos.http.io.SkipInput;
-import org.cactoos.io.BytesOf;
-
 /**
- * Head of HTTP response.
+ * Io for Http.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @author Victor Noel (victor.noel@crazydwarves.org)
  * @version $Id$
  * @since 0.1
  */
-public final class HtBody implements Input {
-
-    /**
-     * Response.
-     */
-    private final Input response;
-
-    /**
-     * Ctor.
-     * @param rsp Response
-     */
-    public HtBody(final Input rsp) {
-        this.response = rsp;
-    }
-
-    @Override
-    public InputStream stream() throws IOException {
-        return new SkipInput(this.response, new BytesOf("\r\n\r\n")).stream();
-    }
-}
+package org.cactoos.http.io;
