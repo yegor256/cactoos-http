@@ -35,10 +35,6 @@ import org.cactoos.scalar.NumberEnvelope;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #1:30min The implementation here is not effective. It converts
- *  the entire head part of the request to a string and then only
- *  takes the first line out of it. We should deal with a stream
- *  instead and just read its first line.
  */
 public final class HtStatus extends NumberEnvelope {
 
