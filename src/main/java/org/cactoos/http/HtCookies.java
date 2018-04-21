@@ -45,15 +45,15 @@ public final class HtCookies extends MapEnvelope<String, String> {
         super(() -> {
             final Map<String, String> result = new HashMap<>();
             final String cookie = new HtHeaders(rsp).get("set-cookie");
-            try {
-                for (final String item : cookie.split(";\\s+")) {
-                    final String[] entry = item.split("=", 2);
+            for (final String item : cookie.split(";\\s+")) {
+                final String[] entry = item.split("=", 2);
+                if (entry.length == 2) {
                     result.put(entry[0], entry[1]);
+                } else {
+                    throw new IllegalArgumentException(
+                        "Incorrect HTTP Response cookie"
+                    );
                 }
-            } catch (final ArrayIndexOutOfBoundsException exc) {
-                throw new IllegalArgumentException(
-                    "Incorrect HTTP Response cookie", exc
-                );
             }
             return result;
         });
