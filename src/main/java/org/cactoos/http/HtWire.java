@@ -27,13 +27,14 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URI;
-import java.util.function.BiFunction;
 import org.cactoos.Input;
+import org.cactoos.func.IoCheckedBiFunc;
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
+import org.cactoos.scalar.Constant;
+import org.cactoos.scalar.IoCheckedScalar;
 
 /**
  * Wire.
@@ -41,6 +42,12 @@ import org.cactoos.io.InputOf;
  * @version $Id$
  * @since 0.1
  */
+@SuppressWarnings(
+    {
+        "PMD.OnlyOneConstructorShouldDoInitialization",
+        "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"
+    }
+)
 public final class HtWire implements Wire {
 
     /**
@@ -56,19 +63,19 @@ public final class HtWire implements Wire {
     /**
      * TCP port.
      */
-    private final int port;
+    private final IoCheckedScalar<Integer> port;
 
     /**
      * Supplier of sockets.
      */
-    private final BiFunction<String, Integer, Socket> supplier;
+    private final IoCheckedBiFunc<String, Integer, Socket> supplier;
 
     /**
      * Ctor.
      * @param uri The address of the server
      */
     public HtWire(final URI uri) {
-        this(uri, HtWire::socket);
+        this(uri, new IoCheckedBiFunc<>(Socket::new));
     }
 
     /**
@@ -76,8 +83,12 @@ public final class HtWire implements Wire {
      * @param addr The address of the server
      */
     public HtWire(final String addr) {
-        // @checkstyle MagicNumber (1 line)
-        this(addr, 80, HtWire::socket);
+        this(
+            addr,
+            // @checkstyle MagicNumber (1 line)
+            new IoCheckedScalar<>(new Constant<>(80)),
+            new IoCheckedBiFunc<>(Socket::new)
+        );
     }
 
     /**
@@ -86,7 +97,11 @@ public final class HtWire implements Wire {
      * @param tcp The TCP port
      */
     public HtWire(final String addr, final int tcp) {
-        this(addr, tcp, HtWire::socket);
+        this(
+            addr,
+            new IoCheckedScalar<>(new Constant<>(tcp)),
+            new IoCheckedBiFunc<>(Socket::new)
+        );
     }
 
     /**
@@ -95,8 +110,22 @@ public final class HtWire implements Wire {
      * @param spplier Socket supplier
      */
     HtWire(final URI uri,
-        final BiFunction<String, Integer, Socket> spplier) {
-        this(uri.getHost(), HtWire.prt(uri), spplier);
+        final IoCheckedBiFunc<String, Integer, Socket> spplier) {
+        this(
+            uri.getHost(),
+            new IoCheckedScalar<>(
+                () -> {
+                    final int prt;
+                    if (uri.getPort() == -1) {
+                        prt = uri.toURL().getDefaultPort();
+                    } else {
+                        prt = uri.getPort();
+                    }
+                    return prt;
+                }
+            ),
+            spplier
+        );
     }
 
     /**
@@ -105,8 +134,8 @@ public final class HtWire implements Wire {
      * @param tcp The TCP port
      * @param spplier Supplier of sockets
      */
-    HtWire(final String addr, final int tcp,
-        final BiFunction<String, Integer, Socket> spplier) {
+    private HtWire(final String addr, final IoCheckedScalar<Integer> tcp,
+        final IoCheckedBiFunc<String, Integer, Socket> spplier) {
         this.address = addr;
         this.port = tcp;
         this.supplier = spplier;
@@ -115,7 +144,9 @@ public final class HtWire implements Wire {
     @Override
     public Input send(final Input input) throws IOException {
         try (
-            final Socket socket = this.supplier.apply(this.address, this.port);
+            final Socket socket = this.supplier.apply(
+                this.address, this.port.value()
+            );
             final InputStream source = input.stream();
             final InputStream ins = socket.getInputStream();
             final OutputStream ous = socket.getOutputStream()
@@ -129,39 +160,6 @@ public final class HtWire implements Wire {
                 ous.write(buf, 0, len);
             }
             return new InputOf(new BytesOf(ins).asBytes());
-        }
-    }
-
-    /**
-     * Get port number from URI.
-     * @param uri URI to get the port from
-     * @return Port number
-     */
-    private static int prt(final URI uri) {
-        final int port;
-        if (uri.getPort() == -1) {
-            try {
-                port = uri.toURL().getDefaultPort();
-            } catch (final MalformedURLException ex) {
-                throw new IllegalStateException(ex);
-            }
-        } else {
-            port = uri.getPort();
-        }
-        return port;
-    }
-
-    /**
-     * Create socket from address and port.
-     * @param addr Address for the socked
-     * @param tcp Port for the socket
-     * @return Created socket
-     */
-    private static Socket socket(final String addr, final Integer tcp) {
-        try {
-            return new Socket(addr, tcp);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
         }
     }
 }

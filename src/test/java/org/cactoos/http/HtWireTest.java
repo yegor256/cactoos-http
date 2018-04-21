@@ -26,7 +26,8 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
-import java.util.function.BiFunction;
+import org.cactoos.BiFunc;
+import org.cactoos.func.IoCheckedBiFunc;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
 import org.junit.Test;
@@ -52,12 +53,12 @@ public final class HtWireTest {
     private static final int HTTPS_PORT = 443;
 
     @Test
-    public void guessesCorrectPortForHttp() throws IOException {
+    public void guessesCorrectPortForHttp() throws Exception {
         this.checkPorts("http://localhost", HtWireTest.HTTP_PORT);
     }
 
     @Test
-    public void guessesCorrectPortForHttps() throws IOException {
+    public void guessesCorrectPortForHttps() throws Exception {
         this.checkPorts("https://localhost", HtWireTest.HTTPS_PORT);
     }
 
@@ -65,17 +66,17 @@ public final class HtWireTest {
      * Verify correct port is returned for given URL.
      * @param url URL to check
      * @param port Port number
-     * @throws IOException In case of error
+     * @throws Exception In case of error
      */
     @SuppressWarnings("unchecked")
     private void checkPorts(final String url, final int port)
-        throws IOException {
-        final BiFunction<String, Integer, Socket> function =
-            Mockito.mock(BiFunction.class);
+        throws Exception {
+        final BiFunc<String, Integer, Socket> function =
+            Mockito.mock(BiFunc.class);
         final Socket socket = this.socket();
         Mockito.when(function.apply(Mockito.any(), Mockito.any()))
             .thenReturn(socket);
-        new HtWire(URI.create(url), function)
+        new HtWire(URI.create(url), new IoCheckedBiFunc<>(function))
             .send(new DeadInput());
         Mockito.verify(function).apply(Mockito.any(), Mockito.eq(port));
     }
