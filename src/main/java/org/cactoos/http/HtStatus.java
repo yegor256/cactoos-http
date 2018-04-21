@@ -24,9 +24,10 @@
 
 package org.cactoos.http;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.cactoos.Input;
 import org.cactoos.scalar.NumberEnvelope;
-import org.cactoos.text.TextOf;
 
 /**
  * Status of HTTP response.
@@ -34,10 +35,6 @@ import org.cactoos.text.TextOf;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #1:30min The implementation here is not effective. It converts
- *  the entire head part of the request to a string and then only
- *  takes the first line out of it. We should deal with a stream
- *  instead and just read its first line.
  */
 public final class HtStatus extends NumberEnvelope {
 
@@ -52,8 +49,10 @@ public final class HtStatus extends NumberEnvelope {
      */
     public HtStatus(final Input head) {
         super(() -> Double.parseDouble(
-            // @checkstyle MagicNumber (1 line)
-            new TextOf(head).asString().split("\r\n")[0].split(" ", 3)[1]
+            // @checkstyle MagicNumber (3 line)
+            new BufferedReader(
+                new InputStreamReader(head.stream())
+            ).readLine().split(" ", 3)[1]
         ));
     }
 
