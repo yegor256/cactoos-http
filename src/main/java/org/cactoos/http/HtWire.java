@@ -29,7 +29,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URI;
+import org.cactoos.BiFunc;
 import org.cactoos.Input;
+import org.cactoos.Scalar;
 import org.cactoos.func.IoCheckedBiFunc;
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
@@ -64,19 +66,19 @@ public final class HtWire implements Wire {
     /**
      * TCP port.
      */
-    private final IoCheckedScalar<Integer> port;
+    private final Scalar<Integer> port;
 
     /**
      * Supplier of sockets.
      */
-    private final IoCheckedBiFunc<String, Integer, Socket> supplier;
+    private final BiFunc<String, Integer, Socket> supplier;
 
     /**
      * Ctor.
      * @param uri The address of the server
      */
     public HtWire(final URI uri) {
-        this(uri, new IoCheckedBiFunc<>(Socket::new));
+        this(uri, Socket::new);
     }
 
     /**
@@ -84,12 +86,8 @@ public final class HtWire implements Wire {
      * @param addr The address of the server
      */
     public HtWire(final String addr) {
-        this(
-            addr,
-            // @checkstyle MagicNumber (1 line)
-            new IoCheckedScalar<>(new Constant<>(80)),
-            new IoCheckedBiFunc<>(Socket::new)
-        );
+        // @checkstyle MagicNumber (1 line)
+        this(addr, new Constant<>(80), Socket::new);
     }
 
     /**
@@ -98,11 +96,7 @@ public final class HtWire implements Wire {
      * @param tcp The TCP port
      */
     public HtWire(final String addr, final int tcp) {
-        this(
-            addr,
-            new IoCheckedScalar<>(new Constant<>(tcp)),
-            new IoCheckedBiFunc<>(Socket::new)
-        );
+        this(addr, new Constant<>(tcp), Socket::new);
     }
 
     /**
@@ -110,21 +104,18 @@ public final class HtWire implements Wire {
      * @param uri The address of the server
      * @param spplier Socket supplier
      */
-    HtWire(final URI uri,
-        final IoCheckedBiFunc<String, Integer, Socket> spplier) {
+    HtWire(final URI uri, final BiFunc<String, Integer, Socket> spplier) {
         this(
             uri.getHost(),
-            new IoCheckedScalar<>(
-                () -> {
-                    final int prt;
-                    if (uri.getPort() == -1) {
-                        prt = uri.toURL().getDefaultPort();
-                    } else {
-                        prt = uri.getPort();
-                    }
-                    return prt;
+            () -> {
+                final int prt;
+                if (uri.getPort() == -1) {
+                    prt = uri.toURL().getDefaultPort();
+                } else {
+                    prt = uri.getPort();
                 }
-            ),
+                return prt;
+            },
             spplier
         );
     }
@@ -132,11 +123,11 @@ public final class HtWire implements Wire {
     /**
      * Ctor.
      * @param addr The address of the server
-     * @param tcp The TCP port
+     * @param tcp The TCP port source
      * @param spplier Supplier of sockets
      */
-    private HtWire(final String addr, final IoCheckedScalar<Integer> tcp,
-        final IoCheckedBiFunc<String, Integer, Socket> spplier) {
+    private HtWire(final String addr, final Scalar<Integer> tcp,
+        final BiFunc<String, Integer, Socket> spplier) {
         this.address = addr;
         this.port = tcp;
         this.supplier = spplier;
@@ -145,8 +136,8 @@ public final class HtWire implements Wire {
     @Override
     public Input send(final Input input) throws IOException {
         try (
-            final Socket socket = this.supplier.apply(
-                this.address, this.port.value()
+            final Socket socket = new IoCheckedBiFunc<>(this.supplier).apply(
+                this.address, new IoCheckedScalar<>(this.port).value()
             );
             final InputStream source = input.stream();
             final InputStream ins = socket.getInputStream();

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import org.cactoos.BiFunc;
-import org.cactoos.func.IoCheckedBiFunc;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public final class HtWireTest {
         final Socket socket = this.socket();
         Mockito.when(function.apply(Mockito.any(), Mockito.any()))
             .thenReturn(socket);
-        new HtWire(URI.create(url), new IoCheckedBiFunc<>(function))
+        new HtWire(URI.create(url), function)
             .send(new DeadInput());
         Mockito.verify(function).apply(Mockito.any(), Mockito.eq(port));
     }
