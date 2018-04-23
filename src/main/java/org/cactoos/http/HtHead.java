@@ -47,6 +47,7 @@ public final class HtHead implements Input {
      * Buffer length.
      */
     private static final int LENGTH = 16384;
+
     /**
      * Response.
      */

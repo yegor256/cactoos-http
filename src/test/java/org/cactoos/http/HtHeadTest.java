@@ -40,6 +40,7 @@ import org.junit.Test;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtHeadTest {
 
     @Test
@@ -59,6 +60,25 @@ public final class HtHeadTest {
                 )
             ).asString(),
             Matchers.endsWith("text/plain")
+        );
+    }
+
+    @Test
+    public void emptyHeadOfHttpResponse() throws IOException {
+        MatcherAssert.assertThat(
+            new TextOf(
+                new HtHead(
+                    new InputOf(
+                        new JoinedText(
+                            "\r\n",
+                            "",
+                            "",
+                            "Body"
+                        )
+                    )
+                )
+            ).asString(),
+            Matchers.equalTo("")
         );
     }
 
