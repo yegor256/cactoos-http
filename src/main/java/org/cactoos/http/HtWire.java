@@ -37,6 +37,7 @@ import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
 import org.cactoos.scalar.Constant;
 import org.cactoos.scalar.IoCheckedScalar;
+import org.cactoos.scalar.Ternary;
 
 /**
  * Wire.
@@ -45,7 +46,6 @@ import org.cactoos.scalar.IoCheckedScalar;
  * @version $Id$
  * @since 0.1
  */
-@SuppressWarnings("PMD.OnlyOneConstructorShouldDoInitialization")
 public final class HtWire implements Wire {
 
     /**
@@ -99,19 +99,14 @@ public final class HtWire implements Wire {
      * @param uri The address of the server
      * @param spplier Socket supplier
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     HtWire(final URI uri, final BiFunc<String, Integer, Socket> spplier) {
         this(
             uri.getHost(),
-            () -> {
-                final int prt;
-                if (uri.getPort() == -1) {
-                    prt = uri.toURL().getDefaultPort();
-                } else {
-                    prt = uri.getPort();
-                }
-                return prt;
-            },
+            new Ternary<>(
+                () -> uri.getPort() == -1,
+                () -> uri.toURL().getDefaultPort(),
+                uri::getPort
+            ),
             spplier
         );
     }
