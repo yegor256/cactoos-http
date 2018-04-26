@@ -45,12 +45,7 @@ import org.cactoos.scalar.IoCheckedScalar;
  * @version $Id$
  * @since 0.1
  */
-@SuppressWarnings(
-    {
-        "PMD.OnlyOneConstructorShouldDoInitialization",
-        "PMD.ConstructorOnlyInitializesOrCallOtherConstructors"
-    }
-)
+@SuppressWarnings("PMD.OnlyOneConstructorShouldDoInitialization")
 public final class HtWire implements Wire {
 
     /**
@@ -104,6 +99,7 @@ public final class HtWire implements Wire {
      * @param uri The address of the server
      * @param spplier Socket supplier
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     HtWire(final URI uri, final BiFunc<String, Integer, Socket> spplier) {
         this(
             uri.getHost(),

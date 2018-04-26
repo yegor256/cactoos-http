@@ -29,8 +29,14 @@ import java.net.URI;
 import org.cactoos.BiFunc;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
+import org.cactoos.text.JoinedText;
+import org.cactoos.text.TextOf;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.takes.http.FtRemote;
+import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtWire}.
@@ -38,6 +44,7 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtWireTest {
 
@@ -59,6 +66,25 @@ public final class HtWireTest {
     @Test
     public void guessesCorrectPortForHttps() throws Exception {
         this.checkPorts("https://localhost", HtWireTest.HTTPS_PORT);
+    }
+
+    @Test
+    public void worksWithProvidedHostNameAndPort() throws IOException {
+        new FtRemote(new TkText("Hello")).exec(
+            home -> MatcherAssert.assertThat(
+                new TextOf(
+                    new HtResponse(
+                        new HtWire(home.getHost(), home.getPort()),
+                        new JoinedText(
+                            "\r\n",
+                            "GET / HTTP/1.1",
+                            String.format("Host:%s", home.getHost())
+                        ).asString()
+                    )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200")
+            )
+        );
     }
 
     /**
