@@ -26,8 +26,9 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import org.cactoos.Input;
-import org.cactoos.io.InputOf;
+import org.cactoos.io.InputStreamOf;
 
 /**
  * Head of HTTP response.
@@ -35,11 +36,6 @@ import org.cactoos.io.InputOf;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #1:30min The implementation of method stream() is rather
- *  ineffective and defective. What if the content of the HTTP response
- *  is too big? Or is binary and can't be represented as a string?
- *  Instead of turning it into a string we must deal with a stream
- *  of bytes.
  */
 public final class HtHead implements Input {
 
@@ -66,7 +62,7 @@ public final class HtHead implements Input {
     public InputStream stream() throws IOException {
         final InputStream stream = this.response.stream();
         final byte[] buf = new byte[HtHead.LENGTH];
-        byte[] head = new byte[0];
+        InputStream head = new InputStreamOf("");
         while (true) {
             final int len = stream.read(buf);
             if (len < 0) {
@@ -82,12 +78,10 @@ public final class HtHead implements Input {
                 }
                 ++tail;
             }
-            final byte[] temp = new byte[head.length];
-            System.arraycopy(head, 0, temp, 0, head.length);
-            head = new byte[temp.length + tail];
-            System.arraycopy(temp, 0, head, 0, temp.length);
-            System.arraycopy(buf, 0, head, temp.length, tail);
+            final byte[] temp = new byte[tail];
+            System.arraycopy(buf, 0, temp, 0, tail);
+            head = new SequenceInputStream(head, new InputStreamOf(temp));
         }
-        return new InputOf(head).stream();
+        return head;
     }
 }
