@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import org.cactoos.Input;
+import org.cactoos.io.DeadInputStream;
 import org.cactoos.io.InputStreamOf;
 
 /**
@@ -62,7 +63,7 @@ public final class HtHead implements Input {
     public InputStream stream() throws IOException {
         final InputStream stream = this.response.stream();
         final byte[] buf = new byte[HtHead.LENGTH];
-        InputStream head = new InputStreamOf("");
+        InputStream head = new DeadInputStream();
         while (true) {
             final int len = stream.read(buf);
             if (len < 0) {
@@ -81,6 +82,9 @@ public final class HtHead implements Input {
             final byte[] temp = new byte[tail];
             System.arraycopy(buf, 0, temp, 0, tail);
             head = new SequenceInputStream(head, new InputStreamOf(temp));
+            if (tail != len) {
+                break;
+            }
         }
         return head;
     }
