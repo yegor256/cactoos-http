@@ -53,6 +53,7 @@ public final class HtSecureWireTest {
     public void worksFineThroughSsl() throws Exception {
         HtSecureWireTest.secure(new TkText("Hello, world!"), 0).exec(
             home -> MatcherAssert.assertThat(
+                "Basic ssl request doesn't work for specified host",
                 new TextOf(
                     new HtResponse(
                         new HtSecureWire(
@@ -70,6 +71,7 @@ public final class HtSecureWireTest {
     public void worksFineByUriThroughSsl() throws Exception {
         HtSecureWireTest.secure(new TkText(), 0).exec(
             home -> MatcherAssert.assertThat(
+                "Doesn't work through ssl for specified uri",
                 new TextOf(
                     new HtResponse(
                         new HtSecureWire(
@@ -86,6 +88,7 @@ public final class HtSecureWireTest {
     @Test
     public void createsSecureWireByAddress() throws Exception {
         MatcherAssert.assertThat(
+            "Unable to create instance of HtSecureWire",
             new HtSecureWire("localhost"),
             Matchers.isA(Wire.class)
         );
