@@ -39,7 +39,6 @@ import org.takes.tk.TkText;
  * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtAutoRedirectTest {
 
@@ -47,6 +46,7 @@ public final class HtAutoRedirectTest {
     public void redirectsRequestAutomatically() throws Exception {
         new FtRemote(new TkText("redirected ok")).exec(
             home -> MatcherAssert.assertThat(
+                "Does not redirects automatically",
                 new TextOf(
                     new HtAutoRedirect(
                         new InputOf(
@@ -67,6 +67,7 @@ public final class HtAutoRedirectTest {
     public void noRedirectionOnStatusOk() throws Exception {
         final String response = "HTTP/1.1 200 OK";
         MatcherAssert.assertThat(
+            "Doesn't return status code OK",
             new TextOf(
                 new HtAutoRedirect(
                     new InputOf(
@@ -82,6 +83,7 @@ public final class HtAutoRedirectTest {
     public void returnsRedirectResponseForNoLocation() throws Exception {
         final String response = "HTTP/1.1 300";
         MatcherAssert.assertThat(
+            "Doesn't return redirection response code",
             new TextOf(
                 new HtAutoRedirect(
                     new InputOf(
