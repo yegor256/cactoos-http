@@ -25,6 +25,7 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import org.cactoos.io.InputOf;
+import org.cactoos.io.ResourceOf;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
@@ -79,6 +80,18 @@ public final class HtHeadTest {
                 )
             ).asString(),
             Matchers.equalTo("")
+        );
+    }
+
+    @Test
+    public void largeText() throws IOException {
+        MatcherAssert.assertThat(
+            new TextOf(
+                new HtHead(
+                    new ResourceOf("large-text")
+                )
+            ).asString(),
+            Matchers.endsWith("text/plain")
         );
     }
 
