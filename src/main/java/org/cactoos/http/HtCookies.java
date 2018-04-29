@@ -35,12 +35,12 @@ import org.cactoos.map.MapEnvelope;
  * @version $Id$
  * @since 0.1
  * @todo #1:30min The implementation of method stream() can handle only
- * one Set-Cookie in a response. Fix HtHeaders so that a single key
- * may be mapped to one or more values (it is legal to receive more than one
- * Set-Cookie in a response).
+ *  one Set-Cookie in a response. Fix HtHeaders so that a single key
+ *  may be mapped to one or more values (it is legal to receive more than one
+ *  Set-Cookie in a response).
  * @todo #2:30min The implementation of method stream() will break on
- * "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that
- * these directives are handled correctly.
+ *  "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that
+ *  these directives are handled correctly.
  */
 public final class HtCookies extends MapEnvelope<String, String> {
 
