@@ -24,11 +24,12 @@
 package org.cactoos.http;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URI;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import org.cactoos.BiFunc;
 import org.cactoos.Input;
-import org.cactoos.Scalar;
+import org.cactoos.scalar.Constant;
 
 /**
  * Wire that supports https.
@@ -38,11 +39,20 @@ import org.cactoos.Scalar;
  * @since 0.1
  */
 public final class HtSecureWire implements Wire {
+    /**
+     * Address.
+     */
+    private final String address;
+
+    /**
+     * TCP port.
+     */
+    private final int port;
 
     /**
      * Socket.
      */
-    private final Scalar<SSLSocket> socket;
+    private final BiFunc<String, Integer, Socket> socket;
 
     /**
      * Ctor.
@@ -67,20 +77,29 @@ public final class HtSecureWire implements Wire {
      * @param tcp The TCP port
      */
     public HtSecureWire(final String addr, final int tcp) {
-        this(() -> (SSLSocket) SSLSocketFactory.getDefault()
-            .createSocket(addr, tcp));
+        this(
+            addr,
+            tcp,
+            (host, prt) -> SSLSocketFactory.getDefault().createSocket(host, prt)
+        );
     }
 
     /**
      * Ctor.
+     * @param addr The address of the server
+     * @param tcp The TCP port
      * @param sck Ssl socket
      */
-    public HtSecureWire(final Scalar<SSLSocket> sck) {
+    public HtSecureWire(final String addr,
+        final int tcp, final BiFunc<String, Integer, Socket> sck) {
+        this.address = addr;
+        this.port = tcp;
         this.socket = sck;
     }
 
     @Override
     public Input send(final Input input) throws IOException {
-        return new HtWire(this.socket::value).send(input);
+        return new HtWire(this.address, new Constant<>(this.port), this.socket)
+            .send(input);
     }
 }
