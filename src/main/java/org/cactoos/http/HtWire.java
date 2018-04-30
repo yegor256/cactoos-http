@@ -117,7 +117,7 @@ public final class HtWire implements Wire {
      * @param tcp The TCP port source
      * @param spplier Supplier of sockets
      */
-    private HtWire(final String addr, final Scalar<Integer> tcp,
+    HtWire(final String addr, final Scalar<Integer> tcp,
         final BiFunc<String, Integer, Socket> spplier) {
         this.address = addr;
         this.port = tcp;
