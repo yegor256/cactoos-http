@@ -21,39 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.cactoos.http;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
 import org.cactoos.Input;
-import org.cactoos.scalar.NumberEnvelope;
+import org.cactoos.io.StickyInput;
+import org.cactoos.scalar.IoCheckedScalar;
 
 /**
- * Status of HTTP response.
+ * Automatically redirects request if response status code is 30x.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Vedran Vatavuk (123vgv@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public final class HtStatus extends NumberEnvelope {
+public final class HtAutoRedirect implements Input {
 
     /**
-     * Serialization marker.
+     * Response.
      */
-    private static final long serialVersionUID = -5892731788828504127L;
+    private final Input response;
 
     /**
      * Ctor.
-     * @param head Response head part
+     * @param rsp Response
      */
-    public HtStatus(final Input head) {
-        super(() -> Double.parseDouble(
-            // @checkstyle MagicNumber (3 line)
-            new BufferedReader(
-                new InputStreamReader(head.stream())
-            ).readLine().split(" ", 3)[1]
-        ));
+    public HtAutoRedirect(final Input rsp) {
+        this.response = new StickyInput(rsp);
     }
 
+    @Override
+    public InputStream stream() throws IOException {
+        InputStream stream = this.response.stream();
+        final String header = "location";
+        final int status = new HtStatus(this.response).intValue();
+        // @checkstyle MagicNumber (1 line)
+        if (status >= 300 && status <= 308) {
+            final Map<String, String> headers = new HtHeaders(
+                new HtHead(this.response)
+            );
+            if (headers.containsKey(header)) {
+                final URL url = new URL(headers.get(header));
+                stream = new HtResponse(
+                    new IoCheckedScalar<>(url::toURI).value()
+                ).stream();
+            }
+        }
+        return stream;
+    }
 }

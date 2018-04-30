@@ -54,7 +54,7 @@ public final class HtWire implements Wire {
     private static final int LENGTH = 16384;
 
     /**
-     * Address of the server.
+     * Address.
      */
     private final String address;
 

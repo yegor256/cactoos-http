@@ -24,36 +24,40 @@
 
 package org.cactoos.http;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import org.cactoos.Input;
-import org.cactoos.scalar.NumberEnvelope;
+import org.cactoos.Scalar;
 
 /**
- * Status of HTTP response.
+ * Content-Type of HTTP response.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * <p>As per
+ * <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html#sec7.2.1">
+ * section 7.2.1 of the HTTP/1.1 RFC</a>,
+ * a missing <code>content-type</code> header is interpreted as
+ * <code>application/octet-stream</code></p>
+ *
+ * @author Victor Noel (victor.noel@crazydwarves.org)
  * @version $Id$
  * @since 0.1
  */
-public final class HtStatus extends NumberEnvelope {
+public final class HtContentType implements Scalar<String> {
 
     /**
-     * Serialization marker.
+     * Response head part.
      */
-    private static final long serialVersionUID = -5892731788828504127L;
+    private final Input head;
 
     /**
      * Ctor.
      * @param head Response head part
      */
-    public HtStatus(final Input head) {
-        super(() -> Double.parseDouble(
-            // @checkstyle MagicNumber (3 line)
-            new BufferedReader(
-                new InputStreamReader(head.stream())
-            ).readLine().split(" ", 3)[1]
-        ));
+    public HtContentType(final Input head) {
+        this.head = head;
     }
 
+    @Override
+    public String value() {
+        return new HtHeaders(this.head)
+            .getOrDefault("content-type", "application/octet-stream");
+    }
 }

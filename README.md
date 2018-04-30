@@ -55,8 +55,7 @@ To make a simple HTTP GET request and read its body:
 String body = new TextOf(
   new HtBody(
     new HtResponse(
-      "http://www.google.com",
-      "GET / HTTP/1.1"
+      "http://www.google.com"
     )
   )
 ).asString();
@@ -72,7 +71,7 @@ Input head = new StickyInput(
       new HtWire("www.example.com"),
       new JoinedText(
         "\n\r"
-        "GET / HTTP/1.1",
+        "PUT / HTTP/1.1",
         "Host: www.example.com"
       )
     )

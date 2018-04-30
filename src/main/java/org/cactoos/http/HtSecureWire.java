@@ -21,39 +21,66 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.cactoos.http;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.net.URI;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import org.cactoos.Input;
-import org.cactoos.scalar.NumberEnvelope;
+import org.cactoos.Scalar;
 
 /**
- * Status of HTTP response.
+ * Wire that supports https.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Vedran Vatavuk (123vgv@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public final class HtStatus extends NumberEnvelope {
+public final class HtSecureWire implements Wire {
 
     /**
-     * Serialization marker.
+     * Socket.
      */
-    private static final long serialVersionUID = -5892731788828504127L;
+    private final Scalar<SSLSocket> socket;
 
     /**
      * Ctor.
-     * @param head Response head part
+     * @param uri The address of the server
      */
-    public HtStatus(final Input head) {
-        super(() -> Double.parseDouble(
-            // @checkstyle MagicNumber (3 line)
-            new BufferedReader(
-                new InputStreamReader(head.stream())
-            ).readLine().split(" ", 3)[1]
-        ));
+    public HtSecureWire(final URI uri) {
+        this(uri.getHost(), uri.getPort());
     }
 
+    /**
+     * Ctor.
+     * @param addr The address of the server
+     */
+    public HtSecureWire(final String addr) {
+        // @checkstyle MagicNumber (1 line)
+        this(addr, 443);
+    }
+
+    /**
+     * Ctor.
+     * @param addr The address of the server
+     * @param tcp The TCP port
+     */
+    public HtSecureWire(final String addr, final int tcp) {
+        this(() -> (SSLSocket) SSLSocketFactory.getDefault()
+            .createSocket(addr, tcp));
+    }
+
+    /**
+     * Ctor.
+     * @param sck Ssl socket
+     */
+    public HtSecureWire(final Scalar<SSLSocket> sck) {
+        this.socket = sck;
+    }
+
+    @Override
+    public Input send(final Input input) throws IOException {
+        return new HtWire(this.socket::value).send(input);
+    }
 }
