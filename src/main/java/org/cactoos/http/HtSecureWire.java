@@ -21,44 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.cactoos.http;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URI;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
-import org.cactoos.io.BytesOf;
-import org.cactoos.io.InputOf;
-import org.cactoos.scalar.IoCheckedScalar;
 
 /**
- * Wire.
+ * Wire that supports https.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
+ * @author Vedran Vatavuk (123vgv@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public final class HtWire implements Wire {
-
-    /**
-     * Buffer length.
-     */
-    private static final int LENGTH = 16384;
+public final class HtSecureWire implements Wire {
 
     /**
      * Socket.
      */
-    private final Scalar<Socket> scalar;
+    private final Scalar<SSLSocket> socket;
 
     /**
      * Ctor.
      * @param uri The address of the server
      */
-    public HtWire(final URI uri) {
+    public HtSecureWire(final URI uri) {
         this(uri.getHost(), uri.getPort());
     }
 
@@ -66,9 +56,9 @@ public final class HtWire implements Wire {
      * Ctor.
      * @param addr The address of the server
      */
-    public HtWire(final String addr) {
+    public HtSecureWire(final String addr) {
         // @checkstyle MagicNumber (1 line)
-        this(addr, 80);
+        this(addr, 443);
     }
 
     /**
@@ -76,34 +66,21 @@ public final class HtWire implements Wire {
      * @param addr The address of the server
      * @param tcp The TCP port
      */
-    public HtWire(final String addr, final int tcp) {
-        this(() -> new Socket(addr, tcp));
+    public HtSecureWire(final String addr, final int tcp) {
+        this(() -> (SSLSocket) SSLSocketFactory.getDefault()
+            .createSocket(addr, tcp));
     }
 
     /**
      * Ctor.
-     * @param socket Socket
+     * @param sck Ssl socket
      */
-    public HtWire(final Scalar<Socket> socket) {
-        this.scalar = socket;
+    public HtSecureWire(final Scalar<SSLSocket> sck) {
+        this.socket = sck;
     }
 
     @Override
     public Input send(final Input input) throws IOException {
-        try (final Socket socket = new IoCheckedScalar<>(this.scalar).value();
-            final InputStream source = input.stream();
-            final InputStream ins = socket.getInputStream();
-            final OutputStream ous = socket.getOutputStream()) {
-            final byte[] buf = new byte[HtWire.LENGTH];
-            while (true) {
-                final int len = source.read(buf);
-                if (len < 0) {
-                    break;
-                }
-                ous.write(buf, 0, len);
-            }
-            return new InputOf(new BytesOf(ins).asBytes());
-        }
+        return new HtWire(this.socket::value).send(input);
     }
-
 }
