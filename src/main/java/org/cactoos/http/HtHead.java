@@ -26,9 +26,10 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import org.cactoos.Input;
-import org.cactoos.io.InputOf;
-import org.cactoos.text.TextOf;
+import org.cactoos.io.DeadInputStream;
+import org.cactoos.io.InputStreamOf;
 
 /**
  * Head of HTTP response.
@@ -36,13 +37,13 @@ import org.cactoos.text.TextOf;
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #1:30min The implementation of method stream() is rather
- *  ineffective and defective. What if the content of the HTTP response
- *  is too big? Or is binary and can't be represented as a string?
- *  Instead of turning it into a string we must deal with a stream
- *  of bytes.
  */
 public final class HtHead implements Input {
+
+    /**
+     * Buffer length.
+     */
+    private static final int LENGTH = 16384;
 
     /**
      * Response.
@@ -58,9 +59,33 @@ public final class HtHead implements Input {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public InputStream stream() throws IOException {
-        return new InputOf(
-            new TextOf(this.response).asString().split("\r\n\r\n")[0]
-        ).stream();
+        final InputStream stream = this.response.stream();
+        final byte[] buf = new byte[HtHead.LENGTH];
+        InputStream head = new DeadInputStream();
+        while (true) {
+            final int len = stream.read(buf);
+            if (len < 0) {
+                break;
+            }
+            //@checkstyle MagicNumberCheck (10 lines)
+            int tail = 3;
+            while (tail < len) {
+                if (buf[tail] == '\n' && buf[tail - 1] == '\r'
+                    && buf[tail - 2] == '\n' && buf[tail - 3] == '\r') {
+                    tail = tail - 3;
+                    break;
+                }
+                ++tail;
+            }
+            final byte[] temp = new byte[tail];
+            System.arraycopy(buf, 0, temp, 0, tail);
+            head = new SequenceInputStream(head, new InputStreamOf(temp));
+            if (tail != len) {
+                break;
+            }
+        }
+        return head;
     }
 }

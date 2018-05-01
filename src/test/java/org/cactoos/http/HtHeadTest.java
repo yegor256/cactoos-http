@@ -24,6 +24,8 @@
 package org.cactoos.http;
 
 import java.io.IOException;
+import java.util.Random;
+import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
@@ -39,7 +41,13 @@ import org.junit.Test;
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @todo #1:30min This test does not cover all possible cases.
+ *  https://codecov.io/gh/yegor256/cactoos-http/pull/24/diff?src=pr&el=tree
+ *  #diff-c3JjL21haW4vamF2YS9vcmcvY2FjdG9vcy9odHRwL0h0U3RhdHVzLmphdmE=
+ *  Finish covering all branches missed for this implementation.
+ *  A refactor may be due as well.
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtHeadTest {
 
     @Test
@@ -54,6 +62,48 @@ public final class HtHeadTest {
                             "Content-type: text/plain",
                             "",
                             "Hello, dude!"
+                        )
+                    )
+                )
+            ).asString(),
+            Matchers.endsWith("text/plain")
+        );
+    }
+
+    @Test
+    public void emptyHeadOfHttpResponse() throws IOException {
+        MatcherAssert.assertThat(
+            new TextOf(
+                new HtHead(
+                    new InputOf(
+                        new JoinedText(
+                            "\r\n",
+                            "",
+                            "",
+                            "Body"
+                        )
+                    )
+                )
+            ).asString(),
+            Matchers.equalTo("")
+        );
+    }
+
+    @Test
+    public void largeText() throws IOException {
+        //@checkstyle MagicNumberCheck (1 lines)
+        final byte[] bytes = new byte[18000];
+        new Random().nextBytes(bytes);
+        MatcherAssert.assertThat(
+            new TextOf(
+                new HtHead(
+                    new InputOf(
+                        new JoinedText(
+                            "\r\n",
+                            "HTTP/1.1 200 OK",
+                            "Content-type: text/plain",
+                            "",
+                            new TextOf(new BytesOf(bytes)).asString()
                         )
                     )
                 )
