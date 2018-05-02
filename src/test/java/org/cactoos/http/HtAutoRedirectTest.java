@@ -24,8 +24,10 @@
 package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
+import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
+import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -39,6 +41,7 @@ import org.takes.tk.TkText;
  * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtAutoRedirectTest {
 
@@ -53,7 +56,11 @@ public final class HtAutoRedirectTest {
                             new JoinedText(
                                 "\r\n",
                                 "HTTP/1.1 301",
-                                String.format("Location: %s", home)
+                                new UncheckedText(
+                                    new FormattedText(
+                                        "Location: %s", home
+                                    )
+                                ).asString()
                             )
                         )
                     )

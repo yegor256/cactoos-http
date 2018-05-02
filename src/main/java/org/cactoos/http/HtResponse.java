@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.net.URI;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
+import org.cactoos.text.FormattedText;
+import org.cactoos.text.UncheckedText;
 
 /**
  * Response.
@@ -66,12 +68,14 @@ public final class HtResponse implements Input {
     public HtResponse(final URI uri) {
         this(
             new HtWire(uri),
-            String.format(
-                "GET %s HTTP/1.1\r\nHost:%s",
-                // @checkstyle AvoidInlineConditionalsCheck (1 line)
-                uri.getQuery() == null ? "/" : uri.getQuery(),
-                uri.getHost()
-            )
+            new UncheckedText(
+                new FormattedText(
+                    "GET %s HTTP/1.1\r\nHost:%s",
+                    // @checkstyle AvoidInlineConditionalsCheck (1 line)
+                    uri.getQuery() == null ? "/" : uri.getQuery(),
+                    uri.getHost()
+                )
+            ).asString()
         );
     }
 
