@@ -32,7 +32,6 @@ import org.cactoos.io.DeadInputStream;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
-import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -80,11 +79,9 @@ public final class HtWireTest {
                         new JoinedText(
                             "\r\n",
                             "GET / HTTP/1.1",
-                            new UncheckedText(
-                                new FormattedText(
-                                    "Host:%s",
-                                    home.getHost()
-                                )
+                            new FormattedText(
+                                "Host:%s",
+                                home.getHost()
                             ).asString()
                         ).asString()
                     )

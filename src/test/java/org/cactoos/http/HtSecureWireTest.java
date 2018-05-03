@@ -32,7 +32,6 @@ import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
-import org.cactoos.text.UncheckedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -134,11 +133,9 @@ public final class HtSecureWireTest {
                 new JoinedText(
                     delimiter,
                     "GET / HTTP/1.1",
-                    new UncheckedText(
-                        new FormattedText(
-                            "Host: %s",
-                            this.host
-                        )
+                    new FormattedText(
+                        "Host: %s",
+                        this.host
                     ).asString(),
                     "Connection: close",
                     delimiter
