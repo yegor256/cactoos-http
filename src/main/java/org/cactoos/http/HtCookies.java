@@ -23,11 +23,14 @@
  */
 package org.cactoos.http;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 import org.cactoos.Input;
 import org.cactoos.Text;
+import org.cactoos.iterable.LengthOf;
+import org.cactoos.list.Mapped;
+import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapEnvelope;
+import org.cactoos.map.MapOf;
 import org.cactoos.text.SplitText;
 
 /**
@@ -51,20 +54,23 @@ public final class HtCookies extends MapEnvelope<String, String> {
      * @param rsp Response
      */
     public HtCookies(final Input rsp) {
-        super(() -> {
-            final Map<String, String> result = new HashMap<>();
-            final String cookie = new HtHeaders(rsp).get("set-cookie");
-            for (final Text item : new SplitText(cookie, ";\\s+")) {
-                final String[] entry = item.asString().split("=", 2);
-                if (entry.length == 2) {
-                    result.put(entry[0], entry[1]);
-                } else {
-                    throw new IllegalArgumentException(
-                        "Incorrect HTTP Response cookie"
+        super(() -> new MapOf<>(
+            new Mapped<>(
+                entry -> {
+                    final Iterable<Text> parts = new SplitText(entry, "=");
+                    if (new LengthOf(parts).intValue() != 2) {
+                        throw new IllegalArgumentException(
+                            "Incorrect HTTP Response cookie"
+                        );
+                    }
+                    final Iterator<Text> iter = parts.iterator();
+                    return new MapEntry<>(
+                        iter.next().asString(),
+                        iter.next().asString()
                     );
-                }
-            }
-            return result;
-        });
+                },
+                new SplitText(new HtHeaders(rsp).get("set-cookie"), ";\\s+")
+            )
+        ));
     }
 }
