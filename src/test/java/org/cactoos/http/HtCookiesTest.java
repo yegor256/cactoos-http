@@ -26,7 +26,7 @@ package org.cactoos.http;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 /**
@@ -58,7 +58,7 @@ public final class HtCookiesTest {
                     )
                 )
             ).get("domain"),
-            Matchers.equalTo(".google.com")
+            new IsEqual<>(".google.com")
         );
     }
 
@@ -80,7 +80,7 @@ public final class HtCookiesTest {
                     )
                 )
             ).get("domain"),
-            Matchers.equalTo(".google.com")
+            new IsEqual<>(".google.com")
         );
     }
 }

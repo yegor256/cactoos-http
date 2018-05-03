@@ -26,7 +26,9 @@ package org.cactoos.http;
 import java.util.HashMap;
 import java.util.Map;
 import org.cactoos.Input;
+import org.cactoos.Text;
 import org.cactoos.map.MapEnvelope;
+import org.cactoos.text.SplitText;
 
 /**
  * Cookies.
@@ -34,11 +36,11 @@ import org.cactoos.map.MapEnvelope;
  * @author Vseslav Sekorin (vssekorin@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #1:30min The implementation of method stream() can handle only
+ * @todo #8:30min The implementation of method stream() can handle only
  *  one Set-Cookie in a response. Fix HtHeaders so that a single key
  *  may be mapped to one or more values (it is legal to receive more than one
  *  Set-Cookie in a response).
- * @todo #2:30min The implementation of method stream() will break on
+ * @todo #8:30min The implementation of method stream() will break on
  *  "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that
  *  these directives are handled correctly.
  */
@@ -52,8 +54,8 @@ public final class HtCookies extends MapEnvelope<String, String> {
         super(() -> {
             final Map<String, String> result = new HashMap<>();
             final String cookie = new HtHeaders(rsp).get("set-cookie");
-            for (final String item : cookie.split(";\\s+")) {
-                final String[] entry = item.split("=", 2);
+            for (final Text item : new SplitText(cookie, ";\\s+")) {
+                final String[] entry = item.asString().split("=", 2);
                 if (entry.length == 2) {
                     result.put(entry[0], entry[1]);
                 } else {
