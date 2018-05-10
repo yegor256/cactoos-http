@@ -51,11 +51,17 @@ public final class HtHead implements Input {
     private final Input response;
 
     /**
+     * Header end.
+     */
+    private final byte[] end;
+
+    /**
      * Ctor.
      * @param rsp Response
      */
     public HtHead(final Input rsp) {
         this.response = rsp;
+        this.end = new byte[]{'\r', '\n', '\r', '\n'};
     }
 
     @Override
@@ -69,16 +75,7 @@ public final class HtHead implements Input {
             if (len < 0) {
                 break;
             }
-            //@checkstyle MagicNumberCheck (10 lines)
-            int tail = 3;
-            while (tail < len) {
-                if (buf[tail] == '\n' && buf[tail - 1] == '\r'
-                    && buf[tail - 2] == '\n' && buf[tail - 3] == '\r') {
-                    tail = tail - 3;
-                    break;
-                }
-                ++tail;
-            }
+            final int tail = this.findEnd(buf, len);
             final byte[] temp = new byte[tail];
             System.arraycopy(buf, 0, temp, 0, tail);
             head = new SequenceInputStream(head, new InputStreamOf(temp));
@@ -87,5 +84,30 @@ public final class HtHead implements Input {
             }
         }
         return head;
+    }
+
+    /**
+     * Find header end.
+     * @param buf Buffer where to search
+     * @param len Size of the buffer
+     * @return End of the header
+     */
+    private int findEnd(final byte[] buf, final int len) {
+        int tail = this.end.length - 1;
+        while (tail < len) {
+            boolean found = true;
+            for (int num = 0; num < this.end.length; ++num) {
+                if (this.end[num] != buf[tail - this.end.length + 1 + num]) {
+                    found = false;
+                    break;
+                }
+            }
+            if (found) {
+                tail = tail - this.end.length + 1;
+                break;
+            }
+            ++tail;
+        }
+        return tail;
     }
 }
