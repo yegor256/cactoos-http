@@ -41,11 +41,6 @@ import org.junit.Test;
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @todo #1:30min This test does not cover all possible cases.
- *  https://codecov.io/gh/yegor256/cactoos-http/pull/24/diff?src=pr&el=tree
- *  #diff-c3JjL21haW4vamF2YS9vcmcvY2FjdG9vcy9odHRwL0h0U3RhdHVzLmphdmE=
- *  Finish covering all branches missed for this implementation.
- *  A refactor may be due as well.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtHeadTest {
