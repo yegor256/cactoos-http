@@ -25,10 +25,9 @@ package org.cactoos.http;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.cactoos.Input;
 import org.cactoos.Text;
+import org.cactoos.collection.Joined;
 import org.cactoos.iterable.LengthOf;
 import org.cactoos.list.Mapped;
 import org.cactoos.map.Grouped;
@@ -53,30 +52,32 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
      * @param rsp Response
      */
     public HtCookies(final Input rsp) {
-        super(() -> new Grouped<>(
-            new Mapped<>(
-                entry -> {
-                    final Iterable<Text> parts = new SplitText(entry, "=");
-                    if (new LengthOf(parts).intValue() != 2) {
-                        throw new IllegalArgumentException(
-                            "Incorrect HTTP Response cookie"
-                        );
-                    }
-                    final Iterator<Text> iter = parts.iterator();
-                    return new MapEntry<>(
-                        iter.next().asString(),
-                        iter.next().asString()
-                    );
-                },
+        super(() -> {
+            return new Grouped<>(
                 new Mapped<>(
-                    e -> new SplitText(e, ";\\s+"),
-                    new HtHeaders(rsp).get("set-cookie")
-                ).stream()
-                    .flatMap(e -> StreamSupport.stream(e.spliterator(), false))
-                    .collect(Collectors.toList())
-            ),
-            MapEntry::getKey,
-            MapEntry::getValue
-        ));
+                    entry -> {
+                        final Iterable<Text> parts = new SplitText(entry, "=");
+                        if (new LengthOf(parts).intValue() != 2) {
+                            throw new IllegalArgumentException(
+                                "Incorrect HTTP Response cookie"
+                            );
+                        }
+                        final Iterator<Text> iter = parts.iterator();
+                        return new MapEntry<>(
+                            iter.next().asString(),
+                            iter.next().asString()
+                        );
+                    },
+                    new Joined<>(
+                        new Mapped<>(
+                            e -> new SplitText(e, ";\\s+"),
+                            new HtHeaders(rsp).get("set-cookie")
+                        )
+                    )
+                ),
+                MapEntry::getKey,
+                MapEntry::getValue
+            );
+        });
     }
 }
