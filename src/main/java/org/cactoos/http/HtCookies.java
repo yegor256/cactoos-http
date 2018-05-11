@@ -52,32 +52,30 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
      * @param rsp Response
      */
     public HtCookies(final Input rsp) {
-        super(() -> {
-            return new Grouped<>(
-                new Mapped<>(
-                    entry -> {
-                        final Iterable<Text> parts = new SplitText(entry, "=");
-                        if (new LengthOf(parts).intValue() != 2) {
-                            throw new IllegalArgumentException(
-                                "Incorrect HTTP Response cookie"
-                            );
-                        }
-                        final Iterator<Text> iter = parts.iterator();
-                        return new MapEntry<>(
-                            iter.next().asString(),
-                            iter.next().asString()
+        super(() -> new Grouped<>(
+            new Mapped<>(
+                entry -> {
+                    final Iterable<Text> parts = new SplitText(entry, "=");
+                    if (new LengthOf(parts).intValue() != 2) {
+                        throw new IllegalArgumentException(
+                            "Incorrect HTTP Response cookie"
                         );
-                    },
-                    new Joined<>(
-                        new Mapped<>(
-                            e -> new SplitText(e, ";\\s+"),
-                            new HtHeaders(rsp).get("set-cookie")
-                        )
+                    }
+                    final Iterator<Text> iter = parts.iterator();
+                    return new MapEntry<>(
+                        iter.next().asString(),
+                        iter.next().asString()
+                    );
+                },
+                new Joined<>(
+                    new Mapped<>(
+                        e -> new SplitText(e, ";\\s+"),
+                        new HtHeaders(rsp).get("set-cookie")
                     )
-                ),
-                MapEntry::getKey,
-                MapEntry::getValue
-            );
-        });
+                )
+            ),
+            MapEntry::getKey,
+            MapEntry::getValue
+        ));
     }
 }
