@@ -21,35 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.cactoos.http.io;
 
 import java.util.Arrays;
-import org.cactoos.http.io.SkipInput.BoundedByteBuffer;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 /**
- * Test case for {@link SkipInput.BoundedByteBuffer}.
+ * Test case for {@link BoundedByteBuffer}.
  *
  * @author Victor Noel (victor.noel@crazydwarves.org)
  * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  */
-public final class SkipInputBoundedByteBufferTest {
+public final class BoundedByteBufferTest {
 
     @Test
     public void onlyKeepsTheLastNBytes() {
         final int limit = 4;
         final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
-        final int[] bytes = new int[] {1, 2, 3, 4, 5, 6, 7, 8 };
+        final int[] bytes = {1, 2, 3, 4, 5, 6, 7, 8 };
         Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             // @checkstyle MagicNumberCheck (1 line)
-            buffer.isEqualsTo(new byte[] {5, 6, 7, 8 }),
+            buffer.equalTo(new byte[] {5, 6, 7, 8 }),
             Matchers.is(true)
+        );
+    }
+
+    @Test
+    public void worksWithSmallerArray() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        final int[] bytes = {1, 2};
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            // @checkstyle MagicNumberCheck (1 line)
+            buffer.equalTo(new byte[] {1, 2}),
+            new IsEqual<>(true)
+        );
+    }
+
+    @Test
+    public void worksWithSmallerArrayFailsComparisonWithLarger() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        final int[] bytes = {1, 2};
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            // @checkstyle MagicNumberCheck (1 line)
+            buffer.equalTo(new byte[] {1, 2, 0}),
+            new IsEqual<>(false)
         );
     }
 }
