@@ -24,8 +24,10 @@
 
 package org.cactoos.http;
 
+import java.util.List;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
+import org.cactoos.list.ListOf;
 
 /**
  * Content-Type of HTTP response.
@@ -40,7 +42,7 @@ import org.cactoos.Scalar;
  * @version $Id$
  * @since 0.1
  */
-public final class HtContentType implements Scalar<String> {
+public final class HtContentType implements Scalar<List<String>> {
 
     /**
      * Response head part.
@@ -56,8 +58,11 @@ public final class HtContentType implements Scalar<String> {
     }
 
     @Override
-    public String value() {
+    public List<String> value() {
         return new HtHeaders(this.head)
-            .getOrDefault("content-type", "application/octet-stream");
+            .getOrDefault(
+                "content-type",
+                new ListOf<>("application/octet-stream")
+            );
     }
 }

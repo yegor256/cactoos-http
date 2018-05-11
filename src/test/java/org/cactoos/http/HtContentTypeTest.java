@@ -24,9 +24,10 @@
 package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
+import org.cactoos.list.ListOf;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 /**
@@ -56,7 +57,7 @@ public final class HtContentTypeTest {
                     )
                 )
             ).value(),
-            Matchers.equalTo("text/plain")
+            new IsEqual<>(new ListOf<>("text/plain"))
         );
     }
 
@@ -75,7 +76,7 @@ public final class HtContentTypeTest {
                     )
                 )
             ).value(),
-            Matchers.equalTo("application/octet-stream")
+            new IsEqual<>(new ListOf<>("application/octet-stream"))
         );
     }
 }

@@ -25,9 +25,12 @@
 package org.cactoos.http;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.cactoos.Input;
+import org.cactoos.list.Joined;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEnvelope;
 import org.cactoos.text.TextOf;
 
@@ -38,25 +41,27 @@ import org.cactoos.text.TextOf;
  * @version $Id$
  * @since 0.1
  */
-public final class HtHeaders extends MapEnvelope<String, String> {
+public final class HtHeaders extends MapEnvelope<String, List<String>> {
 
     /**
      * Ctor.
      * @param head Response head part
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public HtHeaders(final Input head) {
         super(() -> {
             final String[] lines = new TextOf(head).asString().split("\r\n");
-            final Map<String, String> map = new HashMap<>(lines.length - 1);
+            final Map<String, List<String>> map =
+                new HashMap<>(lines.length - 1);
             for (int idx = 1; idx < lines.length; ++idx) {
                 final String[] parts = lines[idx].split(":", 2);
-                map.put(
+                map.merge(
                     parts[0].trim().toLowerCase(Locale.ENGLISH),
-                    parts[1].trim()
+                    new ListOf<>(parts[1].trim()),
+                    (first, second) -> new Joined<String>(first, second)
                 );
             }
             return map;
         });
     }
-
 }

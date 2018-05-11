@@ -24,6 +24,8 @@
 package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
+import org.cactoos.list.ListOf;
+import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
@@ -58,7 +60,35 @@ public final class HtCookiesTest {
                     )
                 )
             ).get("domain"),
-            new IsEqual<>(".google.com")
+            new IsEqual<>(new ListOf<>(".google.com"))
+        );
+    }
+
+    @Test
+    public void takesMultipleCookies() {
+        final String first = "first";
+        final String second = "second";
+        final HtHead head = new HtHead(
+            new InputOf(
+                new FormattedText(
+                    new JoinedText(
+                        "\r\n",
+                        "HTTP/1.1 200 OK",
+                        "Set-Cookie: path=/; session1=%s",
+                        "Set-Cookie: path=/; session2=%s",
+                        "",
+                        "Hello!"
+                    ), first, second
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            new HtCookies(head).get("session1"),
+            new IsEqual<>(new ListOf<>(first))
+        );
+        MatcherAssert.assertThat(
+            new HtCookies(head).get("session2"),
+            new IsEqual<>(new ListOf<>(second))
         );
     }
 
