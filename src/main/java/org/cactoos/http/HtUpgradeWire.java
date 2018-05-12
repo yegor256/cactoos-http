@@ -34,7 +34,8 @@ import org.cactoos.Input;
  * @todo #23:30 min This implementation of class HtUpgradeWire is just
  *  forwarding origin wire behavior. Finish implementation so a HtUpgradeWire
  *  can be upgraded to a HtSecureWire on 101 - Swithicng Protocols status code,
- *  switching the wire to https protocol.
+ *  switching the wire to https protocol. The test HtUpgradeWireTest#testUpgrade
+ *  must be removed after the implementation of this class.
  */
 public final class HtUpgradeWire implements Wire {
 
@@ -47,7 +48,7 @@ public final class HtUpgradeWire implements Wire {
      * Ctor.
      * @param origin Origin wire.
      */
-    HtUpgradeWire(final Wire origin) {
+    public HtUpgradeWire(final Wire origin) {
         this.origin = origin;
     }
 

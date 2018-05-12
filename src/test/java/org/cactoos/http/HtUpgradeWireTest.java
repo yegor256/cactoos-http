@@ -26,7 +26,9 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Input;
+import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,6 +45,7 @@ import org.takes.tk.TkText;
  * @author Paulo Lobo (pauloeduardolobo@gmail.com)
  * @version $Id$
  * @since 0.1
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtUpgradeWireTest {
 
@@ -66,6 +69,31 @@ public final class HtUpgradeWireTest {
                     home.getHost()
                 ).wire(),
                 new IsInstanceOf(HtSecureWire.class)
+            )
+        );
+    }
+
+    /**
+     * Test of {@link HtUpgradeWire} just to suit coverage standards.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void testHtUpgrade() throws Exception {
+        new FtRemote(new TkText("Upgraded wire")).exec(
+            home -> MatcherAssert.assertThat(
+                "Upgrade wire not found",
+                new TextOf(
+                    new HtResponse(
+                        new HtUpgradeWire(
+                            new HtWire(
+                                home.getHost(),
+                                home.getPort()
+                            )
+                        ),
+                        home.getHost()
+                    )
+                ).asString(),
+                Matchers.containsString("HTTP/1.1 200")
             )
         );
     }
