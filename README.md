@@ -70,14 +70,14 @@ Input head = new StickyInput(
     new HtResponse(
       new HtWire("www.example.com"),
       new JoinedText(
-        "\n\r"
+        "\n\r",
         "PUT / HTTP/1.1",
         "Host: www.example.com"
-      )
+      ).asString()
     )
   )
 );
-int status = HtStatus(head).intValue();
+int status = new HtStatus(head).intValue();
 Map<String, String> headers = new HtHeaders(head);
 ```
 
