@@ -16,6 +16,7 @@ architect:
 merge:
   script: |
     pdd --file=/dev/null
+    mvn javadoc:javadoc
     mvn clean install -Pqulice --errors --settings ../settings.xml
     mvn clean site -Psite --errors --settings ../settings.xml
 deploy:
