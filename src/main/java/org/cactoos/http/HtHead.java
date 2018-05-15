@@ -51,17 +51,11 @@ public final class HtHead implements Input {
     private final Input response;
 
     /**
-     * Header end.
-     */
-    private final byte[] end;
-
-    /**
      * Ctor.
      * @param rsp Response
      */
     public HtHead(final Input rsp) {
         this.response = rsp;
-        this.end = new byte[]{'\r', '\n', '\r', '\n'};
     }
 
     @Override
@@ -75,7 +69,7 @@ public final class HtHead implements Input {
             if (len < 0) {
                 break;
             }
-            final int tail = this.findEnd(buf, len);
+            final int tail = HtHead.findEnd(buf, len);
             final byte[] temp = new byte[tail];
             System.arraycopy(buf, 0, temp, 0, tail);
             head = new SequenceInputStream(head, new InputStreamOf(temp));
@@ -92,18 +86,19 @@ public final class HtHead implements Input {
      * @param len Size of the buffer
      * @return End of the header
      */
-    private int findEnd(final byte[] buf, final int len) {
-        int tail = this.end.length - 1;
+    private static int findEnd(final byte[] buf, final int len) {
+        final byte[] end = {'\r', '\n', '\r', '\n'};
+        int tail = end.length - 1;
         while (tail < len) {
             boolean found = true;
-            for (int num = 0; num < this.end.length; ++num) {
-                if (this.end[num] != buf[tail - this.end.length + 1 + num]) {
+            for (int num = 0; num < end.length; ++num) {
+                if (end[num] != buf[tail - end.length + 1 + num]) {
                     found = false;
                     break;
                 }
             }
             if (found) {
-                tail = tail - this.end.length + 1;
+                tail = tail - end.length + 1;
                 break;
             }
             ++tail;
