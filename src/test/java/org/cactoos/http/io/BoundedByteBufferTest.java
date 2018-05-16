@@ -25,7 +25,6 @@ package org.cactoos.http.io;
 
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
