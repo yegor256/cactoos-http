@@ -24,6 +24,10 @@
 package org.cactoos.http.io;
 
 import java.util.Arrays;
+import org.cactoos.Bytes;
+import org.cactoos.io.BytesOf;
+import org.cactoos.scalar.Equality;
+import org.cactoos.scalar.UncheckedScalar;
 
 /**
  * A very simple circular buffer of bytes.
@@ -85,14 +89,22 @@ public final class BoundedByteBuffer {
      *  the {@code bytes}.
      */
     public boolean equalTo(final byte[] bytes) {
-        final boolean result;
+        final int result;
         if (this.current < this.limit) {
-            result = Arrays.equals(
-                Arrays.copyOf(this.internal, this.current), bytes
-            );
+            result = new UncheckedScalar<>(
+                new Equality<Bytes>(
+                    new BytesOf(Arrays.copyOf(this.internal, this.current)),
+                    new BytesOf(bytes)
+                )
+            ).value();
         } else {
-            result = Arrays.equals(this.internal, bytes);
+            result = new UncheckedScalar<>(
+                new Equality<Bytes>(
+                    new BytesOf(this.internal),
+                    new BytesOf(bytes)
+                )
+            ).value();
         }
-        return result;
+        return result == 0;
     }
 }

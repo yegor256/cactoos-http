@@ -48,7 +48,7 @@ public final class BoundedByteBufferTest {
         MatcherAssert.assertThat(
             // @checkstyle MagicNumberCheck (1 line)
             buffer.equalTo(new byte[] {5, 6, 7, 8 }),
-            Matchers.is(true)
+            new IsEqual<>(true)
         );
     }
 
