@@ -25,11 +25,19 @@
 package org.cactoos.http;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.cactoos.Input;
+import org.cactoos.Text;
+import org.cactoos.iterable.Skipped;
+import org.cactoos.list.Joined;
+import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEnvelope;
+import org.cactoos.text.LowerText;
+import org.cactoos.text.SplitText;
 import org.cactoos.text.TextOf;
+import org.cactoos.text.TrimmedText;
 
 /**
  * Headers of HTTP response.
@@ -38,25 +46,31 @@ import org.cactoos.text.TextOf;
  * @version $Id$
  * @since 0.1
  */
-public final class HtHeaders extends MapEnvelope<String, String> {
+public final class HtHeaders extends MapEnvelope<String, List<String>> {
 
     /**
      * Ctor.
      * @param head Response head part
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public HtHeaders(final Input head) {
         super(() -> {
-            final String[] lines = new TextOf(head).asString().split("\r\n");
-            final Map<String, String> map = new HashMap<>(lines.length - 1);
-            for (int idx = 1; idx < lines.length; ++idx) {
-                final String[] parts = lines[idx].split(":", 2);
-                map.put(
-                    parts[0].trim().toLowerCase(Locale.ENGLISH),
-                    parts[1].trim()
+            final Map<String, List<String>> map = new HashMap<>();
+            for (final Text line : new Skipped<>(
+                1, new SplitText(new TextOf(head), "\r\n")
+            )) {
+                final String[] parts = line.asString().split(":", 2);
+                map.merge(
+                    new LowerText(
+                        new TrimmedText(new TextOf(parts[0])), Locale.ENGLISH
+                    ).asString(),
+                    new ListOf<>(
+                        new TrimmedText(new TextOf(parts[1])).asString()
+                    ),
+                    (first, second) -> new Joined<String>(first, second)
                 );
             }
             return map;
         });
     }
-
 }

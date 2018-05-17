@@ -133,6 +133,20 @@ SOFTWARE.
             </systemPropertyVariables>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <failOnError>true</failOnError>
+            <tags>
+              <tag>
+                <name>todo</name>
+              </tag>
+              <tag>
+                <name>checkstyle</name>
+              </tag>
+            </tags>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
