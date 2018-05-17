@@ -26,6 +26,7 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Input;
+import org.cactoos.Scalar;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -67,7 +68,7 @@ public final class HtUpgradeWireTest {
                         )
                     ),
                     home.getHost()
-                ).wire(),
+                ).value(),
                 new IsInstanceOf(HtSecureWire.class)
             )
         );
@@ -101,12 +102,12 @@ public final class HtUpgradeWireTest {
     /**
      * Wrap for response which allows access to its wire.
      */
-    private class ResponseWrap implements Input {
+    private class ResponseWrap implements Input, Scalar<Wire> {
 
         /**
          * Origin response.
          */
-        private final HtResponse origin;
+        private final HtResponse response;
         /**
          * Original wire.
          */
@@ -119,19 +120,16 @@ public final class HtUpgradeWireTest {
          */
         ResponseWrap(final Wire wire, final String req) {
             this.htwire = wire;
-            this.origin = new HtResponse(wire, req);
+            this.response = new HtResponse(wire, req);
         }
 
         @Override
         public InputStream stream() throws IOException {
-            return this.origin.stream();
+            return this.response.stream();
         }
 
-        /**
-         * Returns the wire of this request.
-         * @return Wire.
-         */
-        public Wire wire() {
+        @Override
+        public Wire value() {
             return this.htwire;
         }
     }
