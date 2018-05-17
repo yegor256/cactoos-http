@@ -30,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import org.cactoos.Input;
 import org.cactoos.Text;
-import org.cactoos.iterable.Skipped;
 import org.cactoos.list.Joined;
 import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEnvelope;
@@ -56,9 +55,10 @@ public final class HtHeaders extends MapEnvelope<String, List<String>> {
     public HtHeaders(final Input head) {
         super(() -> {
             final Map<String, List<String>> map = new HashMap<>();
-            for (final Text line : new Skipped<>(
-                1, new SplitText(new TextOf(head), "\r\n")
-            )) {
+            final ListOf<Text> texts = new ListOf<>(
+                new SplitText(new TextOf(head), "\r\n")
+            );
+            for (final Text line : texts.subList(1, texts.size())) {
                 final String[] parts = line.asString().split(":", 2);
                 map.merge(
                     new LowerText(
