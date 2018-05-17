@@ -24,13 +24,15 @@
 package org.cactoos.http;
 
 import java.util.Iterator;
+import java.util.List;
 import org.cactoos.Input;
 import org.cactoos.Text;
+import org.cactoos.collection.Joined;
 import org.cactoos.iterable.LengthOf;
 import org.cactoos.list.Mapped;
+import org.cactoos.map.Grouped;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapEnvelope;
-import org.cactoos.map.MapOf;
 import org.cactoos.text.SplitText;
 
 /**
@@ -39,22 +41,18 @@ import org.cactoos.text.SplitText;
  * @author Vseslav Sekorin (vssekorin@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #8:30min The implementation of method stream() can handle only
- *  one Set-Cookie in a response. Fix HtHeaders so that a single key
- *  may be mapped to one or more values (it is legal to receive more than one
- *  Set-Cookie in a response).
  * @todo #8:30min The implementation of method stream() will break on
  *  "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that
  *  these directives are handled correctly.
  */
-public final class HtCookies extends MapEnvelope<String, String> {
+public final class HtCookies extends MapEnvelope<String, List<String>> {
 
     /**
      * Ctor.
      * @param rsp Response
      */
     public HtCookies(final Input rsp) {
-        super(() -> new MapOf<>(
+        super(() -> new Grouped<>(
             new Mapped<>(
                 entry -> {
                     final Iterable<Text> parts = new SplitText(entry, "=");
@@ -69,8 +67,15 @@ public final class HtCookies extends MapEnvelope<String, String> {
                         iter.next().asString()
                     );
                 },
-                new SplitText(new HtHeaders(rsp).get("set-cookie"), ";\\s+")
-            )
+                new Joined<>(
+                    new Mapped<>(
+                        e -> new SplitText(e, ";\\s+"),
+                        new HtHeaders(rsp).get("set-cookie")
+                    )
+                )
+            ),
+            MapEntry::getKey,
+            MapEntry::getValue
         ));
     }
 }

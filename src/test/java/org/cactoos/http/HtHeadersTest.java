@@ -25,6 +25,7 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import org.cactoos.io.InputOf;
+import org.cactoos.list.ListOf;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -60,7 +61,7 @@ public final class HtHeadersTest {
             ),
             Matchers.hasEntry(
                 Matchers.equalTo("content-type"),
-                Matchers.equalTo("text/plain")
+                Matchers.equalTo(new ListOf<>("text/plain"))
             )
         );
     }

@@ -26,6 +26,7 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import org.cactoos.Input;
 import org.cactoos.io.StickyInput;
@@ -60,11 +61,11 @@ public final class HtAutoRedirect implements Input {
         final int status = new HtStatus(this.response).intValue();
         // @checkstyle MagicNumber (1 line)
         if (status >= 300 && status <= 308) {
-            final Map<String, String> headers = new HtHeaders(
+            final Map<String, List<String>> headers = new HtHeaders(
                 new HtHead(this.response)
             );
             if (headers.containsKey(header)) {
-                final URL url = new URL(headers.get(header));
+                final URL url = new URL(headers.get(header).get(0));
                 stream = new HtResponse(
                     new IoCheckedScalar<>(url::toURI).value()
                 ).stream();
