@@ -161,6 +161,10 @@ SOFTWARE.
             <version>0.17.3</version>
             <configuration>
               <excludes combine.children="append">
+                <!--
+                  @todo #49:30min we should re-enable findbugs and fix all problems it detects.
+                   This mainly concerns for now reliance on default encoding in HtStatus.
+                -->
                 <exclude>findbugs:.*</exclude>
               </excludes>
             </configuration>
