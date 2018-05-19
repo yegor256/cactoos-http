@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -32,8 +32,6 @@ import org.cactoos.Input;
 /**
  * {@link Input} that skips until it find some defined bytes.
  *
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
  * @since 0.1
  */
 public final class SkipInput implements Input {

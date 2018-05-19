@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -32,8 +32,6 @@ import org.cactoos.func.TimedFunc;
 /**
  * {@link Wire} that will terminate the connection if it's taking too long.
  *
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
  * @since 0.1
  */
 public final class HtTimedWire implements Wire {

@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -35,8 +35,6 @@ import org.junit.Test;
 /**
  * Test case for {@link SkipInput}.
  *
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  */

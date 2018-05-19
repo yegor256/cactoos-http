@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -38,8 +38,6 @@ import org.cactoos.list.ListOf;
  * a missing <code>content-type</code> header is interpreted as
  * <code>application/octet-stream</code></p>
  *
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
  * @since 0.1
  */
 public final class HtContentType implements Scalar<List<String>> {

@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -32,10 +32,7 @@ import org.cactoos.io.BytesOf;
 
 /**
  * Head of HTTP response.
- *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
+
  * @since 0.1
  */
 public final class HtBody implements Input {

@@ -158,10 +158,9 @@ SOFTWARE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.17.1</version>
+            <version>0.17.3</version>
             <configuration>
               <excludes combine.children="append">
-                <exclude>checkstyle:/src/site/resources/.*</exclude>
                 <exclude>findbugs:.*</exclude>
               </excludes>
             </configuration>
