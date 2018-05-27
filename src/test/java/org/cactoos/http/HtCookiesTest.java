@@ -28,16 +28,18 @@ import org.cactoos.list.ListOf;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 /**
  * Test case for {@link HtCookies}.
- *
  * @author Vseslav Sekorin (vssekorin@gmail.com)
  * @version $Id$
- * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @since 0.1
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtCookiesTest {
@@ -59,8 +61,11 @@ public final class HtCookiesTest {
                         )
                     )
                 )
-            ).get("domain"),
-            new IsEqual<>(new ListOf<>(".google.com"))
+            ),
+            new IsMapContaining<>(
+                new IsEqual<>("domain"),
+                new IsEqual<>(new ListOf<>(".google.com"))
+            )
         );
     }
 
@@ -83,12 +88,17 @@ public final class HtCookiesTest {
             )
         );
         MatcherAssert.assertThat(
-            new HtCookies(head).get("session1"),
-            new IsEqual<>(new ListOf<>(first))
-        );
-        MatcherAssert.assertThat(
-            new HtCookies(head).get("session2"),
-            new IsEqual<>(new ListOf<>(second))
+            new HtCookies(head),
+            Matchers.allOf(
+                new IsMapContaining<>(
+                    new IsEqual<>("session1"),
+                    new IsEqual<>(new ListOf<>(first))
+                ),
+                new IsMapContaining<>(
+                    new IsEqual<>("session2"),
+                    new IsEqual<>(new ListOf<>(second))
+                )
+            )
         );
     }
 
@@ -109,8 +119,11 @@ public final class HtCookiesTest {
                         )
                     )
                 )
-            ).get("domain"),
-            new IsEqual<>(".google.com")
+            ),
+            new IsMapContaining<>(
+                new IsEqual<>("domain"),
+                new IsEqual<>(".google.com")
+            )
         );
     }
 }

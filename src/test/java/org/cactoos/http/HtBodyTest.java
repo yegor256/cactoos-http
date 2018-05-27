@@ -23,12 +23,11 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import org.cactoos.io.InputOf;
+import org.cactoos.matchers.TextHasString;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -43,7 +42,7 @@ import org.junit.Test;
 public final class HtBodyTest {
 
     @Test
-    public void takesBodyOutOfHttpResponse() throws IOException {
+    public void takesBodyOutOfHttpResponse() {
         MatcherAssert.assertThat(
             new TextOf(
                 new HtBody(
@@ -58,8 +57,8 @@ public final class HtBodyTest {
                         )
                     )
                 )
-            ).asString(),
-            Matchers.equalTo("Hello, dude!\r\nHow are you?")
+            ),
+            new TextHasString("Hello, dude!\r\nHow are you?")
         );
     }
 

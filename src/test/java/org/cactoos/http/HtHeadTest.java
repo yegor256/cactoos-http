@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Random;
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
+import org.cactoos.matchers.TextHasString;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
@@ -79,8 +80,8 @@ public final class HtHeadTest {
                         )
                     )
                 )
-            ).asString(),
-            Matchers.equalTo("")
+            ),
+            new TextHasString("")
         );
     }
 

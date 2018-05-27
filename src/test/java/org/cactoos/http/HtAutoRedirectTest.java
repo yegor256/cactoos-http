@@ -24,6 +24,7 @@
 package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
+import org.cactoos.matchers.TextHasString;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
@@ -40,6 +41,7 @@ import org.takes.tk.TkText;
  * @version $Id$
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtAutoRedirectTest {
 
@@ -77,8 +79,8 @@ public final class HtAutoRedirectTest {
                         new TextOf(response)
                     )
                 )
-            ).asString(),
-            Matchers.containsString(response)
+            ),
+            new TextHasString(response)
         );
     }
 
@@ -93,8 +95,8 @@ public final class HtAutoRedirectTest {
                         new TextOf(response)
                     )
                 )
-            ).asString(),
-            Matchers.containsString(response)
+            ),
+            new TextHasString(response)
         );
     }
 }

@@ -26,10 +26,10 @@ package org.cactoos.http.io;
 
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
+import org.cactoos.matchers.TextHasString;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -59,8 +59,8 @@ public final class SkipInputTest {
                     ),
                     new BytesOf(delimiter)
                 )
-            ).asString(),
-            Matchers.equalTo(suffix)
+            ),
+            new TextHasString(suffix)
         );
     }
 
@@ -72,8 +72,8 @@ public final class SkipInputTest {
                     new InputOf("Hello, dude! How are you?"),
                     new BytesOf("\n")
                 )
-            ).asString(),
-            Matchers.equalTo("")
+            ),
+            new TextHasString("")
         );
     }
 
@@ -92,8 +92,8 @@ public final class SkipInputTest {
                     ),
                     new BytesOf(delimiter)
                 )
-            ).asString(),
-            Matchers.equalTo("")
+            ),
+            new TextHasString("")
         );
     }
 }

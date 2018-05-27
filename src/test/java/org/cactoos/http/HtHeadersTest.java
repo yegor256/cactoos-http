@@ -28,7 +28,8 @@ import org.cactoos.io.InputOf;
 import org.cactoos.list.ListOf;
 import org.cactoos.text.JoinedText;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.hamcrest.collection.IsMapContaining;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 /**
@@ -59,9 +60,9 @@ public final class HtHeadersTest {
                     )
                 )
             ),
-            Matchers.hasEntry(
-                Matchers.equalTo("content-type"),
-                Matchers.equalTo(new ListOf<>("text/plain"))
+            new IsMapContaining<>(
+                new IsEqual<>("content-type"),
+                new IsEqual<>(new ListOf<>("text/plain"))
             )
         );
     }
