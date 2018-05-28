@@ -36,9 +36,9 @@ import org.cactoos.Input;
  *  status code). So, this feature would be under the responsibility of a
  *  response-like object. It must be implemented someway like this:
  *  new HtUpgradedResponse(
- *  new IterableOf<>(
- *  new MapEntry<Func<String, Boolean>, Func<URI, Wire>>(
- *  upgrade -> upgrade.contains("TLS"),
+ *  new IterableOf&lt;&gt;(
+ *  new MapEntry&lt;Func&lt;String, Boolean&gt;, Func&lt;URI, Wire&gt;&gt;(
+ *  upgrade -&gt; upgrade.contains("TLS"),
  *  HtSecureWire::new
  *  )
  *  )
