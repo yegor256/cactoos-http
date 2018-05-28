@@ -28,17 +28,17 @@ import java.io.IOException;
 import org.cactoos.Input;
 
 /**
- * Wire.
+ * A physical connection between two HTTP endpoints.
  *
  * @since 0.1
  */
 public interface Wire {
 
     /**
-     * Send and read result.
-     * @param input The source of data
-     * @return The stream to read from
-     * @throws IOException If fails
+     * Send an input and return the response.
+     * @param input The data to send
+     * @return The remote service's response
+     * @throws IOException If an I/O error occurs
      */
     Input send(Input input) throws IOException;
 
