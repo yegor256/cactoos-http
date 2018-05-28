@@ -33,15 +33,15 @@ import org.cactoos.Input;
  * @since 0.1
  * @todo #23:30 min As discovered in #53, the upgrade is not a job of the
  *  wire because it need reading the contents of the response (in this case,
- *  stvatus code). So, this feature would be under the responsibility of a
+ *  status code). So, this feature would be under the responsibility of a
  *  response-like object. It must be implemented someway like this:
  *  new HtUpgradedResponse(
- *     new IterableOf<>(
- *         new MapEntry<Func<String, Boolean>, Func<URI, Wire>>(
- *             upgrade -> upgrade.contains("TLS"),
- *             HtSecureWire::new
- *         )
- *     )
+ *  new IterableOf<>(
+ *  new MapEntry<Func<String, Boolean>, Func<URI, Wire>>(
+ *  upgrade -> upgrade.contains("TLS"),
+ *  HtSecureWire::new
+ *  )
+ *  )
  *  )
  *  The test HtUpgradeWireTest#testHtUpgrade must be removed after the
  *  implementation of this class.
