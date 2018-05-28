@@ -31,11 +31,20 @@ import org.cactoos.Input;
  * @author Paulo Lobo (pauloeduardolobo@gmail.com)
  * @version $Id$
  * @since 0.1
- * @todo #23:30 min This implementation of class HtUpgradeWire is just
- *  forwarding origin wire behavior. Finish implementation so a HtUpgradeWire
- *  can be upgraded to a HtSecureWire on 101 - Swithicng Protocols status code,
- *  switching the wire to https protocol. The test HtUpgradeWireTest#testUpgrade
- *  must be removed after the implementation of this class.
+ * @todo #23:30 min As discovered in #53, the upgrade is not a job of the
+ *  wire because it need reading the contents of the response (in this case,
+ *  stvatus code). So, this feature would be under the responsibility of a
+ *  response-like object. It must be implemented someway like this:
+ *  new HtUpgradedResponse(
+ *     new IterableOf<>(
+ *         new MapEntry<Func<String, Boolean>, Func<URI, Wire>>(
+ *             upgrade -> upgrade.contains("TLS"),
+ *             HtSecureWire::new
+ *         )
+ *     )
+ *  )
+ *  The test HtUpgradeWireTest#testHtUpgrade must be removed after the
+ *  implementation of this class.
  */
 public final class HtUpgradeWire implements Wire {
 
