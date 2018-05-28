@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -43,8 +43,6 @@ import org.takes.tk.TkText;
 /**
  * Test for {@link HtUpgradeWire}. Must test if the {@link Wire} returned
  * after an 101 status code is an {@link HtSecureWire}.
- * @author Paulo Lobo (pauloeduardolobo@gmail.com)
- * @version $Id$
  * @since 0.1
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */

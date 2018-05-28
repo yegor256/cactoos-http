@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -28,8 +28,6 @@ import org.cactoos.Input;
 
 /**
  * Wire that is capable of upgrading itself upon an 101 status code.
- * @author Paulo Lobo (pauloeduardolobo@gmail.com)
- * @version $Id$
  * @since 0.1
  * @todo #23:30 min As discovered in #53, the upgrade is not a job of the
  *  wire because it need reading the contents of the response (in this case,
