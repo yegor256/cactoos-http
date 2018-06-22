@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -35,8 +35,6 @@ import org.cactoos.scalar.IoCheckedScalar;
 /**
  * Automatically redirects request if response status code is 30x.
  *
- * @author Vedran Vatavuk (123vgv@gmail.com)
- * @version $Id$
  * @since 0.1
  */
 public final class HtAutoRedirect implements Input {

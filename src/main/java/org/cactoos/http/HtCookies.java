@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -38,8 +38,6 @@ import org.cactoos.text.SplitText;
 /**
  * Cookies.
  *
- * @author Vseslav Sekorin (vssekorin@gmail.com)
- * @version $Id$
  * @since 0.1
  * @todo #8:30min The implementation of method stream() will break on
  *  "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that

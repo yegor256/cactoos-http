@@ -88,6 +88,12 @@ SOFTWARE.
       <version>0.31</version>
     </dependency>
     <dependency>
+      <groupId>org.llorllale</groupId>
+      <artifactId>cactoos-matchers</artifactId>
+      <version>0.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.takes</groupId>
       <artifactId>takes</artifactId>
       <version>1.1</version>
@@ -158,10 +164,13 @@ SOFTWARE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.17.1</version>
+            <version>0.17.3</version>
             <configuration>
               <excludes combine.children="append">
-                <exclude>checkstyle:/src/site/resources/.*</exclude>
+                <!--
+                  @todo #49:30min we should re-enable findbugs and fix all problems it detects.
+                   This mainly concerns for now reliance on default encoding in HtStatus.
+                -->
                 <exclude>findbugs:.*</exclude>
               </excludes>
             </configuration>

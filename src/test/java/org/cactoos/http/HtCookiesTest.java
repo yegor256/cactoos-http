@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -35,8 +35,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link HtCookies}.
- * @author Vseslav Sekorin (vssekorin@gmail.com)
- * @version $Id$
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @since 0.1

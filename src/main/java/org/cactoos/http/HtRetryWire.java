@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -35,8 +35,6 @@ import org.cactoos.func.RetryFunc;
  *
  * <p>There is no thread-safety guarantee.
  *
- * @author Victor Noel (victor.noel@crazydwarves.org)
- * @version $Id$
  * @since 0.1
  */
 public final class HtRetryWire implements Wire {

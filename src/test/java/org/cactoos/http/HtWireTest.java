@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Yegor Bugayenko
@@ -41,8 +41,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtWire}.
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
- * @version $Id$
+ *
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

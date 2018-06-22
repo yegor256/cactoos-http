@@ -21,25 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.cactoos.http;
 
 import java.io.IOException;
 import org.cactoos.Input;
 
 /**
- * A physical connection between two HTTP endpoints.
- *
+ * Wire that is capable of upgrading itself upon an 101 status code.
  * @since 0.1
+ * @todo #23:30 min As discovered in #53, the upgrade is not a job of the
+ *  wire because it need reading the contents of the response (in this case,
+ *  status code). So, this feature would be under the responsibility of a
+ *  response-like object. It must be implemented someway like this:
+ *  new HtUpgradedResponse(
+ *  new IterableOf&lt;&gt;(
+ *  new MapEntry&lt;Func&lt;String, Boolean&gt;, Func&lt;URI, Wire&gt;&gt;(
+ *  upgrade -&gt; upgrade.contains("TLS"),
+ *  HtSecureWire::new
+ *  )
+ *  )
+ *  )
+ *  The test HtUpgradeWireTest#testHtUpgrade must be removed after the
+ *  implementation of this class.
  */
-public interface Wire {
+public final class HtUpgradeWire implements Wire {
 
     /**
-     * Send an input and return the response.
-     * @param input The data to send
-     * @return The remote service's response
-     * @throws IOException If an I/O error occurs
+     * Origin wire.
      */
-    Input send(Input input) throws IOException;
+    private final Wire origin;
 
+    /**
+     * Ctor.
+     * @param origin Origin wire.
+     */
+    public HtUpgradeWire(final Wire origin) {
+        this.origin = origin;
+    }
+
+    @Override
+    public Input send(final Input input) throws IOException {
+        return this.origin.send(input);
+    }
 }
