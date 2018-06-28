@@ -43,6 +43,10 @@ import org.cactoos.scalar.Ternary;
  * Wire.
  *
  * @since 0.1
+ * @todo #62:30min HtWire should not close the socket opened to the remote
+ *  service (this includes not closing associated input and output streams).
+ *  It should instead return an `Input` with the socket's inputstream "unread".
+ *  Refactor accordingly.
  */
 public final class HtWire implements Wire {
 

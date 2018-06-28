@@ -36,6 +36,10 @@ import org.cactoos.text.UncheckedText;
  * Response.
  *
  * @since 0.1
+ * @todo #62:30min We need decorators for HtResponse that will automatically
+ *  close the inputstream (therefore also closing the network socket) based
+ *  on criteria like the Content-Length header, the Transfer-Encoding header
+ *  (when service returns the payload in chunks), etc.
  */
 public final class HtResponse implements Input {
 
