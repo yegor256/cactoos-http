@@ -26,6 +26,7 @@ package org.cactoos.http;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import org.cactoos.Input;
 import org.cactoos.scalar.NumberEnvelope;
 
@@ -49,7 +50,7 @@ public final class HtStatus extends NumberEnvelope {
         super(() -> Double.parseDouble(
             // @checkstyle MagicNumber (3 line)
             new BufferedReader(
-                new InputStreamReader(head.stream())
+                new InputStreamReader(head.stream(), StandardCharsets.UTF_8)
             ).readLine().split(" ", 3)[1]
         ));
     }
