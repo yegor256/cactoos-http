@@ -70,19 +70,6 @@ public final class HtKeepAliveResponse implements Input {
      * @param mtimeout The timeout for the connection usage in milliseconds
      * @param rmax The maximum quantity of the requests within the connection
      *  timeout
-     */
-    public HtKeepAliveResponse(
-        final String uri, final long mtimeout, final int rmax
-    ) {
-        this(URI.create(uri), mtimeout, rmax);
-    }
-
-    /**
-     * Ctor.
-     * @param uri Target URI
-     * @param mtimeout The timeout for the connection usage in milliseconds
-     * @param rmax The maximum quantity of the requests within the connection
-     *  timeout
      * @todo #20:30min Replace the HtWire by HtKeepAliveWire which should
      *  support the <em>Keep-Alive</em> header. It should has at least 1 `ctor`
      *  with 3 parameters:
@@ -103,9 +90,7 @@ public final class HtKeepAliveResponse implements Input {
                     HtKeepAliveResponse.TEMPLATE,
                     new UncheckedScalar<>(
                         new Ternary<>(
-                            () -> uri.getQuery() == null,
-                            () -> "/",
-                            uri::getQuery
+                            uri.getQuery() == null, "/", uri.getQuery()
                         )
                     ),
                     uri.getHost(),
