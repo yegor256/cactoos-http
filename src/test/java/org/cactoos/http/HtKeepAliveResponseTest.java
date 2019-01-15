@@ -26,8 +26,8 @@ package org.cactoos.http;
 import java.io.IOException;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.core.StringContains;
 import org.junit.Test;
+import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
 
@@ -46,8 +46,8 @@ public final class HtKeepAliveResponseTest {
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtKeepAliveResponse(home, 5000, 5)
-                ).asString(),
-                new StringContains("HTTP/1.1 200 OK")
+                ),
+                new TextHasString("HTTP/1.1 200 OK")
             )
         );
     }

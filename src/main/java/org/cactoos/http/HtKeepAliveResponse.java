@@ -26,14 +26,12 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 import org.cactoos.Input;
 import org.cactoos.Text;
 import org.cactoos.io.InputOf;
-import org.cactoos.scalar.Ternary;
-import org.cactoos.scalar.UncheckedScalar;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
-import org.cactoos.text.UncheckedText;
 
 /**
  * The response which supports <em>Keep-Alive</em> header.
@@ -76,8 +74,8 @@ public final class HtKeepAliveResponse implements Input {
      *  - `wire` which represents the HTTP connection;
      *  - `timeout` in milliseconds;
      *  - `rmax` the max quantity of within the timeout.
-     *  In case if the quantity of requests more than `rmax` but takes less than
-     *  `timeout`, the connection should be reset by the server.
+     *  In case the quantity of requests is greater than rmax but takes less
+     *  time than `timeout`, the connection should be reset by the server.
      *  Remove the suppresing of PMD errors due to unused private fields.
      */
     public HtKeepAliveResponse(
@@ -85,19 +83,13 @@ public final class HtKeepAliveResponse implements Input {
     ) {
         this(
             new HtWire(uri),
-            new UncheckedText(
                 new FormattedText(
                     HtKeepAliveResponse.TEMPLATE,
-                    new UncheckedScalar<>(
-                        new Ternary<>(
-                            uri.getQuery() == null, "/", uri.getQuery()
-                        )
-                    ),
+                    Optional.ofNullable(uri.getQuery()).orElse("/"),
                     uri.getHost(),
                     mtimeout,
                     rmax
-                )
-            ).asString(),
+                ),
             mtimeout,
             rmax
         );
@@ -113,7 +105,7 @@ public final class HtKeepAliveResponse implements Input {
      * @checkstyle ParameterNumberCheck (5 lines)
      */
     public HtKeepAliveResponse(
-        final Wire wire, final String req, final long mtimeout, final int rmax
+        final Wire wire, final Text req, final long mtimeout, final int rmax
     ) {
         this(wire, new InputOf(req), mtimeout, rmax);
     }
