@@ -25,9 +25,9 @@
 package org.cactoos.http;
 
 import java.io.InputStream;
-import java.io.SequenceInputStream;
+import java.nio.charset.Charset;
+import java.util.Scanner;
 import org.cactoos.Input;
-import org.cactoos.io.DeadInputStream;
 import org.cactoos.io.InputStreamOf;
 
 /**
@@ -38,9 +38,14 @@ import org.cactoos.io.InputStreamOf;
 public final class HtHead implements Input {
 
     /**
-     * Buffer length.
+     * Header separator.
      */
-    private static final int LENGTH = 16384;
+    private static final String DELIMITER = "\r\n\r\n";
+
+    /**
+     * Charset that is used to read headers.
+     */
+    private static final Charset CHARSET = Charset.defaultCharset();
 
     /**
      * Response.
@@ -56,50 +61,14 @@ public final class HtHead implements Input {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public InputStream stream() throws Exception {
-        final InputStream stream = this.response.stream();
-        final byte[] buf = new byte[HtHead.LENGTH];
-        InputStream head = new DeadInputStream();
-        while (true) {
-            final int len = stream.read(buf);
-            if (len < 0) {
-                break;
-            }
-            final int tail = HtHead.findEnd(buf, len);
-            final byte[] temp = new byte[tail];
-            System.arraycopy(buf, 0, temp, 0, tail);
-            head = new SequenceInputStream(head, new InputStreamOf(temp));
-            if (tail != len) {
-                break;
-            }
+        try (final Scanner scanner = new Scanner(
+            this.response.stream(),
+            HtHead.CHARSET.name()
+        )) {
+            scanner.useDelimiter(HtHead.DELIMITER);
+            return new InputStreamOf(scanner.next());
         }
-        return head;
-    }
-
-    /**
-     * Find header end.
-     * @param buf Buffer where to search
-     * @param len Size of the buffer
-     * @return End of the header
-     */
-    private static int findEnd(final byte[] buf, final int len) {
-        final byte[] end = {'\r', '\n', '\r', '\n'};
-        int tail = end.length - 1;
-        while (tail < len) {
-            boolean found = true;
-            for (int num = 0; num < end.length; ++num) {
-                if (end[num] != buf[tail - end.length + 1 + num]) {
-                    found = false;
-                    break;
-                }
-            }
-            if (found) {
-                tail = tail - end.length + 1;
-                break;
-            }
-            ++tail;
-        }
-        return tail;
     }
 }
+
