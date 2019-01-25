@@ -25,8 +25,8 @@ package org.cactoos.http;
 
 import java.io.IOException;
 import org.cactoos.text.TextOf;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
@@ -43,12 +43,13 @@ public final class HtKeepAliveResponseTest {
     @Test
     public void worksFineByUri() throws IOException {
         new FtRemote(new TkText("Hello, dude!")).exec(
-            home -> MatcherAssert.assertThat(
-                new TextOf(
+            home -> new Assertion<>(
+                "The HTTP response contains 200 status code",
+                () -> new TextOf(
                     new HtKeepAliveResponse(home, 5000, 5)
                 ),
                 new TextHasString("HTTP/1.1 200 OK")
-            )
+            ).affirm()
         );
     }
 }
