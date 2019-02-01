@@ -23,8 +23,6 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
 import org.cactoos.Input;
@@ -38,7 +36,7 @@ import org.cactoos.text.JoinedText;
  *
  * @since 0.1
  */
-public final class HtKeepAliveResponse implements Input {
+public final class HtKeepAliveResponse extends HtResponseEnvelope {
 
     /**
      * The template of GET request which supports the <em>Keep-Alive</em>
@@ -51,16 +49,6 @@ public final class HtKeepAliveResponse implements Input {
         "Connection: Keep-Alive",
         "Keep-Alive: timeout=%s, max=%s"
     );
-
-    /**
-     * The wire.
-     */
-    private final Wire wire;
-
-    /**
-     * HTTP request.
-     */
-    private final Input request;
 
     /**
      * Ctor.
@@ -83,13 +71,13 @@ public final class HtKeepAliveResponse implements Input {
     ) {
         this(
             new HtWire(uri),
-                new FormattedText(
-                    HtKeepAliveResponse.TEMPLATE,
-                    Optional.ofNullable(uri.getQuery()).orElse("/"),
-                    uri.getHost(),
-                    mtimeout,
-                    rmax
-                ),
+            new FormattedText(
+                HtKeepAliveResponse.TEMPLATE,
+                Optional.ofNullable(uri.getQuery()).orElse("/"),
+                uri.getHost(),
+                mtimeout,
+                rmax
+            ),
             mtimeout,
             rmax
         );
@@ -123,13 +111,7 @@ public final class HtKeepAliveResponse implements Input {
     public HtKeepAliveResponse(
         final Wire wire, final Input req, final long mtimeout, final int rmax
     ) {
-        this.wire = wire;
-        this.request = req;
-    }
-
-    @Override
-    public InputStream stream() throws IOException {
-        return this.wire.send(this.request).stream();
+        super(wire, req);
     }
 
 }

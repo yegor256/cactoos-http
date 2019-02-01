@@ -24,8 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
@@ -41,17 +39,7 @@ import org.cactoos.text.UncheckedText;
  *  on criteria like the Content-Length header, the Transfer-Encoding header
  *  (when service returns the payload in chunks), etc.
  */
-public final class HtResponse implements Input {
-
-    /**
-     * The wire.
-     */
-    private final Wire wire;
-
-    /**
-     * HTTP request.
-     */
-    private final Input request;
+public final class HtResponse extends HtResponseEnvelope {
 
     /**
      * Ctor.
@@ -96,12 +84,7 @@ public final class HtResponse implements Input {
      * @param req The request
      */
     public HtResponse(final Wire wre, final Input req) {
-        this.wire = wre;
-        this.request = req;
+        super(wre, req);
     }
 
-    @Override
-    public InputStream stream() throws IOException {
-        return this.wire.send(this.request).stream();
-    }
 }
