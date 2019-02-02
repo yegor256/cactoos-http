@@ -111,7 +111,7 @@ public final class HtKeepAliveResponse extends HtResponseEnvelope {
     public HtKeepAliveResponse(
         final Wire wire, final Input req, final long mtimeout, final int rmax
     ) {
-        super(wire, req);
+        super(new HtResponse(wire, req));
     }
 
 }

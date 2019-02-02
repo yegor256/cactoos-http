@@ -84,7 +84,7 @@ public final class HtResponse extends HtResponseEnvelope {
      * @param req The request
      */
     public HtResponse(final Wire wre, final Input req) {
-        super(wre, req);
+        super(() -> wre.send(req).stream());
     }
 
 }

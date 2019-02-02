@@ -33,30 +33,23 @@ import org.cactoos.Input;
  *
  * @since 0.1
  */
-public class HtResponseEnvelope implements Input {
-
-    /**
-     * The wire.
-     */
-    private final Wire wire;
+public abstract class HtResponseEnvelope implements Input {
 
     /**
      * HTTP request.
      */
-    private final Input request;
+    private final Input origin;
 
     /**
      * Ctor.
-     * @param wre The wire
-     * @param req The request
+     * @param origin The request
      */
-    public HtResponseEnvelope(final Wire wre, final Input req) {
-        this.wire = wre;
-        this.request = req;
+    public HtResponseEnvelope(final Input origin) {
+        this.origin = origin;
     }
 
     @Override
     public final InputStream stream() throws IOException {
-        return this.wire.send(this.request).stream();
+        return this.origin.stream();
     }
 }
