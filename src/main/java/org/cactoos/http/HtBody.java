@@ -24,7 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Input;
 import org.cactoos.http.io.SkipInput;
@@ -51,7 +50,7 @@ public final class HtBody implements Input {
     }
 
     @Override
-    public InputStream stream() throws IOException {
+    public InputStream stream() throws Exception {
         return new SkipInput(this.response, new BytesOf("\r\n\r\n")).stream();
     }
 }

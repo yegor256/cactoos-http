@@ -24,7 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -127,7 +126,7 @@ public final class HtWire implements Wire {
     }
 
     @Override
-    public Input send(final Input input) throws IOException {
+    public Input send(final Input input) throws Exception {
         try (
             final Socket socket = new IoCheckedBiFunc<>(this.supplier).apply(
                 this.address, new IoCheckedScalar<>(this.port).value()

@@ -122,7 +122,7 @@ public final class HtUpgradeWireTest {
         }
 
         @Override
-        public InputStream stream() throws IOException {
+        public InputStream stream() throws Exception {
             return this.response.stream();
         }
 

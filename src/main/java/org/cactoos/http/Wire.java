@@ -24,7 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import org.cactoos.Input;
 
 /**
@@ -38,8 +37,8 @@ public interface Wire {
      * Send an input and return the response.
      * @param input The data to send
      * @return The remote service's response
-     * @throws IOException If an I/O error occurs
+     * @throws Exception If an I/O error occurs
      */
-    Input send(Input input) throws IOException;
+    Input send(Input input) throws Exception;
 
 }

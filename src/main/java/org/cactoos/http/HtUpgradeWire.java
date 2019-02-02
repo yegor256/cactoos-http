@@ -23,7 +23,6 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import org.cactoos.Input;
 
 /**
@@ -60,7 +59,7 @@ public final class HtUpgradeWire implements Wire {
     }
 
     @Override
-    public Input send(final Input input) throws IOException {
+    public Input send(final Input input) throws Exception {
         return this.origin.send(input);
     }
 }

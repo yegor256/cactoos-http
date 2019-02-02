@@ -23,14 +23,12 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import org.cactoos.Input;
-import org.cactoos.io.StickyInput;
-import org.cactoos.scalar.IoCheckedScalar;
+import org.cactoos.io.Sticky;
 
 /**
  * Automatically redirects request if response status code is 30x.
@@ -49,11 +47,11 @@ public final class HtAutoRedirect implements Input {
      * @param rsp Response
      */
     public HtAutoRedirect(final Input rsp) {
-        this.response = new StickyInput(rsp);
+        this.response = new Sticky(rsp);
     }
 
     @Override
-    public InputStream stream() throws IOException {
+    public InputStream stream() throws Exception {
         InputStream stream = this.response.stream();
         final String header = "location";
         final int status = new HtStatus(this.response).intValue();
@@ -64,9 +62,7 @@ public final class HtAutoRedirect implements Input {
             );
             if (headers.containsKey(header)) {
                 final URL url = new URL(headers.get(header).get(0));
-                stream = new HtResponse(
-                    new IoCheckedScalar<>(url::toURI).value()
-                ).stream();
+                stream = new HtResponse(url.toURI()).stream();
             }
         }
         return stream;

@@ -24,7 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import org.cactoos.Input;
@@ -58,7 +57,7 @@ public final class HtHead implements Input {
 
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public InputStream stream() throws IOException {
+    public InputStream stream() throws Exception {
         final InputStream stream = this.response.stream();
         final byte[] buf = new byte[HtHead.LENGTH];
         InputStream head = new DeadInputStream();

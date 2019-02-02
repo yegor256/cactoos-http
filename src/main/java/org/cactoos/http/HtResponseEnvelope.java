@@ -24,7 +24,6 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Input;
 
@@ -49,7 +48,7 @@ public abstract class HtResponseEnvelope implements Input {
     }
 
     @Override
-    public final InputStream stream() throws IOException {
+    public final InputStream stream() throws Exception {
         return this.origin.stream();
     }
 }

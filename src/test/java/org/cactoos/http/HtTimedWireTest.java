@@ -23,7 +23,6 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.TimeoutException;
@@ -32,12 +31,10 @@ import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
 
@@ -50,9 +47,6 @@ import org.takes.tk.TkText;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtTimedWireTest {
-
-    @Rule
-    public final ExpectedException expected = ExpectedException.none();
 
     private ServerSocket server;
 
@@ -75,26 +69,25 @@ public final class HtTimedWireTest {
                 new TextOf(
                     new HtResponse(
                         new HtTimedWire(new HtWire(home), timeout),
-                        new JoinedText(
-                            "\r\n",
-                            "GET / HTTP/1.1",
-                            new FormattedText("Host:%s", home.getHost())
-                                .asString()
-                        ).asString()
+                        new InputOf(
+                            new JoinedText(
+                                new TextOf("\r\n"),
+                                new TextOf("GET / HTTP/1.1"),
+                                new FormattedText("Host:%s", home.getHost())
+                            )
+                        )
                     )
-                ).asString(),
-                Matchers.containsString("HTTP/1.1 200 ")
+                ),
+                new TextHasString("HTTP/1.1 200 ")
             )
         );
     }
 
     // @checkstyle MagicNumberCheck (1 line)
-    @Test(timeout = 1000)
+    @Test(expected = TimeoutException.class, timeout = 1000)
     public void failsAfterTimeout() throws Exception {
         // @checkstyle MagicNumberCheck (1 line)
         final long timeout = 100;
-        this.expected.expect(IOException.class);
-        this.expected.expectCause(Matchers.instanceOf(TimeoutException.class));
         try (Socket blocker = new Socket()) {
             blocker.connect(this.server.getLocalSocketAddress());
             new HtTimedWire(

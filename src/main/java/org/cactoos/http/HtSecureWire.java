@@ -23,7 +23,6 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import javax.net.ssl.SSLSocketFactory;
@@ -96,7 +95,7 @@ public final class HtSecureWire implements Wire {
     }
 
     @Override
-    public Input send(final Input input) throws IOException {
+    public Input send(final Input input) throws Exception {
         return new HtWire(this.address, new Constant<>(this.port), this.socket)
             .send(input);
     }

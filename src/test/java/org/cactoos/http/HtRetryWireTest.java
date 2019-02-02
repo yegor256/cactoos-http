@@ -27,14 +27,14 @@ package org.cactoos.http;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.cactoos.Text;
 import org.cactoos.io.InputOf;
-import org.cactoos.matchers.FuncApplies;
-import org.cactoos.matchers.InputHasContent;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.llorllale.cactoos.matchers.FuncApplies;
+import org.llorllale.cactoos.matchers.InputHasContent;
 
 /**
  * Test case for {@link HtRetryWire}.

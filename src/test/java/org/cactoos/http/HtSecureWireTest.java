@@ -23,7 +23,6 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -125,7 +124,7 @@ public final class HtSecureWireTest {
         }
 
         @Override
-        public InputStream stream() throws IOException {
+        public InputStream stream() throws Exception {
             final String delimiter = "\r\n";
             return new InputOf(
                 new JoinedText(

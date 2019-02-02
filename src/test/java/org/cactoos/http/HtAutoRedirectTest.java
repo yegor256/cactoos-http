@@ -28,7 +28,6 @@ import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
@@ -52,16 +51,16 @@ public final class HtAutoRedirectTest {
                     new HtAutoRedirect(
                         new InputOf(
                             new JoinedText(
-                                "\r\n",
-                                "HTTP/1.1 301",
+                                new TextOf("\r\n"),
+                                new TextOf("HTTP/1.1 301"),
                                 new FormattedText(
                                     "Location: %s", home
-                                ).asString()
+                                )
                             )
                         )
                     )
-                ).asString(),
-                Matchers.containsString("HTTP/1.1 200 ")
+                ),
+                new TextHasString("HTTP/1.1 200 ")
             )
         );
     }

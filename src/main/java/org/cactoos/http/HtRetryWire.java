@@ -24,11 +24,9 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import org.cactoos.Func;
 import org.cactoos.Input;
-import org.cactoos.func.IoCheckedFunc;
-import org.cactoos.func.RetryFunc;
+import org.cactoos.func.Retry;
 
 /**
  * {@link Wire} that will try a few times before throwing an exception.
@@ -69,12 +67,10 @@ public final class HtRetryWire implements Wire {
     }
 
     @Override
-    public Input send(final Input input) throws IOException {
-        return new IoCheckedFunc<>(
-            new RetryFunc<>(
-                this.origin::send,
-                this.func
-            )
-         ).apply(input);
+    public Input send(final Input input) throws Exception {
+        return new Retry<>(
+            this.origin::send,
+            this.func
+        ).apply(input);
     }
 }

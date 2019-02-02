@@ -24,7 +24,6 @@
 
 package org.cactoos.http.io;
 
-import java.io.IOException;
 import java.io.InputStream;
 import org.cactoos.Bytes;
 import org.cactoos.Input;
@@ -58,7 +57,7 @@ public final class SkipInput implements Input {
     }
 
     @Override
-    public InputStream stream() throws IOException {
+    public InputStream stream() throws Exception {
         final byte[] bytes = this.delimiter.asBytes();
         final BoundedByteBuffer buffer = new BoundedByteBuffer(
             bytes.length

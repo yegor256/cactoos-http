@@ -24,9 +24,7 @@
 
 package org.cactoos.http;
 
-import java.io.IOException;
 import org.cactoos.Input;
-import org.cactoos.func.IoCheckedFunc;
 import org.cactoos.func.TimedFunc;
 
 /**
@@ -57,12 +55,10 @@ public final class HtTimedWire implements Wire {
     }
 
     @Override
-    public Input send(final Input input) throws IOException {
-        return new IoCheckedFunc<>(
-            new TimedFunc<>(
-                this.origin::send,
-                this.milliseconds
-            )
+    public Input send(final Input input) throws Exception {
+        return new TimedFunc<>(
+            this.origin::send,
+            this.milliseconds
         ).apply(input);
     }
 }

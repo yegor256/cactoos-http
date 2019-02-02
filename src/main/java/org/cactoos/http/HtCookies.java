@@ -27,12 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import org.cactoos.Input;
 import org.cactoos.Text;
-import org.cactoos.collection.Joined;
-import org.cactoos.iterable.LengthOf;
-import org.cactoos.list.Mapped;
+import org.cactoos.iterable.Joined;
+import org.cactoos.iterable.Mapped;
 import org.cactoos.map.Grouped;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapEnvelope;
+import org.cactoos.scalar.LengthOf;
 import org.cactoos.text.SplitText;
 
 /**
@@ -52,7 +52,7 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
     public HtCookies(final Input rsp) {
         super(() -> new Grouped<>(
             new Mapped<>(
-                entry -> {
+                (Text entry) -> {
                     final Iterable<Text> parts = new SplitText(entry, "=");
                     if (new LengthOf(parts).intValue() != 2) {
                         throw new IllegalArgumentException(
