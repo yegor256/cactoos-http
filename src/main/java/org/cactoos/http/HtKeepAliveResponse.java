@@ -77,9 +77,7 @@ public final class HtKeepAliveResponse extends HtResponseEnvelope {
                 uri.getHost(),
                 mtimeout,
                 rmax
-            ),
-            mtimeout,
-            rmax
+            )
         );
     }
 
@@ -87,30 +85,18 @@ public final class HtKeepAliveResponse extends HtResponseEnvelope {
      * Ctor.
      * @param wire The wire
      * @param req The request
-     * @param mtimeout The timeout for the connection usage in milliseconds
-     * @param rmax The maximum quantity of the requests within the connection
      *  timeout
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
-    public HtKeepAliveResponse(
-        final Wire wire, final Text req, final long mtimeout, final int rmax
-    ) {
-        this(wire, new InputOf(req), mtimeout, rmax);
+    public HtKeepAliveResponse(final Wire wire, final Text req) {
+        this(wire, new InputOf(req));
     }
 
     /**
      * Ctor.
      * @param wire The wire
      * @param req The request
-     * @param mtimeout The timeout for the connection usage in milliseconds
-     * @param rmax The maximum quantity of the requests within the connection
-     *  timeout
-     * @checkstyle ParameterNumberCheck (5 lines)
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    public HtKeepAliveResponse(
-        final Wire wire, final Input req, final long mtimeout, final int rmax
-    ) {
+    public HtKeepAliveResponse(final Wire wire, final Input req) {
         super(new HtResponse(wire, req));
     }
 
