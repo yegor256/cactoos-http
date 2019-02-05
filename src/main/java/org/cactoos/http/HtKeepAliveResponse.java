@@ -25,7 +25,6 @@ package org.cactoos.http;
 
 import java.net.URI;
 import java.util.Optional;
-import org.cactoos.Input;
 import org.cactoos.Text;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
@@ -69,35 +68,19 @@ public final class HtKeepAliveResponse extends HtResponseEnvelope {
     public HtKeepAliveResponse(
         final URI uri, final long mtimeout, final int rmax
     ) {
-        this(
-            new HtWire(uri),
-            new FormattedText(
-                HtKeepAliveResponse.TEMPLATE,
-                Optional.ofNullable(uri.getQuery()).orElse("/"),
-                uri.getHost(),
-                mtimeout,
-                rmax
+        super(
+            new HtResponse(
+                new HtWire(uri),
+                new InputOf(
+                    new FormattedText(
+                        HtKeepAliveResponse.TEMPLATE,
+                        Optional.ofNullable(uri.getQuery()).orElse("/"),
+                        uri.getHost(),
+                        mtimeout,
+                        rmax
+                    )
+                )
             )
         );
     }
-
-    /**
-     * Ctor.
-     * @param wire The wire
-     * @param req The request
-     *  timeout
-     */
-    public HtKeepAliveResponse(final Wire wire, final Text req) {
-        this(wire, new InputOf(req));
-    }
-
-    /**
-     * Ctor.
-     * @param wire The wire
-     * @param req The request
-     */
-    public HtKeepAliveResponse(final Wire wire, final Input req) {
-        super(new HtResponse(wire, req));
-    }
-
 }
