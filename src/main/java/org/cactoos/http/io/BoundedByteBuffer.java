@@ -91,28 +91,27 @@ public final class BoundedByteBuffer {
      *  the {@code bytes}.
      */
     public boolean equalTo(final byte[] bytes) {
-        final int result;
-        result = new UncheckedScalar<>(
-            new Equality<Bytes>(
-                new BytesOf(currentState()),
-                new BytesOf(bytes)
-            )
-        ).value();
-        return result == 0;
-    }
-
-    private byte[] currentState(){
+        boolean result;
         if (this.full){
-            byte[] state = new byte[this.internal.length];
-            if (this.internal.length - this.idx >= 0)
-                System.arraycopy(this.internal, this.idx, state, 0, this.internal.length - this.idx);
-            if (this.idx >= 0)
-                System.arraycopy(this.internal, 0, state, this.idx, this.idx);
-            return state;
+            result = bytes.length == this.internal.length;
+            for (int i=this.idx; i<this.internal.length; i++){
+                if (!result)
+                    break;
+                result = bytes[i-this.idx] == this.internal[i];
+            }
+            for (int i=0; i<this.idx-1; i++){
+                if (!result)
+                    break;
+                result = bytes[i+this.idx-1] == this.internal[i];
+            }
         } else {
-            byte[] state = new byte[this.idx];
-            System.arraycopy(this.internal, 0, state, 0, this.idx);
-            return state;
+            result = bytes.length == this.idx;
+            for (int i=0; i<this.idx-1; i++){
+                if (!result)
+                    break;
+                result = bytes[i] == this.internal[i];
+            }
         }
+        return result;
     }
 }
