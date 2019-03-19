@@ -23,11 +23,13 @@
  */
 package org.cactoos.http.io;
 
+/*
 import java.util.Arrays;
 import org.cactoos.Bytes;
 import org.cactoos.io.BytesOf;
 import org.cactoos.scalar.Equality;
 import org.cactoos.scalar.UncheckedScalar;
+*/
 
 /**
  * A very simple circular buffer of bytes.
@@ -93,26 +95,27 @@ public final class BoundedByteBuffer {
         boolean result;
         if (this.full) {
             result = bytes.length == this.internal.length;
-            for (int idx = this.idx; idx < this.internal.length; idx += 1) {
+            for (int idn = this.idx; idn < this.internal.length; idn += 1) {
                 if (!result) {
                     break;
                 }
-                result = bytes[idx - this.idx] == this.internal[idx];
+                result = bytes[idn - this.idx] == this.internal[idn];
             }
-            for (int idx = 0; idx<this.idx - 1; idx += 1) {
+            for (int idn = 0; idn < this.idx - 1; idn += 1) {
                 if (!result) {
                     break;
                 }
-                result = bytes[idx + this.idx - 1] == this.internal[idx];
+                result = bytes[idn + this.idx - 1] == this.internal[idn];
             }
         } else {
             result = bytes.length == this.idx;
-            for (int idx = 0; idx < this.idx - 1; idx += 1) {
+            for (int idn = 0; idn < this.idx - 1; idn += 1) {
                 if (!result) {
                     break;
                 }
-                result = bytes[idx] == this.internal[idx];
+                result = bytes[idn] == this.internal[idn];
             }
+
         }
         return result;
     }
