@@ -92,21 +92,12 @@ public final class BoundedByteBuffer {
      */
     public boolean equalTo(final byte[] bytes) {
         final int result;
-        if (this.current < this.limit) {
-            result = new UncheckedScalar<>(
-                new Equality<Bytes>(
-                    new BytesOf(Arrays.copyOf(this.internal, this.current)),
-                    new BytesOf(bytes)
-                )
-            ).value();
-        } else {
-            result = new UncheckedScalar<>(
-                new Equality<Bytes>(
-                    new BytesOf(this.internal),
-                    new BytesOf(bytes)
-                )
-            ).value();
-        }
+        result = new UncheckedScalar<>(
+            new Equality<Bytes>(
+                new BytesOf(currentState()),
+                new BytesOf(bytes)
+            )
+        ).value();
         return result == 0;
     }
 
