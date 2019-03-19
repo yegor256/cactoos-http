@@ -109,4 +109,19 @@ public final class BoundedByteBuffer {
         }
         return result == 0;
     }
+
+    private byte[] currentState(){
+        if (this.full){
+            byte[] state = new byte[this.internal.length];
+            if (this.internal.length - this.idx >= 0)
+                System.arraycopy(this.internal, this.idx, state, 0, this.internal.length - this.idx);
+            if (this.idx >= 0)
+                System.arraycopy(this.internal, 0, state, this.idx, this.idx);
+            return state;
+        } else {
+            byte[] state = new byte[this.idx];
+            System.arraycopy(this.internal, 0, state, 0, this.idx);
+            return state;
+        }
+    }
 }
