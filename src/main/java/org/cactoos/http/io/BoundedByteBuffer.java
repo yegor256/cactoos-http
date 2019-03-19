@@ -47,9 +47,15 @@ public final class BoundedByteBuffer {
     private final int limit;
 
     /**
-     * Current size of buffer.
+     * Current buffer index.
      */
-    private int current;
+    private int idx;
+
+    /**
+     * Is the buffer full?
+     */
+    private boolean full;
+
 
     /**
      * Ctor.
@@ -59,7 +65,8 @@ public final class BoundedByteBuffer {
     BoundedByteBuffer(final int limit) {
         this.limit = limit;
         this.internal = new byte[this.limit];
-        this.current = 0;
+        this.idx = 0;
+        this.full = false;
     }
 
     /**
@@ -69,14 +76,11 @@ public final class BoundedByteBuffer {
      * @param add The byte to add
      */
     public void offer(final byte add) {
-        if (this.current == this.limit) {
-            System.arraycopy(
-                this.internal, 1, this.internal, 0, this.limit - 1
-            );
-        } else {
-            ++this.current;
+        this.internal[this.idx] = add;
+        this.idx = (this.idx + 1) % this.limit;
+        if (this.idx == 0){
+            this.full = true;
         }
-        this.internal[this.current - 1] = add;
     }
 
     /**
