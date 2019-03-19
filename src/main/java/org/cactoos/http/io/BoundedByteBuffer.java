@@ -22,13 +22,7 @@
  * SOFTWARE.
  */
 package org.cactoos.http.io;
-/*
-import java.util.Arrays;
-import org.cactoos.Bytes;
-import org.cactoos.io.BytesOf;
-import org.cactoos.scalar.Equality;
-import org.cactoos.scalar.UncheckedScalar;
-*/
+
 /**
  * A very simple circular buffer of bytes.
  *
