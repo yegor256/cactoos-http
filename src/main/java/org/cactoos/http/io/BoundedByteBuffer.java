@@ -56,7 +56,6 @@ public final class BoundedByteBuffer {
      */
     private boolean full;
 
-
     /**
      * Ctor.
      *
@@ -78,7 +77,7 @@ public final class BoundedByteBuffer {
     public void offer(final byte add) {
         this.internal[this.idx] = add;
         this.idx = (this.idx + 1) % this.limit;
-        if (this.idx == 0){
+        if (this.idx == 0) {
             this.full = true;
         }
     }
@@ -92,24 +91,27 @@ public final class BoundedByteBuffer {
      */
     public boolean equalTo(final byte[] bytes) {
         boolean result;
-        if (this.full){
+        if (this.full) {
             result = bytes.length == this.internal.length;
-            for (int i=this.idx; i<this.internal.length; i++){
-                if (!result)
+            for (int idx = this.idx; idx < this.internal.length; idx += 1) {
+                if (!result) {
                     break;
-                result = bytes[i-this.idx] == this.internal[i];
+                }
+                result = bytes[idx - this.idx] == this.internal[idx];
             }
-            for (int i=0; i<this.idx-1; i++){
-                if (!result)
+            for (int idx = 0; idx<this.idx - 1; idx += 1) {
+                if (!result) {
                     break;
-                result = bytes[i+this.idx-1] == this.internal[i];
+                }
+                result = bytes[idx + this.idx - 1] == this.internal[idx];
             }
         } else {
             result = bytes.length == this.idx;
-            for (int i=0; i<this.idx-1; i++){
-                if (!result)
+            for (int idx = 0; idx < this.idx - 1; idx += 1) {
+                if (!result) {
                     break;
-                result = bytes[i] == this.internal[i];
+                }
+                result = bytes[idx] == this.internal[idx];
             }
         }
         return result;
