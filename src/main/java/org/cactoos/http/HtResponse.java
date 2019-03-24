@@ -39,7 +39,7 @@ import org.cactoos.text.UncheckedText;
  *  on criteria like the Content-Length header, the Transfer-Encoding header
  *  (when service returns the payload in chunks), etc.
  */
-public final class HtResponse extends HtResponseEnvelope {
+public final class HtResponse extends InputEnvelope {
 
     /**
      * Ctor.

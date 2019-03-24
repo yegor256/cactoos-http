@@ -35,7 +35,7 @@ import org.cactoos.text.JoinedText;
  *
  * @since 0.1
  */
-public final class HtKeepAliveResponse extends HtResponseEnvelope {
+public final class HtKeepAliveResponse extends InputEnvelope {
 
     /**
      * The template of GET request which supports the <em>Keep-Alive</em>

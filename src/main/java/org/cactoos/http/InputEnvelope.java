@@ -28,11 +28,11 @@ import java.io.InputStream;
 import org.cactoos.Input;
 
 /**
- * The envelope for HTTP response.
+ * The envelope for {@link Input}.
  *
  * @since 0.1
  */
-public abstract class HtResponseEnvelope implements Input {
+public abstract class InputEnvelope implements Input {
 
     /**
      * HTTP request.
@@ -43,7 +43,7 @@ public abstract class HtResponseEnvelope implements Input {
      * Ctor.
      * @param origin The request
      */
-    public HtResponseEnvelope(final Input origin) {
+    public InputEnvelope(final Input origin) {
         this.origin = origin;
     }
 
