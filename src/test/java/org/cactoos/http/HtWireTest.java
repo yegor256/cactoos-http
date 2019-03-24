@@ -24,9 +24,11 @@
 package org.cactoos.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.URI;
 import org.cactoos.BiFunc;
+import org.cactoos.Input;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
 import org.cactoos.io.InputOf;
@@ -34,7 +36,12 @@ import org.cactoos.text.FormattedText;
 import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNot;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.IsTrue;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.mockito.Mockito;
 import org.takes.http.FtRemote;
@@ -70,26 +77,67 @@ public final class HtWireTest {
     }
 
     @Test
+    public void guessesCorrectPortForExplicit() throws Exception {
+        final int port = 1234;
+        this.checkPorts(
+            new FormattedText("https://localhost:%d", port).asString(),
+            port
+        );
+    }
+
+    @Test
     public void worksWithProvidedHostNameAndPort() throws IOException {
         new FtRemote(new TkText("Hello")).exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
                     new HtResponse(
                         new HtWire(home.getHost(), home.getPort()),
-                        new InputOf(
-                            new JoinedText(
-                                new TextOf("\r\n"),
-                                new TextOf("GET / HTTP/1.1"),
-                                new FormattedText(
-                                    "Host:%s",
-                                    home.getHost()
-                                )
-                            )
-                        )
+                        new GetInput(home)
                     )
                 ),
                 new TextHasString("HTTP/1.1 200")
             )
+        );
+    }
+
+    // @todo #63:30min HtWire should not close the socket opened to the remote
+    //  service (this includes not closing associated input and output
+    //  streams). It should instead return an `Input` with the socket's
+    //  inputstream "unread". Refactor accordingly and unignore this test.
+    @Ignore("see todo above")
+    @Test
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public void closesSocketOnlyAfterResponseIsClosed() throws Exception {
+        new FtRemote(new TkText("Hey")).exec(
+            home -> {
+                @SuppressWarnings("resource")
+                final Socket socket = new Socket(
+                    home.getHost(),
+                    home.getPort()
+                );
+                try (InputStream ins = new HtWire(() -> socket).send(
+                    new GetInput(home)
+                ).stream()) {
+                    new Assertion<>(
+                        "must have a response",
+                        () -> ins.read(),
+                        new IsNot<>(new IsEqual<>(-1))
+                    ).affirm();
+                    new Assertion<>(
+                        "must keep the socket open until response is closed",
+                        socket::isClosed,
+                        new IsNot<>(new IsTrue())
+                    ).affirm();
+                    // @checkstyle IllegalCatchCheck (1 line)
+                } catch (final Exception ex) {
+                    throw new IOException(ex);
+                }
+                new Assertion<>(
+                    "must close the socket once input response is closed",
+                    socket::isClosed,
+                    new IsTrue()
+                ).affirm();
+            }
         );
     }
 
@@ -121,5 +169,26 @@ public final class HtWireTest {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.when(socket.getInputStream()).thenReturn(new DeadInputStream());
         return socket;
+    }
+
+    /**
+     * An {@link Input} to GET an HTTP URI.
+     */
+    private static final class GetInput extends InputEnvelope {
+        GetInput(final URI url) {
+            super(new InputOf(
+                new JoinedText(
+                    new TextOf("\r\n"),
+                    new FormattedText(
+                        "GET %s HTTP/1.1",
+                        url.getPath()
+                    ),
+                    new FormattedText(
+                        "Host:%s",
+                        url.getHost()
+                    )
+                )
+            ));
+        }
     }
 }
