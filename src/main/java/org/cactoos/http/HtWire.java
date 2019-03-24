@@ -31,11 +31,9 @@ import java.net.URI;
 import org.cactoos.BiFunc;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
-import org.cactoos.func.IoCheckedBiFunc;
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
 import org.cactoos.scalar.Constant;
-import org.cactoos.scalar.IoCheckedScalar;
 import org.cactoos.scalar.Ternary;
 
 /**
@@ -55,19 +53,9 @@ public final class HtWire implements Wire {
     private static final int LENGTH = 16384;
 
     /**
-     * Address.
-     */
-    private final String address;
-
-    /**
-     * TCP port.
-     */
-    private final Scalar<Integer> port;
-
-    /**
      * Supplier of sockets.
      */
-    private final BiFunc<String, Integer, Socket> supplier;
+    private final Scalar<Socket> supplier;
 
     /**
      * Ctor.
@@ -120,17 +108,21 @@ public final class HtWire implements Wire {
      */
     HtWire(final String addr, final Scalar<Integer> tcp,
         final BiFunc<String, Integer, Socket> spplier) {
-        this.address = addr;
-        this.port = tcp;
+        this(() -> spplier.apply(addr, tcp.value()));
+    }
+
+    /**
+     * Ctor.
+     * @param spplier Supplier of sockets
+     */
+    HtWire(final Scalar<Socket> spplier) {
         this.supplier = spplier;
     }
 
     @Override
     public Input send(final Input input) throws Exception {
         try (
-            final Socket socket = new IoCheckedBiFunc<>(this.supplier).apply(
-                this.address, new IoCheckedScalar<>(this.port).value()
-            );
+            final Socket socket = this.supplier.value();
             final InputStream source = input.stream();
             final InputStream ins = socket.getInputStream();
             final OutputStream ous = socket.getOutputStream()
