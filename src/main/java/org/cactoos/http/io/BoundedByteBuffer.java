@@ -76,6 +76,8 @@ public final class BoundedByteBuffer {
      * @param bytes The bytes to compare to.
      * @return The value {@code true} if the buffer contains exactly
      *  the {@code bytes}.
+     * @todo #60:30min Figure out a more elegant way to compare 
+     *  the ring buffer imitation to another buffer.
      */
     public boolean equalTo(final byte[] bytes) {
         boolean result;
