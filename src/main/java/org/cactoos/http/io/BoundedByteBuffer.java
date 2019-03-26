@@ -36,11 +36,6 @@ public final class BoundedByteBuffer {
     private final byte[] internal;
 
     /**
-     * The size limit.
-     */
-    private final int limit;
-
-    /**
      * Current buffer index.
      */
     private int idx;
@@ -56,8 +51,7 @@ public final class BoundedByteBuffer {
      * @param limit The size limit.
      */
     BoundedByteBuffer(final int limit) {
-        this.limit = limit;
-        this.internal = new byte[this.limit];
+        this.internal = new byte[limit];
         this.idx = 0;
         this.full = false;
     }
@@ -70,7 +64,7 @@ public final class BoundedByteBuffer {
      */
     public void offer(final byte add) {
         this.internal[this.idx] = add;
-        this.idx = (this.idx + 1) % this.limit;
+        this.idx = (this.idx + 1) % this.internal.length;
         if (this.idx == 0) {
             this.full = true;
         }
