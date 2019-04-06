@@ -23,50 +23,37 @@
  */
 package org.cactoos.http;
 
-import java.io.IOException;
+import java.net.URI;
+import org.cactoos.Input;
+import org.cactoos.io.InputOf;
+import org.cactoos.text.FormattedText;
+import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.llorllale.cactoos.matchers.TextHasString;
-import org.takes.http.FtRemote;
-import org.takes.tk.TkText;
 
 /**
- * Test case for {@link HtResponse}.
+ * An {@link Input} to GET an HTTP URI.
  *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class HtResponseTest {
-
-    @Test
-    public void worksFine() throws IOException {
-        new FtRemote(new TkText("Hello, world!")).exec(
-            home -> MatcherAssert.assertThat(
-                new TextOf(
-                    new HtResponse(
-                        new HtWire(home),
-                        new GetInput(home)
-                    )
+public final class GetInput extends InputEnvelope {
+    /**
+     * Ctor.
+     *
+     * @param url Url to GET.
+     */
+    public GetInput(final URI url) {
+        super(new InputOf(
+            new JoinedText(
+                new TextOf("\r\n"),
+                new FormattedText(
+                    "GET %s HTTP/1.1",
+                    url.getPath()
                 ),
-                new TextHasString("HTTP/1.1 200 OK")
+                new FormattedText(
+                    "Host:%s",
+                    url.getHost()
+                )
             )
-        );
+        ));
     }
-
-    @Test
-    public void worksFineByUri() throws IOException {
-        new FtRemote(new TkText("Hello, dude!")).exec(
-            home -> MatcherAssert.assertThat(
-                new TextOf(
-                    new HtResponse(home)
-                ).asString(),
-                Matchers.containsString("HTTP/1.1 200 OK")
-            )
-        );
-    }
-
 }

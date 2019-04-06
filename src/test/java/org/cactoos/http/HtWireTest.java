@@ -28,12 +28,9 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.URI;
 import org.cactoos.BiFunc;
-import org.cactoos.Input;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
-import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
@@ -169,26 +166,5 @@ public final class HtWireTest {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.when(socket.getInputStream()).thenReturn(new DeadInputStream());
         return socket;
-    }
-
-    /**
-     * An {@link Input} to GET an HTTP URI.
-     */
-    private static final class GetInput extends InputEnvelope {
-        GetInput(final URI url) {
-            super(new InputOf(
-                new JoinedText(
-                    new TextOf("\r\n"),
-                    new FormattedText(
-                        "GET %s HTTP/1.1",
-                        url.getPath()
-                    ),
-                    new FormattedText(
-                        "Host:%s",
-                        url.getHost()
-                    )
-                )
-            ));
-        }
     }
 }

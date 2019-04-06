@@ -27,8 +27,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.TimeoutException;
 import org.cactoos.io.InputOf;
-import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -69,13 +67,7 @@ public final class HtTimedWireTest {
                 new TextOf(
                     new HtResponse(
                         new HtTimedWire(new HtWire(home), timeout),
-                        new InputOf(
-                            new JoinedText(
-                                new TextOf("\r\n"),
-                                new TextOf("GET / HTTP/1.1"),
-                                new FormattedText("Host:%s", home.getHost())
-                            )
-                        )
+                        new GetInput(home)
                     )
                 ),
                 new TextHasString("HTTP/1.1 200 ")
