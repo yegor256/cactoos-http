@@ -37,6 +37,12 @@ import org.takes.tk.TkText;
  * Test case for {@link HtAutoClosedResponse}.
  *
  * @since 0.1
+ * @todo #64:30min Introduce abstractions to read from an Input
+ *  without closing the stream as most of the cactoos abstraction
+ *  do. As a starter use them in HtAutoClosedResponseTest, HtWireTest
+ *  and AutoClosedInputStreamTest instead of the ugly while loops or
+ *  meaningless reads. Use them also to actually test the content of
+ *  the inputs.
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
