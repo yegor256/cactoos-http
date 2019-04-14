@@ -89,7 +89,7 @@ public final class HtWireTest {
                 new TextOf(
                     new HtResponse(
                         new HtWire(home.getHost(), home.getPort()),
-                        new GetInput(home)
+                        new Get(home)
                     )
                 ),
                 new TextHasString("HTTP/1.1 200")
@@ -113,7 +113,7 @@ public final class HtWireTest {
                     home.getPort()
                 );
                 try (InputStream ins = new HtWire(() -> socket).send(
-                    new GetInput(home)
+                    new Get(home)
                 ).stream()) {
                     new Assertion<>(
                         "must have a response",

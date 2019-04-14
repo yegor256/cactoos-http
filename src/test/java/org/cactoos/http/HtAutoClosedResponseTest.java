@@ -60,7 +60,7 @@ public final class HtAutoClosedResponseTest {
                 try (InputStream ins = new HtAutoClosedResponse(
                     new HtResponse(
                         new HtWire(() -> socket),
-                        new GetInput(home)
+                        new Get(home)
                     )
                 ).stream()) {
                     int read;

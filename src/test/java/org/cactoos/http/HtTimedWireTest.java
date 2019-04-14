@@ -67,7 +67,7 @@ public final class HtTimedWireTest {
                 new TextOf(
                     new HtResponse(
                         new HtTimedWire(new HtWire(home), timeout),
-                        new GetInput(home)
+                        new Get(home)
                     )
                 ),
                 new TextHasString("HTTP/1.1 200 ")

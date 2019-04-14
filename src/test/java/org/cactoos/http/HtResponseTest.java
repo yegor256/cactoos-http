@@ -49,7 +49,7 @@ public final class HtResponseTest {
                 new TextOf(
                     new HtResponse(
                         new HtWire(home),
-                        new GetInput(home)
+                        new Get(home)
                     )
                 ),
                 new TextHasString("HTTP/1.1 200 OK")

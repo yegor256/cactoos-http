@@ -35,13 +35,13 @@ import org.cactoos.text.TextOf;
  *
  * @since 0.1
  */
-public final class GetInput extends InputEnvelope {
+public final class Get extends InputEnvelope {
     /**
      * Ctor.
      *
      * @param url Url to GET.
      */
-    public GetInput(final URI url) {
+    public Get(final URI url) {
         super(new InputOf(
             new JoinedText(
                 new TextOf("\r\n"),
