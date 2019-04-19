@@ -39,11 +39,6 @@ public final class AutoClosedInputStream extends InputStream {
     private final InputStream origin;
 
     /**
-     * If the stream has been closed.
-     */
-    private boolean closed;
-
-    /**
      * Cotr.
      *
      * @param origin The origin input.
@@ -55,10 +50,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     @Override
     public void close() throws IOException {
-        if (!this.closed) {
-            this.origin.close();
-            this.closed = true;
-        }
+        this.origin.close();
     }
 
     @Override
@@ -115,13 +107,9 @@ public final class AutoClosedInputStream extends InputStream {
         @Override
         public int value() throws IOException {
             final int ret;
-            if (AutoClosedInputStream.this.closed) {
-                ret = -1;
-            } else {
-                ret = this.origin.value();
-                if (ret < 0) {
-                    AutoClosedInputStream.this.close();
-                }
+            ret = this.origin.value();
+            if (ret < 0) {
+                AutoClosedInputStream.this.close();
             }
             return ret;
         }
