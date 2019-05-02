@@ -36,12 +36,17 @@ public final class BoundedByteBuffer {
     private final byte[] internal;
 
     /**
-     * Current buffer index.
+     * Beginning of buffer.
      */
-    private int idx;
+    private int start;
 
     /**
-     * Is the buffer full?
+     * End of buffer.
+     */
+    private int end;
+
+    /**
+     * Buffer is full and will rotate.
      */
     private boolean full;
 
@@ -52,7 +57,8 @@ public final class BoundedByteBuffer {
      */
     BoundedByteBuffer(final int limit) {
         this.internal = new byte[limit];
-        this.idx = 0;
+        this.end = 0;
+        this.start = 0;
         this.full = false;
     }
 
@@ -63,9 +69,12 @@ public final class BoundedByteBuffer {
      * @param add The byte to add
      */
     public void offer(final byte add) {
-        this.internal[this.idx] = add;
-        this.idx = (this.idx + 1) % this.internal.length;
-        if (this.idx == 0) {
+        if (this.full) {
+            this.start = (this.start + 1) % this.internal.length;
+        }
+        this.internal[this.end] = add;
+        this.end = (this.end + 1) % this.internal.length;
+        if (this.start == this.end) {
             this.full = true;
         }
     }
@@ -76,35 +85,44 @@ public final class BoundedByteBuffer {
      * @param bytes The bytes to compare to.
      * @return The value {@code true} if the buffer contains exactly
      *  the {@code bytes}.
-     * @todo #60:30min Figure out a more elegant way to compare
-     *  the ring buffer imitation to another buffer,
-     *  and avoid the for loop hell that is in the following method.
+     * @checkstyle ReturnCountCheck (14 lines)
      */
+    @SuppressWarnings("PMD.OnlyOneReturn")
     public boolean equalTo(final byte[] bytes) {
-        boolean result;
-        if (this.full) {
-            result = bytes.length == this.internal.length;
-            for (int idn = this.idx; idn < this.internal.length; idn += 1) {
-                if (!result) {
-                    break;
-                }
-                result = bytes[idn - this.idx] == this.internal[idn];
-            }
-            for (int idn = 0; idn < this.idx - 1; idn += 1) {
-                if (!result) {
-                    break;
-                }
-                result = bytes[idn + this.idx - 1] == this.internal[idn];
-            }
-        } else {
-            result = bytes.length == this.idx;
-            for (int idn = 0; idn < this.idx - 1; idn += 1) {
-                if (!result) {
-                    break;
-                }
-                result = bytes[idn] == this.internal[idn];
-            }
+        if (this.size() != bytes.length) {
+            return false;
         }
-        return result;
+        int index = this.start;
+        for (final byte current : bytes) {
+            if ((int) current != (int) this.internal[index]) {
+                return false;
+            }
+            index = (index + 1) % this.internal.length;
+        }
+        return true;
+    }
+
+    /**
+     * Size of this buffer.
+     * @return This buffer's size.
+     */
+    private int size() {
+        final int size;
+        if (this.full) {
+            size = this.internal.length;
+        } else if (this.empty()) {
+            size = 0;
+        } else {
+            size = this.end;
+        }
+        return size;
+    }
+
+    /**
+     * Is this buffer empty?
+     * @return True if empty, otherwise false.
+     */
+    private boolean empty() {
+        return this.end == this.start && !this.full;
     }
 }

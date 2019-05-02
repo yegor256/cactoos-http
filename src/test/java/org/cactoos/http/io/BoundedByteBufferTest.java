@@ -33,8 +33,35 @@ import org.junit.Test;
  *
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle MagicNumberCheck (500 lines)
  */
 public final class BoundedByteBufferTest {
+
+    @Test
+    public void worksWithEqualSameSizeArray() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        buffer.offer((byte) 11);
+        final int[] bytes = {1, 2, 3, 4};
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            buffer.equalTo(new byte[]{1, 2, 3, 4}),
+            new IsEqual<>(true)
+        );
+    }
+
+    @Test
+    public void worksWithUnequalSameSizeArray() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        buffer.offer((byte) 11);
+        final int[] bytes = {1, 2, 3, 5};
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            buffer.equalTo(new byte[]{1, 2, 3, 4}),
+            new IsEqual<>(false)
+        );
+    }
 
     @Test
     public void onlyKeepsTheLastNBytes() {
@@ -43,7 +70,6 @@ public final class BoundedByteBufferTest {
         final int[] bytes = {1, 2, 3, 4, 5, 6, 7, 8 };
         Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
-            // @checkstyle MagicNumberCheck (1 line)
             buffer.equalTo(new byte[] {5, 6, 7, 8 }),
             new IsEqual<>(true)
         );
@@ -56,7 +82,6 @@ public final class BoundedByteBufferTest {
         final int[] bytes = {1, 2};
         Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
-            // @checkstyle MagicNumberCheck (1 line)
             buffer.equalTo(new byte[] {1, 2}),
             new IsEqual<>(true)
         );
@@ -69,9 +94,21 @@ public final class BoundedByteBufferTest {
         final int[] bytes = {1, 2};
         Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
-            // @checkstyle MagicNumberCheck (1 line)
             buffer.equalTo(new byte[] {1, 2, 0}),
             new IsEqual<>(false)
+        );
+    }
+
+    @Test
+    public void equalsWhenShiftedOdd() {
+        final int limit = 4;
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+        buffer.offer((byte) 11);
+        final int[] bytes = {1, 2, 1, 2};
+        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        MatcherAssert.assertThat(
+            buffer.equalTo(new byte[]{1, 2, 1, 2}),
+            new IsEqual<>(true)
         );
     }
 }
