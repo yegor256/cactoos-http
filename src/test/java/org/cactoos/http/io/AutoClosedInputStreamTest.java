@@ -41,22 +41,19 @@ import org.llorllale.cactoos.matchers.IsTrue;
 public final class AutoClosedInputStreamTest {
 
     @Test
-    public void autoClosesTheStream() {
-        new Assertion<Boolean>(
+    public void autoClosesTheStream() throws Exception {
+        final CloseableInputStream closeable = new CloseableInputStream(
+            new DeadInputStream()
+        );
+        try (final InputStream ins = new AutoClosedInputStream(closeable)) {
+            int read;
+            do {
+                read = ins.read();
+            } while (read != -1);
+        }
+        new Assertion<>(
             "must autoclose the stream",
-            () -> {
-                final CloseableInputStream closeable =
-                    new CloseableInputStream(new DeadInputStream());
-                try (final InputStream ins = new AutoClosedInputStream(
-                    closeable
-                )) {
-                    int read;
-                    do {
-                        read = ins.read();
-                    } while (read != -1);
-                    return closeable.isClosed();
-                }
-            },
+            closeable.isClosed(),
             new IsTrue()
         ).affirm();
     }

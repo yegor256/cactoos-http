@@ -45,7 +45,7 @@ public final class HtKeepAliveResponseTest {
         new FtRemote(new TkText("Hello, dude!")).exec(
             home -> new Assertion<>(
                 "The HTTP response contains 200 status code",
-                () -> new TextOf(
+                new TextOf(
                     new HtKeepAliveResponse(home, 5000, 5)
                 ),
                 new TextHasString("HTTP/1.1 200 OK")

@@ -31,7 +31,6 @@ import java.net.URI;
 import org.cactoos.BiFunc;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
-import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
 import org.cactoos.scalar.Constant;
 import org.cactoos.scalar.Ternary;
@@ -117,21 +116,18 @@ public final class HtWire implements Wire {
 
     @Override
     public Input send(final Input input) throws Exception {
-        try (
-            final Socket socket = this.supplier.value();
-            final InputStream source = input.stream();
-            final InputStream ins = socket.getInputStream();
-            final OutputStream ous = socket.getOutputStream()
-        ) {
-            final byte[] buf = new byte[HtWire.LENGTH];
-            while (true) {
-                final int len = source.read(buf);
-                if (len < 0) {
-                    break;
-                }
-                ous.write(buf, 0, len);
+        final Socket socket = this.supplier.value();
+        final InputStream source = input.stream();
+        final InputStream ins = socket.getInputStream();
+        final OutputStream ous = socket.getOutputStream();
+        final byte[] buf = new byte[HtWire.LENGTH];
+        while (true) {
+            final int len = source.read(buf);
+            if (len < 0) {
+                break;
             }
-            return new InputOf(new BytesOf(ins).asBytes());
+            ous.write(buf, 0, len);
         }
+        return new InputOf(ins);
     }
 }
