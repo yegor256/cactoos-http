@@ -35,7 +35,6 @@ import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNot;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
@@ -97,11 +96,6 @@ public final class HtWireTest {
         );
     }
 
-    // @todo #63:30min HtWire should not close the socket opened to the remote
-    //  service (this includes not closing associated input and output
-    //  streams). It should instead return an `Input` with the socket's
-    //  inputstream "unread". Refactor accordingly and unignore this test.
-    @Ignore("see todo above")
     @Test
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void closesSocketOnlyAfterResponseIsClosed() throws Exception {
@@ -117,12 +111,12 @@ public final class HtWireTest {
                 ).stream()) {
                     new Assertion<>(
                         "must have a response",
-                        () -> ins.read(),
+                        ins.read(),
                         new IsNot<>(new IsEqual<>(-1))
                     ).affirm();
                     new Assertion<>(
                         "must keep the socket open until response is closed",
-                        socket::isClosed,
+                        socket.isClosed(),
                         new IsNot<>(new IsTrue())
                     ).affirm();
                     // @checkstyle IllegalCatchCheck (1 line)
@@ -131,7 +125,7 @@ public final class HtWireTest {
                 }
                 new Assertion<>(
                     "must close the socket once input response is closed",
-                    socket::isClosed,
+                    socket.isClosed(),
                     new IsTrue()
                 ).affirm();
             }

@@ -26,10 +26,10 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
+import org.llorllale.cactoos.matchers.Throws;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
 
@@ -69,13 +69,13 @@ public final class HtAutoClosedResponseTest {
                     } while (read != -1);
                     new Assertion<>(
                         "must close the response, thus the socket, after EOF",
-                        socket::isClosed,
+                        socket.isClosed(),
                         new IsTrue()
                     ).affirm();
                     new Assertion<>(
                         "must behave as closed",
                         ins::available,
-                        new IsEqual<>(0)
+                        new Throws<>("Stream closed.", IOException.class)
                     ).affirm();
                     // @checkstyle IllegalCatchCheck (1 line)
                 } catch (final Exception ex) {

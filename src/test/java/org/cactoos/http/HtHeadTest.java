@@ -53,7 +53,7 @@ public final class HtHeadTest {
     public void takesHeadOutOfHttpResponse() {
         new Assertion<>(
             "Header does not have 'text/plain'",
-            () -> new TextOf(
+            new TextOf(
                 new HtHead(
                     new InputOf(
                         new JoinedText(
@@ -74,7 +74,7 @@ public final class HtHeadTest {
     public void emptyHeadOfHttpResponse()  {
         new Assertion<>(
             "Text does not have an empty string",
-            () -> new TextOf(
+            new TextOf(
                 new HtHead(
                     new InputOf(
                         new JoinedText(
@@ -91,13 +91,13 @@ public final class HtHeadTest {
     }
 
     @Test
-    public void largeText() {
+    public void largeText() throws Exception {
         //@checkstyle MagicNumberCheck (1 lines)
         final byte[] bytes = new byte[18000];
         new Random().nextBytes(bytes);
         new Assertion<>(
             "Header does not have text/plain header",
-            () -> new TextOf(
+            new TextOf(
                 new HtHead(
                     new InputOf(
                         new JoinedText(
@@ -134,14 +134,14 @@ public final class HtHeadTest {
         );
         new Assertion<>(
             "make sure the constructed block is exact size",
-            () -> block.asString().length(),
+            block.asString().length(),
             new IsEqual<>(
                 size
             )
         ).affirm();
         new Assertion<>(
             String.format("Edge of the block tearing for size: %s", size),
-            () -> new TextOf(
+            new TextOf(
                 new HtHead(
                     new InputOf(
                         new JoinedText(
