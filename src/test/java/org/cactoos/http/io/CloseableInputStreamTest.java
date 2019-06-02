@@ -23,14 +23,18 @@
  */
 package org.cactoos.http.io;
 
+import org.cactoos.Text;
 import org.cactoos.io.DeadInputStream;
+import org.cactoos.io.InputOf;
+import org.cactoos.text.TextOf;
 import org.hamcrest.core.IsNot;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.InputHasContent;
 import org.llorllale.cactoos.matchers.IsTrue;
 
 /**
- * Test case for {@link AutoClosedInputStream}.
+ * Test case for {@link CloseableInputStreamTest}.
  *
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
@@ -38,18 +42,35 @@ import org.llorllale.cactoos.matchers.IsTrue;
  * @checkstyle JavadocVariableCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class AutoClosedInputStreamTest {
-
+public final class CloseableInputStreamTest {
     @Test
-    public void autoClosesTheStream() throws Exception {
+    public void doesNotCloseTheStream() throws Exception {
         final CloseableInputStream closeable = new CloseableInputStream(
             new DeadInputStream()
         );
-        new ReadBytes(closeable).asBytes();
         new Assertion<>(
-            "must not close the stream",
+            "must not be marked as closed before close is called",
             closeable.wasClosed(),
             new IsNot<>(new IsTrue())
+        ).affirm();
+        closeable.close();
+        new Assertion<>(
+            "must be marked as closed after close is called",
+            closeable.wasClosed(),
+            new IsTrue()
+        ).affirm();
+    }
+
+    @Test
+    public void wrapsAndInputStream() throws Exception {
+        final Text text = new TextOf("test");
+        final CloseableInputStream closeable = new CloseableInputStream(
+            new InputOf(text).stream()
+        );
+        new Assertion<>(
+            "must allow to read the stream",
+            new InputOf(closeable),
+            new InputHasContent(text)
         ).affirm();
     }
 }

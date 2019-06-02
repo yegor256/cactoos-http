@@ -23,33 +23,55 @@
  */
 package org.cactoos.http.io;
 
-import org.cactoos.io.DeadInputStream;
-import org.hamcrest.core.IsNot;
-import org.junit.Test;
-import org.llorllale.cactoos.matchers.Assertion;
-import org.llorllale.cactoos.matchers.IsTrue;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Test case for {@link AutoClosedInputStream}.
+ * Useful {@link InputStream} implementation for tests.
+ *
+ * <p>There is no thread-safety guarantee.
  *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle JavadocTypeCheck (500 lines)
- * @checkstyle JavadocVariableCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class AutoClosedInputStreamTest {
+public final class CloseableInputStream extends InputStream {
 
-    @Test
-    public void autoClosesTheStream() throws Exception {
-        final CloseableInputStream closeable = new CloseableInputStream(
-            new DeadInputStream()
-        );
-        new ReadBytes(closeable).asBytes();
-        new Assertion<>(
-            "must not close the stream",
-            closeable.wasClosed(),
-            new IsNot<>(new IsTrue())
-        ).affirm();
+    /**
+     * The wrapped stream.
+     */
+    private final InputStream origin;
+
+    /**
+     * Closed or not.
+     */
+    private boolean closed;
+
+    /**
+     * Ctor.
+     *
+     * @param origin The wrapped stream.
+     */
+    public CloseableInputStream(final InputStream origin) {
+        super();
+        this.origin = origin;
+    }
+
+    /**
+     * Check if stream is closed.
+     *
+     * @return True if the stream was closed.
+     */
+    public boolean wasClosed() {
+        return this.closed;
+    }
+
+    @Override
+    public int read() throws IOException {
+        return this.origin.read();
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.closed = true;
+        this.origin.close();
     }
 }

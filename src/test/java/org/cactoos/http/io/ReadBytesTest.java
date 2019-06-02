@@ -24,13 +24,12 @@
 package org.cactoos.http.io;
 
 import org.cactoos.io.DeadInputStream;
-import org.hamcrest.core.IsNot;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
 
 /**
- * Test case for {@link AutoClosedInputStream}.
+ * Test case for {@link ReadBytesTest}.
  *
  * @since 0.1
  * @checkstyle JavadocMethodCheck (500 lines)
@@ -38,18 +37,17 @@ import org.llorllale.cactoos.matchers.IsTrue;
  * @checkstyle JavadocVariableCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class AutoClosedInputStreamTest {
-
+public final class ReadBytesTest {
     @Test
-    public void autoClosesTheStream() throws Exception {
+    public void doesNotCloseTheStream() throws Exception {
         final CloseableInputStream closeable = new CloseableInputStream(
             new DeadInputStream()
         );
-        new ReadBytes(closeable).asBytes();
+        new ReadBytes(new AutoClosedInputStream(closeable)).asBytes();
         new Assertion<>(
-            "must not close the stream",
+            "must autoclose the stream",
             closeable.wasClosed(),
-            new IsNot<>(new IsTrue())
+            new IsTrue()
         ).affirm();
     }
 }

@@ -26,9 +26,12 @@ package org.cactoos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import org.cactoos.http.io.ReadBytes;
+import org.cactoos.text.TextOf;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.IsTrue;
+import org.llorllale.cactoos.matchers.TextHasString;
 import org.llorllale.cactoos.matchers.Throws;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
@@ -37,12 +40,6 @@ import org.takes.tk.TkText;
  * Test case for {@link HtAutoClosedResponse}.
  *
  * @since 0.1
- * @todo #64:30min Introduce abstractions to read from an Input
- *  without closing the stream as most of the cactoos abstraction
- *  do. As a starter use them in HtAutoClosedResponseTest, HtWireTest
- *  and AutoClosedInputStreamTest instead of the ugly while loops or
- *  meaningless reads. Use them also to actually test the content of
- *  the inputs.
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
@@ -63,10 +60,11 @@ public final class HtAutoClosedResponseTest {
                         new Get(home)
                     )
                 ).stream()) {
-                    int read;
-                    do {
-                        read = ins.read();
-                    } while (read != -1);
+                    new Assertion<>(
+                        "must have a response",
+                        new TextOf(new ReadBytes(ins)),
+                        new TextHasString("HTTP/1.1 200 OK")
+                    ).affirm();
                     new Assertion<>(
                         "must close the response, thus the socket, after EOF",
                         socket.isClosed(),

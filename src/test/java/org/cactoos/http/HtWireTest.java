@@ -28,12 +28,12 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.URI;
 import org.cactoos.BiFunc;
+import org.cactoos.http.io.ReadBytes;
 import org.cactoos.io.DeadInput;
 import org.cactoos.io.DeadInputStream;
 import org.cactoos.text.FormattedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNot;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
@@ -111,8 +111,8 @@ public final class HtWireTest {
                 ).stream()) {
                     new Assertion<>(
                         "must have a response",
-                        ins.read(),
-                        new IsNot<>(new IsEqual<>(-1))
+                        new TextOf(new ReadBytes(ins)),
+                        new TextHasString("HTTP/1.1 200 OK")
                     ).affirm();
                     new Assertion<>(
                         "must keep the socket open until response is closed",
