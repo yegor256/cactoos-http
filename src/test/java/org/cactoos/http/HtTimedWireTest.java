@@ -75,7 +75,7 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @todo #87:30m For now I can't find proper OOP-alternative for waiting
+    // @todo #87:30m For now I can't find proper OOP alternative for waiting
     //  (such in this case). Needs to create a new one.
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
