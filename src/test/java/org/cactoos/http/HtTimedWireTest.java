@@ -24,14 +24,13 @@
 package org.cactoos.http;
 
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
@@ -76,24 +75,19 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @todo #78:30min With #78 solved, HtWire stopped closing the connection
-    //  when send() is called and the following test stopped working for no
-    //  clear reason. Investigate the cause of this, fix it and unignore this.
-    @Ignore("see todo above")
+    // @todo #87:30m For now I can't find proper OOP-alternative for waiting
+    //  (such in this case). Needs to create a new one.
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
     public void failsAfterTimeout() throws Exception {
         // @checkstyle MagicNumberCheck (1 line)
         final long timeout = 100;
-        try (Socket blocker = new Socket()) {
-            blocker.connect(this.server.getLocalSocketAddress());
-            new HtTimedWire(
-                new HtWire(
-                    this.server.getInetAddress().getHostAddress(),
-                    this.server.getLocalPort()
-                ),
-                timeout
-            ).send(new InputOf("unused"));
-        }
+        new HtTimedWire(
+            input -> {
+                TimeUnit.SECONDS.sleep(timeout + timeout);
+                return input;
+            },
+            timeout
+        ).send(new InputOf("unused"));
     }
 }
