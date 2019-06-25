@@ -78,9 +78,9 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @todo #87:30m For now I can't find proper OOP alternative for waiting
-    // (such in this case). Needs to create a new one. I think this can looks
-    // like this: new Wait().seconds(long seconds). Needs to do this in the test
+    // @todo #87:30m For now I can't find proper OOP alternative for waiting.
+    // Needs to create a new one. I think this can looks like this:
+    // new Wait().seconds(long seconds). Needs to do this in the test
     // org.cactoos.http.HtTimedWireTest.failsAfterTimeoutCheckIfWait too
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
