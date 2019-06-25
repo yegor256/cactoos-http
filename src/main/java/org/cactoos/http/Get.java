@@ -50,7 +50,7 @@ public final class Get extends InputEnvelope {
                     url.getPath()
                 ),
                 new FormattedText(
-                    "Host:%s",
+                    "Host: %s",
                     url.getHost()
                 )
             )

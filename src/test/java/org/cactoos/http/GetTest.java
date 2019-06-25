@@ -48,7 +48,7 @@ public final class GetTest {
                     )
                 )
             ),
-            new TextHasString("GET /path/to/resource HTTP/1.1\r\nHost:host")
+            new TextHasString("GET /path/to/resource HTTP/1.1\r\nHost: host")
         ).affirm();
     }
 
