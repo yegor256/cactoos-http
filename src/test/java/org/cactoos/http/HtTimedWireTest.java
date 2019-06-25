@@ -30,8 +30,10 @@ import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.llorllale.cactoos.matchers.MatcherOf;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
@@ -46,6 +48,7 @@ import org.takes.tk.TkText;
  */
 public final class HtTimedWireTest {
 
+    private static final String UNUSED = "UNUSED";
     private ServerSocket server;
 
     @Before
@@ -76,7 +79,9 @@ public final class HtTimedWireTest {
     }
 
     // @todo #87:30m For now I can't find proper OOP alternative for waiting
-    //  (such in this case). Needs to create a new one.
+    // (such in this case). Needs to create a new one. I think this can looks
+    // like this: new Wait().seconds(long seconds). Needs to do this in the test
+    // org.cactoos.http.HtTimedWireTest.failsAfterTimeoutCheckIfWait too
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
     public void failsAfterTimeout() throws Exception {
@@ -84,10 +89,38 @@ public final class HtTimedWireTest {
         final long timeout = 100;
         new HtTimedWire(
             input -> {
-                TimeUnit.SECONDS.sleep(timeout + timeout);
+                TimeUnit.SECONDS.sleep(timeout + 1);
                 return input;
             },
             timeout
-        ).send(new InputOf("unused"));
+        ).send(new InputOf(HtTimedWireTest.UNUSED));
+    }
+
+    // @checkstyle MagicNumberCheck (1 line)
+    @Test(timeout = 1000)
+    public void failsAfterTimeoutCheckIfWait() throws Exception {
+        final long timeout = 100;
+        final long current = System.currentTimeMillis();
+        final long sleep = 10 * timeout;
+        try {
+            new HtTimedWire(
+                input -> {
+                    TimeUnit.SECONDS.sleep(sleep);
+                    return input;
+                },
+                timeout
+            ).send(
+                new InputOf(HtTimedWireTest.UNUSED)
+            );
+            Assert.fail("Not failed on Timeout");
+        } catch (final TimeoutException exception) {
+            final long failed = System.currentTimeMillis();
+            MatcherAssert.assertThat(
+                failed,
+                new MatcherOf<>(
+                    input -> input - current < sleep
+                )
+            );
+        }
     }
 }
