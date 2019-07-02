@@ -29,11 +29,13 @@ import java.util.concurrent.TimeoutException;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
 import org.cactoos.io.InputOf;
+import org.cactoos.iterable.IterableOf;
+import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.hamcrest.core.AllOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +55,6 @@ import org.takes.tk.TkText;
 @SuppressWarnings("PMD.TooManyMethods")
 public final class HtTimedWireTest {
 
-    private static final String UNUSED = "UNUSED";
-    private static final String TIMEOUT = "Did not failed after timeout";
     private ServerSocket server;
 
     @Before
@@ -84,16 +84,12 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @todo #87:30m For now I can't find proper OOP alternative for waiting.
-    //  Needs to create a new one. I think this can looks like this:
-    //  new Wait().seconds(long seconds). Needs to do this in the test
-    //  org.cactoos.http.HtTimedWireTest.failsAfterTimeoutCheckIfWait too
-    //  @checkstyle MagicNumberCheck (1 line)
+    // @checkstyle MagicNumberCheck (1 line)
     @Test(timeout = 1000)
     public void failsAfterTimeout() throws Exception {
         // @checkstyle MagicNumberCheck (1 line)
         final long timeout = 100;
-        final HtTimedWire wire = new HtTimedWire(
+        final Wire wire = new HtTimedWire(
             input -> {
                 TimeUnit.SECONDS.sleep(timeout + 1);
                 return input;
@@ -101,45 +97,77 @@ public final class HtTimedWireTest {
             timeout
         );
         new Assertion<>(
-            HtTimedWireTest.TIMEOUT,
-            () -> wire.send(new InputOf(HtTimedWireTest.UNUSED)),
+            "fails with timeout exception",
+            () -> wire.send(new InputOf()),
             new TimeoutExceptionMatcher()
-        )
-            .affirm();
+        ).affirm();
     }
 
     // @checkstyle MagicNumberCheck (1 line)
     @Test(timeout = 1000)
+    @SuppressWarnings("unchecked")
+    // @todo #87:30m In the creation of IterableOf without
+    //  @SuppressWarnings("unchecked") complication failed with:
+    //  Warning:(124, 29) java: unchecked generic array creation
+    //  for varargs parameter of type
+    //  org.hamcrest.Matcher<? super org.cactoos.Scalar<org.cactoos.Input>>[].
+    //  Needs to investigate and fix this warning.
     public void failsAfterTimeoutCheckIfWait() throws Exception {
         final long timeout = 100;
         final long sleep = 10 * timeout;
-        final HtTimedWire wire = new HtTimedWire(
+        final Wire wire = new HtTimedWire(
             input -> {
                 TimeUnit.SECONDS.sleep(sleep);
                 return input;
             },
             timeout
         );
-        final long current = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
+        final JoinedText message = new JoinedText(
+            "or",
+            " fails with timeout exception ",
+            " execution isn't interrupted when a timeout is exceeded "
+        );
         new Assertion<>(
-            HtTimedWireTest.TIMEOUT, () -> wire.send(
-            new InputOf(HtTimedWireTest.UNUSED)
-        ), new AllOf(
-            new TimeoutExceptionMatcher(),
-            new TypeSafeDiagnosingMatcher<Scalar<Input>>() {
-                @Override
-                protected boolean matchesSafely(
-                    final Scalar<Input> item,
-                    final Description description) {
-                    final long failed = System.currentTimeMillis();
-                    return failed - current < sleep;
-                }
+            message.asString(),
+            () -> wire.send(new InputOf()),
+            new AllOf<>(
+                new IterableOf<>(
+                    new TimeoutExceptionMatcher(),
+                    new MaximumTimeMatcher(start, sleep)
+                ))).affirm();
+    }
 
-                @Override
-                @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
-                public void describeTo(final Description description) {
-                }
-            }));
+    /**
+     * Class that matches, that execution in not more than
+     * {@link org.cactoos.http.HtTimedWireTest.MaximumTimeMatcher#sleep}.
+     * @todo #87:30m Need to replace this with
+     *  https://github.com/llorllale/cactoos-matchers/issues/133
+     *  when an issue will be resolved. This is a temporary solution
+     *  for asserting a maximum time.
+     */
+    private final class MaximumTimeMatcher
+        extends TypeSafeDiagnosingMatcher<Scalar<Input>> {
+        private final long start;
+        private final long sleep;
+
+        MaximumTimeMatcher(final long start, final long sleep) {
+            super();
+            this.start = start;
+            this.sleep = sleep;
+        }
+
+        @Override
+        @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
+        public void describeTo(final Description description) {
+        }
+
+        @Override
+        public boolean matchesSafely(
+            final Scalar<Input> item,
+            final Description description) {
+            return System.currentTimeMillis() - start < sleep;
+        }
     }
 
     /**
@@ -183,46 +211,4 @@ public final class HtTimedWireTest {
             //Not used
         }
     }
-
-    /**
-     * Class that matches that use
-     * all of {@link org.cactoos.http.HtTimedWireTest.AllOf#matchers}.
-     * @todo #87:30m For a some reason org.hamcrest.core.AllOf matcher with
-     *  org.cactoos.iterable.IterableOf is not working (compilation error with
-     *  unchecked generic array creation for varargs parameter).
-     *  Needs to replace this with org.hamcrest.core.AllOf
-     *  and deal with compilation error.
-     *  And needs try to remove {@link java.lang.SuppressWarnings} in
-     *  {@link org.cactoos.http.HtTimedWireTest}.
-     */
-    private final class AllOf extends TypeSafeDiagnosingMatcher<Scalar<Input>> {
-
-        private final Matcher<Scalar<Input>>[] matchers;
-
-        @SafeVarargs
-        private AllOf(final Matcher<Scalar<Input>>... matchers) {
-            super();
-            this.matchers = matchers;
-        }
-
-        @Override
-        public void describeTo(final Description description) {
-            //Not used
-        }
-
-        @Override
-        public boolean matchesSafely(
-            final Scalar<Input> item,
-            final Description description) {
-            boolean matches = true;
-            for (final Matcher<Scalar<Input>> matcher : this.matchers) {
-                matcher.matches(item);
-                if (!matcher.matches(item)) {
-                    matches = false;
-                }
-            }
-            return matches;
-        }
-    }
-
 }
