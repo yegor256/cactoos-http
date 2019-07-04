@@ -30,7 +30,6 @@ import org.cactoos.Input;
 import org.cactoos.Scalar;
 import org.cactoos.io.InputOf;
 import org.cactoos.iterable.IterableOf;
-import org.cactoos.text.JoinedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
@@ -99,7 +98,7 @@ public final class HtTimedWireTest {
         new Assertion<>(
             "fails with timeout exception",
             () -> wire.send(new InputOf()),
-            new TimeoutExceptionMatcher()
+            new ThrowsTimeoutExceptionMatcher()
         ).affirm();
     }
 
@@ -123,24 +122,19 @@ public final class HtTimedWireTest {
             timeout
         );
         final long start = System.currentTimeMillis();
-        final JoinedText message = new JoinedText(
-            "or",
-            " fails with timeout exception ",
-            " execution isn't interrupted when a timeout is exceeded "
-        );
         new Assertion<>(
-            message.asString(),
+            "Execution isn't interrupted when a timeout is exceeded",
             () -> wire.send(new InputOf()),
             new AllOf<>(
                 new IterableOf<>(
-                    new TimeoutExceptionMatcher(),
+                    new ThrowsTimeoutExceptionMatcher(),
                     new MaximumTimeMatcher(start, sleep)
                 ))).affirm();
     }
 
     /**
      * Class that matches, that execution in not more than
-     * {@link org.cactoos.http.HtTimedWireTest.MaximumTimeMatcher#sleep}.
+     * {@link org.cactoos.http.HtTimedWireTest.MaximumTimeMatcher#duration}.
      * @todo #87:30m Need to replace this with
      *  https://github.com/llorllale/cactoos-matchers/issues/133
      *  when an issue will be resolved. This is a temporary solution
@@ -149,12 +143,12 @@ public final class HtTimedWireTest {
     private final class MaximumTimeMatcher
         extends TypeSafeDiagnosingMatcher<Scalar<Input>> {
         private final long start;
-        private final long sleep;
+        private final long duration;
 
-        MaximumTimeMatcher(final long start, final long sleep) {
+        MaximumTimeMatcher(final long start, final long duration) {
             super();
             this.start = start;
-            this.sleep = sleep;
+            this.duration = duration;
         }
 
         @Override
@@ -166,7 +160,7 @@ public final class HtTimedWireTest {
         public boolean matchesSafely(
             final Scalar<Input> item,
             final Description description) {
-            return System.currentTimeMillis() - start < sleep;
+            return System.currentTimeMillis() - start < duration;
         }
     }
 
@@ -185,7 +179,7 @@ public final class HtTimedWireTest {
      *  And needs try to remove {@link java.lang.SuppressWarnings} in
      *  {@link org.cactoos.http.HtTimedWireTest}.
      */
-    private final class TimeoutExceptionMatcher extends
+    private final class ThrowsTimeoutExceptionMatcher extends
         TypeSafeDiagnosingMatcher<Scalar<Input>> {
 
         @Override
