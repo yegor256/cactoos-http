@@ -23,15 +23,11 @@
  */
 package org.cactoos.http;
 
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.concurrent.TimeoutException;
+import org.cactoos.http.io.BlockingSocketServer;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
@@ -46,19 +42,6 @@ import org.takes.tk.TkText;
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class HtTimedWireTest {
-
-    private ServerSocket server;
-
-    @Before
-    public void openServerWithOneSlot() throws Exception {
-        this.server = new ServerSocket(0, 1);
-    }
-
-    @After
-    public void closeServer() throws Exception {
-        this.server.close();
-    }
-
     @Test
     public void worksFine() throws Exception {
         // @checkstyle MagicNumberCheck (1 line)
@@ -76,21 +59,16 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @todo #78:30min With #78 solved, HtWire stopped closing the connection
-    //  when send() is called and the following test stopped working for no
-    //  clear reason. Investigate the cause of this, fix it and unignore this.
-    @Ignore("see todo above")
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
     public void failsAfterTimeout() throws Exception {
         // @checkstyle MagicNumberCheck (1 line)
         final long timeout = 100;
-        try (Socket blocker = new Socket()) {
-            blocker.connect(this.server.getLocalSocketAddress());
+        try (BlockingSocketServer server = new BlockingSocketServer()) {
             new HtTimedWire(
                 new HtWire(
-                    this.server.getInetAddress().getHostAddress(),
-                    this.server.getLocalPort()
+                    server.address().getHostAddress(),
+                    server.port()
                 ),
                 timeout
             ).send(new InputOf("unused"));
