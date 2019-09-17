@@ -46,7 +46,7 @@ public final class HtKeepAliveResponseTest {
             home -> new Assertion<>(
                 "The HTTP response contains 200 status code",
                 new TextOf(
-                    new HtKeepAliveResponse(home, 5000, 5)
+                    new HtKeepAliveResponse(new HtWire(home), 5000, 5, "req1")
                 ),
                 new TextHasString("HTTP/1.1 200 OK")
             ).affirm()
