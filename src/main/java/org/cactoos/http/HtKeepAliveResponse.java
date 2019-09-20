@@ -54,7 +54,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
      * @param rmax The maximum quantity of the requests within the connection
      *  timeout
      * @param req The request
-     * @checkstyle ParameterNumberCheck (58 lines)
+     * @checkstyle ParameterNumberCheck (2 lines)
      */
     public HtKeepAliveResponse(
         final Wire wre, final long mtimeout, final int rmax, final String req
@@ -81,7 +81,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
      * @param rmax The maximum quantity of the requests within the connection
      *  timeout
      * @param req The request
-     * @checkstyle ParameterNumberCheck (84 lines)
+     * @checkstyle ParameterNumberCheck (2 lines)
      */
     public HtKeepAliveResponse(
         final Wire wre, final long mtimeout, final int rmax, final Input req
