@@ -37,16 +37,36 @@ import org.takes.tk.TkText;
  * @since 0.1
  * @checkstyle MagicNumberCheck (500 lines)
  * @checkstyle JavadocMethodCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HtKeepAliveResponseTest {
 
     @Test
-    public void worksFineByUri() throws IOException {
+    public void worksFineByStringReq() throws IOException {
         new FtRemote(new TkText("Hello, dude!")).exec(
             home -> new Assertion<>(
                 "The HTTP response contains 200 status code",
                 new TextOf(
-                    new HtKeepAliveResponse(home, 5000, 5)
+                    new HtKeepAliveResponse(new HtWire(home), 5000, 5, "req1")
+                ),
+                new TextHasString("HTTP/1.1 200 OK")
+            ).affirm()
+        );
+    }
+
+    @Test
+    public void worksFineByInputReq() throws IOException {
+        new FtRemote(new TkText("Hello, world!")).exec(
+            home -> new Assertion<>(
+                "The HTTP response contains 200 status code",
+                new TextOf(
+                    new HtKeepAliveResponse(
+                        new HtWire(home),
+                        5000,
+                        5,
+                        new Get(home)
+                    )
                 ),
                 new TextHasString("HTTP/1.1 200 OK")
             ).affirm()

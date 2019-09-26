@@ -23,8 +23,7 @@
  */
 package org.cactoos.http;
 
-import java.net.URI;
-import java.util.Optional;
+import org.cactoos.Input;
 import org.cactoos.Text;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
@@ -43,44 +42,59 @@ public final class HtKeepAliveResponse extends InputEnvelope {
      */
     private static final Text TEMPLATE = new JoinedText(
         "\r\n",
-        "GET %s HTTP/1.1",
-        "Host:%s",
+        "%s",
         "Connection: Keep-Alive",
         "Keep-Alive: timeout=%s, max=%s"
     );
 
     /**
      * Ctor.
-     * @param uri Target URI
+     * @param wre The wire
      * @param mtimeout The timeout for the connection usage in milliseconds
      * @param rmax The maximum quantity of the requests within the connection
      *  timeout
-     * @todo #20:30min Replace the HtWire by HtKeepAliveWire which should
-     *  support the <em>Keep-Alive</em> header. It should has at least 1 `ctor`
-     *  with 3 parameters:
-     *  - `wire` which represents the HTTP connection;
-     *  - `timeout` in milliseconds;
-     *  - `rmax` the max quantity of within the timeout.
-     *  In case the quantity of requests is greater than rmax but takes less
-     *  time than `timeout`, the connection should be reset by the server.
-     *  Remove the suppresing of PMD errors due to unused private fields.
+     * @param req The request
+     * @checkstyle ParameterNumberCheck (2 lines)
      */
     public HtKeepAliveResponse(
-        final URI uri, final long mtimeout, final int rmax
+        final Wire wre, final long mtimeout, final int rmax, final String req
     ) {
         super(
             new HtResponse(
-                new HtWire(uri),
+                wre,
                 new InputOf(
                     new FormattedText(
                         HtKeepAliveResponse.TEMPLATE,
-                        Optional.ofNullable(uri.getQuery()).orElse("/"),
-                        uri.getHost(),
+                        req,
                         mtimeout,
                         rmax
                     )
                 )
             )
         );
+    }
+
+    /**
+     * Ctor.
+     * @param wre The wire
+     * @param mtimeout The timeout for the connection usage in milliseconds
+     * @param rmax The maximum quantity of the requests within the connection
+     *  timeout
+     * @param req The request
+     * @checkstyle ParameterNumberCheck (2 lines)
+     */
+    public HtKeepAliveResponse(
+        final Wire wre, final long mtimeout, final int rmax, final Input req
+    ) {
+        super(() -> wre.send(
+            new InputOf(
+                new FormattedText(
+                    HtKeepAliveResponse.TEMPLATE,
+                    req,
+                    mtimeout,
+                    rmax
+                )
+            )
+        ).stream());
     }
 }
