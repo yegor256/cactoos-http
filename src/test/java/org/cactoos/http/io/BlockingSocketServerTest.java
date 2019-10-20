@@ -28,6 +28,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import org.cactoos.text.TextOf;
 import org.hamcrest.core.IsEqual;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.MatcherOf;
@@ -71,6 +72,7 @@ public final class BlockingSocketServerTest {
         }
     }
 
+    @Ignore("see BlockingSocketServer todo for #87")
     // @checkstyle MagicNumberCheck (1 line)
     @Test(timeout = 1000)
     public void blocksOnNewConnections() {

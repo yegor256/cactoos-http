@@ -28,6 +28,7 @@ import org.cactoos.http.io.BlockingSocketServer;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
@@ -59,6 +60,7 @@ public final class HtTimedWireTest {
         );
     }
 
+    @Ignore("see BlockingSocketServer todo for #87")
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
     public void failsAfterTimeout() throws Exception {

@@ -42,6 +42,14 @@ import org.cactoos.scalar.UncheckedScalar;
  * <p>There is no thread-safety guarantee.
  *
  * @since 0.1
+ * @todo #87:30min Rework the implementation of this class not
+ *  to rely on the `backlog` behaviour of `ServerSocket` because
+ *  the assumption made on it can be wrong on some contexts as
+ *  explained in the `ServerSocket` javadoc and as experienced
+ *  in https://github.com/yegor256/cactoos-http/pull/93 when
+ *  the tests are executed by rultor. See this same PR for more details.
+ *  Unignore the tests in `BlockingSocketServerTest` and `HtTimedWireTest`
+ *  after.
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class BlockingSocketServer implements AutoCloseable {
