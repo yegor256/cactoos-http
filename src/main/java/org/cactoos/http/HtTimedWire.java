@@ -25,7 +25,7 @@
 package org.cactoos.http;
 
 import org.cactoos.Input;
-import org.cactoos.func.TimedFunc;
+import org.cactoos.func.Timed;
 
 /**
  * {@link Wire} that will terminate the connection if it's taking too long.
@@ -56,7 +56,7 @@ public final class HtTimedWire implements Wire {
 
     @Override
     public Input send(final Input input) throws Exception {
-        return new TimedFunc<>(
+        return new Timed<>(
             this.origin::send,
             this.milliseconds
         ).apply(input);

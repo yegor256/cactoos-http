@@ -69,7 +69,7 @@ Input head = new StickyInput(
   new HtHead(
     new HtResponse(
       new HtWire("www.example.com"),
-      new JoinedText(
+      new Joined(
         "\n\r",
         "PUT / HTTP/1.1",
         "Host: www.example.com"

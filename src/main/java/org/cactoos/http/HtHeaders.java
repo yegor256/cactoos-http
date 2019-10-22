@@ -33,10 +33,10 @@ import org.cactoos.Text;
 import org.cactoos.list.Joined;
 import org.cactoos.list.ListOf;
 import org.cactoos.map.MapEnvelope;
-import org.cactoos.text.LowerText;
-import org.cactoos.text.SplitText;
+import org.cactoos.text.Lowered;
+import org.cactoos.text.Split;
 import org.cactoos.text.TextOf;
-import org.cactoos.text.TrimmedText;
+import org.cactoos.text.Trimmed;
 
 /**
  * Headers of HTTP response.
@@ -54,16 +54,16 @@ public final class HtHeaders extends MapEnvelope<String, List<String>> {
         super(() -> {
             final Map<String, List<String>> map = new HashMap<>();
             final ListOf<Text> texts = new ListOf<>(
-                new SplitText(new TextOf(head), "\r\n")
+                new Split(new TextOf(head), "\r\n")
             );
             for (final Text line : texts.subList(1, texts.size())) {
                 final String[] parts = line.asString().split(":", 2);
                 map.merge(
-                    new LowerText(
-                        new TrimmedText(new TextOf(parts[0])), Locale.ENGLISH
+                    new Lowered(
+                        new Trimmed(new TextOf(parts[0])), Locale.ENGLISH
                     ).asString(),
                     new ListOf<>(
-                        new TrimmedText(new TextOf(parts[1])).asString()
+                        new Trimmed(new TextOf(parts[1])).asString()
                     ),
                     (first, second) -> new Joined<String>(first, second)
                 );

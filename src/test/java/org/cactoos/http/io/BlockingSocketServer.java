@@ -34,7 +34,7 @@ import org.cactoos.iterable.Reversed;
 import org.cactoos.list.ListOf;
 import org.cactoos.scalar.FallbackFrom;
 import org.cactoos.scalar.Folded;
-import org.cactoos.scalar.UncheckedScalar;
+import org.cactoos.scalar.Unchecked;
 
 /**
  * Useful object for tests that needs to timeout on connect.
@@ -68,10 +68,10 @@ public final class BlockingSocketServer implements AutoCloseable {
      * Ctor.
      */
     public BlockingSocketServer() {
-        this.server = new UncheckedScalar<>(
+        this.server = new Unchecked<>(
             () -> new ServerSocket(0, 1)
         ).value();
-        this.blockers = new UncheckedScalar<>(
+        this.blockers = new Unchecked<>(
             () -> new ListOf<AutoCloseable>(
                 new Socket(this.address(), this.port()),
                 new Socket(this.address(), this.port())
@@ -101,7 +101,7 @@ public final class BlockingSocketServer implements AutoCloseable {
     @Override
     public void close() {
         final RuntimeException fail = new RuntimeException("Cannot close");
-        final boolean failed = new UncheckedScalar<>(
+        final boolean failed = new Unchecked<>(
             new Folded<>(
                 false,
                 Boolean::logicalOr,

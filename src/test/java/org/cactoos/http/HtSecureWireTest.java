@@ -29,7 +29,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -127,7 +127,7 @@ public final class HtSecureWireTest {
         public InputStream stream() throws Exception {
             final String delimiter = "\r\n";
             return new InputOf(
-                new JoinedText(
+                new Joined(
                     delimiter,
                     "GET / HTTP/1.1",
                     new FormattedText(

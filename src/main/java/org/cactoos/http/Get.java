@@ -27,7 +27,7 @@ import java.net.URI;
 import org.cactoos.Input;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.cactoos.text.TextOf;
 
 /**
@@ -43,7 +43,7 @@ public final class Get extends InputEnvelope {
      */
     public Get(final URI url) {
         super(new InputOf(
-            new JoinedText(
+            new Joined(
                 new TextOf("\r\n"),
                 new FormattedText(
                     "GET %s HTTP/1.1",

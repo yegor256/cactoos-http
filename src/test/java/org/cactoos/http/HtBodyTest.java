@@ -24,7 +24,7 @@
 package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public final class HtBodyTest {
             new TextOf(
                 new HtBody(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",

@@ -25,7 +25,7 @@ package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public final class HtAutoRedirectTest {
                 new TextOf(
                     new HtAutoRedirect(
                         new InputOf(
-                            new JoinedText(
+                            new Joined(
                                 new TextOf("\r\n"),
                                 new TextOf("HTTP/1.1 301"),
                                 new FormattedText(

@@ -25,7 +25,7 @@ package org.cactoos.http;
 
 import org.cactoos.io.InputOf;
 import org.cactoos.list.ListOf;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public final class HtContentTypeTest {
             new HtContentType(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
@@ -65,7 +65,7 @@ public final class HtContentTypeTest {
             new HtContentType(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "",

@@ -26,7 +26,7 @@ package org.cactoos.http.io;
 
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public final class SkipInputTest {
             new TextOf(
                 new SkipInput(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             delimiter,
                             prefix,
                             suffix
@@ -82,7 +82,7 @@ public final class SkipInputTest {
             new TextOf(
                 new SkipInput(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "",
                             "Hello dude! How are you?",
                             delimiter

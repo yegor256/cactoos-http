@@ -27,9 +27,9 @@ import java.util.Random;
 import org.cactoos.Text;
 import org.cactoos.io.BytesOf;
 import org.cactoos.io.InputOf;
-import org.cactoos.text.JoinedText;
-import org.cactoos.text.RepeatedText;
-import org.cactoos.text.ReplacedText;
+import org.cactoos.text.Joined;
+import org.cactoos.text.Repeated;
+import org.cactoos.text.Replaced;
 import org.cactoos.text.TextOf;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
@@ -56,7 +56,7 @@ public final class HtHeadTest {
             new TextOf(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
@@ -77,7 +77,7 @@ public final class HtHeadTest {
             new TextOf(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "",
                             "",
@@ -100,7 +100,7 @@ public final class HtHeadTest {
             new TextOf(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
@@ -117,17 +117,17 @@ public final class HtHeadTest {
     @Test
     public void edgeOfTheBlockTearing() throws Exception {
         final int size = 16384;
-        final Text header = new JoinedText(
+        final Text header = new Joined(
             "\r\n",
             "HTTP/1.1 200 OK",
             "Referer: http://en.wikipedia.org/wiki/Main_Page#\0",
             "Content-type: text/plain",
             ""
         );
-        final Text block = new ReplacedText(
+        final Text block = new Replaced(
             header,
             "\0",
-            new RepeatedText(
+            new Repeated(
                 "x",
                 size - header.asString().length() + 1
             ).asString()
@@ -144,7 +144,7 @@ public final class HtHeadTest {
             new TextOf(
                 new HtHead(
                     new InputOf(
-                        new JoinedText(
+                        new Joined(
                             "\r\n",
                             block.asString(),
                             "",

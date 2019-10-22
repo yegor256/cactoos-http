@@ -28,7 +28,7 @@ import java.io.InputStream;
 import org.cactoos.Bytes;
 import org.cactoos.Input;
 import org.cactoos.Scalar;
-import org.cactoos.scalar.StickyScalar;
+import org.cactoos.scalar.Sticky;
 
 /**
  * Reads available data from {@link Input} as {@link Bytes} only once
@@ -62,7 +62,7 @@ public final class ReadBytes implements Bytes {
      * @param max Max length of the buffer for reading
      */
     public ReadBytes(final InputStream input, final int max) {
-        this.scalar = new StickyScalar<>(
+        this.scalar = new Sticky<>(
             () -> {
                 final ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 final byte[] buf = new byte[max];

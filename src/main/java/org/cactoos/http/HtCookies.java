@@ -33,7 +33,7 @@ import org.cactoos.map.Grouped;
 import org.cactoos.map.MapEntry;
 import org.cactoos.map.MapEnvelope;
 import org.cactoos.scalar.LengthOf;
-import org.cactoos.text.SplitText;
+import org.cactoos.text.Split;
 
 /**
  * Cookies.
@@ -53,7 +53,7 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
         super(() -> new Grouped<>(
             new Mapped<>(
                 (Text entry) -> {
-                    final Iterable<Text> parts = new SplitText(entry, "=");
+                    final Iterable<Text> parts = new Split(entry, "=");
                     if (new LengthOf(parts).intValue() != 2) {
                         throw new IllegalArgumentException(
                             "Incorrect HTTP Response cookie"
@@ -67,7 +67,7 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
                 },
                 new Joined<>(
                     new Mapped<>(
-                        e -> new SplitText(e, ";\\s+"),
+                        e -> new Split(e, ";\\s+"),
                         new HtHeaders(rsp).get("set-cookie")
                     )
                 )

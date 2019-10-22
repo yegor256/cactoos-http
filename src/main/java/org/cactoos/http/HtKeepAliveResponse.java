@@ -27,7 +27,7 @@ import org.cactoos.Input;
 import org.cactoos.Text;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.FormattedText;
-import org.cactoos.text.JoinedText;
+import org.cactoos.text.Joined;
 
 /**
  * The response which supports <em>Keep-Alive</em> header.
@@ -40,7 +40,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
      * The template of GET request which supports the <em>Keep-Alive</em>
      * header.
      */
-    private static final Text TEMPLATE = new JoinedText(
+    private static final Text TEMPLATE = new Joined(
         "\r\n",
         "%s",
         "Connection: Keep-Alive",
