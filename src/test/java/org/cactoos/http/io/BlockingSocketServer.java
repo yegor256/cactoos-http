@@ -32,6 +32,7 @@ import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.iterable.Reversed;
 import org.cactoos.list.ListOf;
+import org.cactoos.scalar.Binary;
 import org.cactoos.scalar.FallbackFrom;
 import org.cactoos.scalar.Folded;
 import org.cactoos.scalar.Unchecked;
@@ -95,36 +96,35 @@ public final class BlockingSocketServer implements AutoCloseable {
         return this.server.getLocalPort();
     }
 
-    // @todo #87:30min Update cactoos to at least 0.42 and then use
-    //  the new Binary class to replace the if construction below and have
-    //  a full OO code here.
     @Override
     public void close() {
         final RuntimeException fail = new RuntimeException("Cannot close");
-        final boolean failed = new Unchecked<>(
-            new Folded<>(
-                false,
-                Boolean::logicalOr,
-                new Mapped<>(
-                    new FuncWithFallback<>(
-                        (AutoCloseable sck) -> {
-                            sck.close();
-                            return false;
-                        },
-                        new FallbackFrom<>(
-                            Exception.class,
-                            ex -> {
-                                fail.addSuppressed(ex);
-                                return true;
-                            }
-                        )
-                    ),
-                    new Reversed<>(new Joined<>(this.server, this.blockers))
-                )
+        new Unchecked<>(
+            new Binary(
+                new Folded<>(
+                    false,
+                    Boolean::logicalOr,
+                    new Mapped<>(
+                        new FuncWithFallback<>(
+                            (AutoCloseable sck) -> {
+                                sck.close();
+                                return false;
+                            },
+                            new FallbackFrom<>(
+                                Exception.class,
+                                ex -> {
+                                    fail.addSuppressed(ex);
+                                    return true;
+                                }
+                            )
+                        ),
+                        new Reversed<>(new Joined<>(this.server, this.blockers))
+                    )
+                ),
+                () -> {
+                    throw fail;
+                }
             )
         ).value();
-        if (failed) {
-            throw fail;
-        }
     }
 }
