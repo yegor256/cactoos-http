@@ -24,11 +24,9 @@
 package org.cactoos.http;
 
 import java.util.concurrent.TimeoutException;
-import org.cactoos.http.io.BlockingSocketServer;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.llorllale.cactoos.matchers.TextHasString;
 import org.takes.http.FtRemote;
@@ -60,20 +58,19 @@ public final class HtTimedWireTest {
         );
     }
 
-    @Ignore("see BlockingSocketServer todo for #87")
     // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void failsAfterTimeout() throws Exception {
-        // @checkstyle MagicNumberCheck (1 line)
+        // @checkstyle MagicNumberCheck (2 lines)
         final long timeout = 100;
-        try (BlockingSocketServer server = new BlockingSocketServer()) {
-            new HtTimedWire(
-                new HtWire(
-                    server.address().getHostAddress(),
-                    server.port()
-                ),
-                timeout
-            ).send(new InputOf("unused"));
-        }
+        final int port = 80;
+        new HtTimedWire(
+            new HtWire(
+                "192.168.0.0",
+                port
+            ),
+            timeout
+        ).send(new InputOf("unused"));
     }
 }
