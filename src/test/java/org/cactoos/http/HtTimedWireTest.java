@@ -39,11 +39,12 @@ import org.takes.tk.TkText;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle JavadocVariableCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle MagicNumberCheck (500 lines)
+ * @checkstyle MethodBodyCommentsCheck (500 lines)
  */
 public final class HtTimedWireTest {
     @Test
     public void worksFine() throws Exception {
-        // @checkstyle MagicNumberCheck (1 line)
         final long timeout = 1000;
         new FtRemote(new TkText("Hello, world!")).exec(
             home -> MatcherAssert.assertThat(
@@ -58,17 +59,16 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @checkstyle MagicNumberCheck (1 line)
     @Test(expected = TimeoutException.class, timeout = 1000)
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void failsAfterTimeout() throws Exception {
-        // @checkstyle MagicNumberCheck (2 lines)
         final long timeout = 100;
-        final int port = 80;
         new HtTimedWire(
             new HtWire(
-                "192.168.0.0",
-                port
+                // non-routable IP address artificially creates a timeout error
+                // @see: https://stackoverflow.com/a/904609/3456163
+                "10.255.255.1",
+                80
             ),
             timeout
         ).send(new InputOf("unused"));
