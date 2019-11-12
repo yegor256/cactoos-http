@@ -39,7 +39,6 @@ import org.takes.tk.TkText;
  * @checkstyle JavadocMethodCheck (500 lines)
  * @checkstyle JavadocVariableCheck (500 lines)
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @checkstyle MethodBodyCommentsCheck (500 lines)
  */
 public final class HtTimedWireTest {
     @Test
@@ -59,16 +58,18 @@ public final class HtTimedWireTest {
         );
     }
 
-    // @checkstyle MagicNumberCheck (1 line)
+    /**
+     * Non-routable IP address artificially creates a timeout error.
+     * See: https://stackoverflow.com/a/904609/3456163
+     *
+     * @checkstyle MagicNumberCheck (9 lines)
+     */
     @Test(expected = TimeoutException.class, timeout = 1000)
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void failsAfterTimeout() throws Exception {
-        // @checkstyle MagicNumberCheck (8 lines)
         final long timeout = 100;
         new HtTimedWire(
             new HtWire(
-                // non-routable IP address artificially creates a timeout error
-                // see: https://stackoverflow.com/a/904609/3456163
                 "10.255.255.1",
                 80
             ),
