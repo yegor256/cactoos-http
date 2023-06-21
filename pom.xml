@@ -131,7 +131,7 @@ SOFTWARE.
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.21.0</version>
+          <version>2.22.2</version>
           <configuration>
             <systemPropertyVariables>
               <javax.net.ssl.keyStore>${project.build.directory}/test-classes/org/cactoos/http/keystore</javax.net.ssl.keyStore>
