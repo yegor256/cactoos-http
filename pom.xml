@@ -166,7 +166,7 @@ SOFTWARE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.17.3</version>
+            <version>0.23.0</version>
           </plugin>
           <plugin>
             <groupId>org.jacoco</groupId>
