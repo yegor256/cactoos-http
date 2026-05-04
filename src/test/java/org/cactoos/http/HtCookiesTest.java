@@ -124,4 +124,34 @@ public final class HtCookiesTest {
             )
         );
     }
+
+    @Test
+    public void ignoresFlagTypeDirectives() {
+        MatcherAssert.assertThat(
+            new HtCookies(
+                new HtHead(
+                    new InputOf(
+                        new Joined(
+                            "\r\n",
+                            "HTTP/1.1 200 OK",
+                            "Content-type: text/plain",
+                            "Set-Cookie: name=value; Secure; HttpOnly; domain=.google.com",
+                            "",
+                            "Hello"
+                        )
+                    )
+                )
+            ),
+            Matchers.allOf(
+                new IsMapContaining<>(
+                    new IsEqual<>("name"),
+                    new IsEqual<>(new ListOf<>("value"))
+                ),
+                new IsMapContaining<>(
+                    new IsEqual<>("domain"),
+                    new IsEqual<>(new ListOf<>(".google.com"))
+                )
+            )
+        );
+    }
 }
