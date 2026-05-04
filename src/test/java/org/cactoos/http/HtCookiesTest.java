@@ -100,8 +100,8 @@ public final class HtCookiesTest {
         );
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void incorrectHttpResponseCookie() {
+    @Test
+    public void skipsCookieSegmentWithoutEqualsSign() {
         MatcherAssert.assertThat(
             new HtCookies(
                 new HtHead(
@@ -120,7 +120,7 @@ public final class HtCookiesTest {
             ),
             new IsMapContaining<>(
                 new IsEqual<>("domain"),
-                new IsEqual<>(".google.com")
+                new IsEqual<>(new ListOf<>(".google.com"))
             )
         );
     }
