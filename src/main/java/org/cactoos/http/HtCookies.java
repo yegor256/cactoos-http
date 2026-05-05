@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.cactoos.Input;
 import org.cactoos.Text;
+import org.cactoos.iterable.Filtered;
 import org.cactoos.iterable.Joined;
 import org.cactoos.iterable.Mapped;
 import org.cactoos.map.Grouped;
@@ -39,9 +40,6 @@ import org.cactoos.text.Split;
  * Cookies.
  *
  * @since 0.1
- * @todo #8:30min The implementation of method stream() will break on
- *  "flag-type" directives (`Secure`, `HttpOnly`). Fix HtHeaders so that
- *  these directives are handled correctly.
  */
 public final class HtCookies extends MapEnvelope<String, List<String>> {
 
@@ -53,22 +51,19 @@ public final class HtCookies extends MapEnvelope<String, List<String>> {
         super(() -> new Grouped<>(
             new Mapped<>(
                 (Text entry) -> {
-                    final Iterable<Text> parts = new Split(entry, "=");
-                    if (new LengthOf(parts).intValue() != 2) {
-                        throw new IllegalArgumentException(
-                            "Incorrect HTTP Response cookie"
-                        );
-                    }
-                    final Iterator<Text> iter = parts.iterator();
+                    final Iterator<Text> iter = new Split(entry, "=").iterator();
                     return new MapEntry<>(
                         iter.next().asString(),
                         iter.next().asString()
                     );
                 },
-                new Joined<>(
-                    new Mapped<>(
-                        e -> new Split(e, ";\\s+"),
-                        new HtHeaders(rsp).get("set-cookie")
+                new Filtered<>(
+                    entry -> new LengthOf(new Split(entry, "=")).intValue() == 2,
+                    new Joined<>(
+                        new Mapped<>(
+                            e -> new Split(e, ";\\s+"),
+                            new HtHeaders(rsp).get("set-cookie")
+                        )
                     )
                 )
             ),

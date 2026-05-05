@@ -24,7 +24,7 @@
 package org.cactoos.http;
 
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import org.cactoos.Input;
@@ -61,8 +61,8 @@ public final class HtAutoRedirect implements Input {
                 new HtHead(this.response)
             );
             if (headers.containsKey(header)) {
-                final URL url = new URL(headers.get(header).get(0));
-                stream = new HtResponse(url.toURI()).stream();
+                final URI uri = URI.create(headers.get(header).get(0));
+                stream = new HtResponse(uri).stream();
             }
         }
         return stream;
