@@ -71,4 +71,3 @@ public final class HtHead implements Input {
         }
     }
 }
-
