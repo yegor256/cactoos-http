@@ -82,7 +82,7 @@ final class HtUpgradeWireTest {
      * Wrap for response which allows access to its wire.
      * @since 0.1
      */
-    private final class ResponseWrap implements Input, Scalar<Wire> {
+    private static final class ResponseWrap implements Input, Scalar<Wire> {
 
         /**
          * Origin response.
@@ -119,7 +119,7 @@ final class HtUpgradeWireTest {
      * Mock which always returns response with 101 code.
      * @since 0.1
      */
-    private final class TkAlways101Mock implements Take {
+    private static final class TkAlways101Mock implements Take {
 
         /**
          * Origin {@link Take}.

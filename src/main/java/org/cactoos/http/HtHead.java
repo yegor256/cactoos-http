@@ -45,7 +45,7 @@ public final class HtHead implements Input {
         try (
             Scanner scanner = new Scanner(
                 this.response.stream(),
-                HtHead.CHARSET.name()
+                HtHead.CHARSET
             )
         ) {
             scanner.useDelimiter(HtHead.DELIMITER);

@@ -49,6 +49,12 @@ public final class CloseableInputStream extends InputStream {
     }
 
     @Override
+    public int read(final byte[] buf, final int off, final int len)
+        throws IOException {
+        return this.origin.read(buf, off, len);
+    }
+
+    @Override
     public void close() throws IOException {
         this.closed = true;
         this.origin.close();

@@ -46,7 +46,7 @@ final class HtTimedWireTest {
     void failsAfterTimeout() {
         final long timeout = 100;
         Assertions.assertTimeoutPreemptively(
-            Duration.ofMillis(1000),
+            Duration.ofSeconds(1),
             () -> Assertions.assertThrows(
                 TimeoutException.class,
                 () -> new HtTimedWire(
