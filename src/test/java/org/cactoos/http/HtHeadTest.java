@@ -1,31 +1,12 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2018 Yegor Bugayenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 package org.cactoos.http;
 
 import java.util.Random;
 import org.cactoos.Text;
-import org.cactoos.io.BytesOf;
+import org.cactoos.bytes.BytesOf;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.Joined;
 import org.cactoos.text.Repeated;
@@ -33,30 +14,27 @@ import org.cactoos.text.Replaced;
 import org.cactoos.text.TextOf;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 import org.llorllale.cactoos.matchers.EndsWith;
+import org.llorllale.cactoos.matchers.HasString;
 import org.llorllale.cactoos.matchers.StartsWith;
-import org.llorllale.cactoos.matchers.TextHasString;
 
 /**
  * Test case for {@link HtHead}.
- *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class HtHeadTest {
+final class HtHeadTest {
 
     @Test
-    public void takesHeadOutOfHttpResponse() {
+    void takesHeadOutOfHttpResponse() {
         new Assertion<>(
             "Header does not have 'text/plain'",
             new TextOf(
                 new HtHead(
                     new InputOf(
                         new Joined(
+                            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
@@ -71,13 +49,14 @@ public final class HtHeadTest {
     }
 
     @Test
-    public void emptyHeadOfHttpResponse()  {
+    void emptyHeadOfHttpResponse() {
         new Assertion<>(
             "Text does not have an empty string",
             new TextOf(
                 new HtHead(
                     new InputOf(
                         new Joined(
+                            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
                             "\r\n",
                             "",
                             "",
@@ -86,14 +65,13 @@ public final class HtHeadTest {
                     )
                 )
             ),
-            new TextHasString("")
+            new HasString("")
         ).affirm();
     }
 
     @Test
-    public void largeText() throws Exception {
-        //@checkstyle MagicNumberCheck (1 lines)
-        final byte[] bytes = new byte[18000];
+    void largeText() throws Exception {
+        final byte[] bytes = new byte[18_000];
         new Random().nextBytes(bytes);
         new Assertion<>(
             "Header does not have text/plain header",
@@ -101,6 +79,7 @@ public final class HtHeadTest {
                 new HtHead(
                     new InputOf(
                         new Joined(
+                            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
                             "\r\n",
                             "HTTP/1.1 200 OK",
                             "Content-type: text/plain",
@@ -115,9 +94,10 @@ public final class HtHeadTest {
     }
 
     @Test
-    public void edgeOfTheBlockTearing() throws Exception {
-        final int size = 16384;
+    void edgeOfTheBlockTearing() throws Exception {
+        final int size = 16_384;
         final Text header = new Joined(
+            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
             "\r\n",
             "HTTP/1.1 200 OK",
             "Referer: http://en.wikipedia.org/wiki/Main_Page#\0",
@@ -145,6 +125,7 @@ public final class HtHeadTest {
                 new HtHead(
                     new InputOf(
                         new Joined(
+                            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
                             "\r\n",
                             block.asString(),
                             "",
@@ -155,7 +136,8 @@ public final class HtHeadTest {
             ),
             Matchers.allOf(
                 new StartsWith("HTTP"),
-                new TextHasString("OK\r\nReferer"),
+                // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
+                new HasString("OK\r\nReferer"),
                 new EndsWith("text/plain")
             )
         ).affirm();

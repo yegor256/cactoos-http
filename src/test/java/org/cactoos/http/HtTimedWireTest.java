@@ -1,49 +1,28 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2018 Yegor Bugayenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 package org.cactoos.http;
 
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 import org.cactoos.io.InputOf;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.llorllale.cactoos.matchers.TextHasString;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.llorllale.cactoos.matchers.HasString;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtTimedWire}.
- *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle JavadocVariableCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtTimedWireTest {
+final class HtTimedWireTest {
+
     @Test
-    public void worksFine() throws Exception {
-        // @checkstyle MagicNumberCheck (1 line)
+    void worksFine() throws Exception {
         final long timeout = 1000;
         new FtRemote(new TkText("Hello, world!")).exec(
             home -> MatcherAssert.assertThat(
@@ -53,7 +32,7 @@ public final class HtTimedWireTest {
                         new Get(home)
                     )
                 ),
-                new TextHasString("HTTP/1.1 200 ")
+                new HasString("HTTP/1.1 200 ")
             )
         );
     }
@@ -61,19 +40,23 @@ public final class HtTimedWireTest {
     /**
      * Non-routable IP address artificially creates a timeout error.
      * See: https://stackoverflow.com/a/904609/3456163
-     *
-     * @checkstyle MagicNumberCheck (9 lines)
      */
-    @Test(expected = TimeoutException.class, timeout = 1000)
+    @Test
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    public void failsAfterTimeout() throws Exception {
+    void failsAfterTimeout() {
         final long timeout = 100;
-        new HtTimedWire(
-            new HtWire(
-                "10.255.255.1",
-                80
-            ),
-            timeout
-        ).send(new InputOf("unused"));
+        Assertions.assertTimeoutPreemptively(
+            Duration.ofMillis(1000),
+            () -> Assertions.assertThrows(
+                TimeoutException.class,
+                () -> new HtTimedWire(
+                    new HtWire(
+                        "10.255.255.1",
+                        80
+                    ),
+                    timeout
+                ).send(new InputOf("unused"))
+            )
+        );
     }
 }

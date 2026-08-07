@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
+version = 1
+[[annotations]]
+path = [
+    ".0pdd.yml",
+    ".gitattributes",
+    ".gitignore",
+    ".pdd",
+    ".rultor.yml",
+    ".travis.yml",
+    "README.md",
+    "renovate.json",
+    "src/test/resources/org/cactoos/http/keystore",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (c) 2018-2026 Yegor Bugayenko"
+SPDX-License-Identifier = "MIT"

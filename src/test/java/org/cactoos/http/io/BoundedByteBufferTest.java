@@ -1,49 +1,25 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2018 Yegor Bugayenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 package org.cactoos.http.io;
 
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link BoundedByteBuffer}.
- *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle MagicNumberCheck (500 lines)
  */
-public final class BoundedByteBufferTest {
+final class BoundedByteBufferTest {
 
     @Test
-    public void worksWithEqualSameSizeArray() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+    void worksWithEqualSameSizeArray() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
         buffer.offer((byte) 11);
-        final int[] bytes = {1, 2, 3, 4};
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        Arrays.stream(new int[] {1, 2, 3, 4}).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[]{1, 2, 3, 4}),
             new IsEqual<>(true)
@@ -51,12 +27,10 @@ public final class BoundedByteBufferTest {
     }
 
     @Test
-    public void worksWithUnequalSameSizeArray() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+    void worksWithUnequalSameSizeArray() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
         buffer.offer((byte) 11);
-        final int[] bytes = {1, 2, 3, 5};
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        Arrays.stream(new int[] {1, 2, 3, 5}).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[]{1, 2, 3, 4}),
             new IsEqual<>(false)
@@ -64,11 +38,9 @@ public final class BoundedByteBufferTest {
     }
 
     @Test
-    public void onlyKeepsTheLastNBytes() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
-        final int[] bytes = {1, 2, 3, 4, 5, 6, 7, 8 };
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+    void onlyKeepsTheLastNBytes() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
+        Arrays.stream(new int[] {1, 2, 3, 4, 5, 6, 7, 8 }).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[] {5, 6, 7, 8 }),
             new IsEqual<>(true)
@@ -76,11 +48,9 @@ public final class BoundedByteBufferTest {
     }
 
     @Test
-    public void worksWithSmallerArray() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
-        final int[] bytes = {1, 2};
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+    void worksWithSmallerArray() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
+        Arrays.stream(new int[] {1, 2}).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[] {1, 2}),
             new IsEqual<>(true)
@@ -88,11 +58,9 @@ public final class BoundedByteBufferTest {
     }
 
     @Test
-    public void worksWithSmallerArrayFailsComparisonWithLarger() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
-        final int[] bytes = {1, 2};
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+    void worksWithSmallerArrayFailsComparisonWithLarger() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
+        Arrays.stream(new int[] {1, 2}).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[] {1, 2, 0}),
             new IsEqual<>(false)
@@ -100,12 +68,10 @@ public final class BoundedByteBufferTest {
     }
 
     @Test
-    public void equalsWhenShiftedOdd() {
-        final int limit = 4;
-        final BoundedByteBuffer buffer = new BoundedByteBuffer(limit);
+    void equalsWhenShiftedOdd() {
+        final BoundedByteBuffer buffer = new BoundedByteBuffer(4);
         buffer.offer((byte) 11);
-        final int[] bytes = {1, 2, 1, 2};
-        Arrays.stream(bytes).forEach(b -> buffer.offer((byte) b));
+        Arrays.stream(new int[] {1, 2, 1, 2}).forEach(b -> buffer.offer((byte) b));
         MatcherAssert.assertThat(
             buffer.equalTo(new byte[]{1, 2, 1, 2}),
             new IsEqual<>(true)

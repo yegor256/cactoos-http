@@ -1,4 +1,6 @@
-<img src="http://cf.jare.io/?u=http%3A%2F%2Fwww.yegor256.com%2Fimages%2Fbooks%2Felegant-objects%2Fcactus.svg" height="100px" />
+# Cactoos-HTTP
+
+![logo](http://cf.jare.io/?u=http%3A%2F%2Fwww.yegor256.com%2Fimages%2Fbooks%2Felegant-objects%2Fcactus.svg)
 
 [![Donate via Zerocracy](https://www.0crat.com/contrib-badge/C63314D6Z.svg)](https://www.0crat.com/contrib/C63314D6Z)
 
@@ -18,7 +20,8 @@
 
 Cactoos-HTTP is a experimental HTTP client, fully object-oriented.
 
-These are the [design principles](http://www.elegantobjects.org#principles) behind Cactoos-HTTP.
+These are the [design principles](http://www.elegantobjects.org#principles)
+behind Cactoos-HTTP.
 
 All you need is this:
 
@@ -37,12 +40,12 @@ StackOverflow tag is [cactoos](https://stackoverflow.com/questions/tagged/cactoo
 We are well aware of competitors
 (most likely they are more powerful than our client, but less object-oriented):
 
-  * [JDK HTTP Client](https://developer.oracle.com/java/jdk-http-client)
-  * [Apache HttpClient](https://hc.apache.org/httpcomponents-client-ga/)
-  * [JCabi-Http](http://http.jcabi.com)
-  * [Google HTTP Java Client](https://github.com/google/google-http-java-client)
-  * [Unirest](http://unirest.io/java.html)
-  * [OkHttp](http://square.github.io/okhttp/)
+* [JDK HTTP Client](https://developer.oracle.com/java/jdk-http-client)
+* [Apache HttpClient](https://hc.apache.org/httpcomponents-client-ga/)
+* [JCabi-Http](http://http.jcabi.com)
+* [Google HTTP Java Client](https://github.com/google/google-http-java-client)
+* [Unirest](http://unirest.io/java.html)
+* [OkHttp](http://square.github.io/okhttp/)
 
 ## How to use
 
@@ -83,7 +86,9 @@ Map<String, String> headers = new HtHeaders(head);
 
 ## Questions
 
-Ask your questions related to cactoos library on [Stackoverflow](https://stackoverflow.com/questions/ask) with [cactoos](https://stackoverflow.com/tags/cactoos/info) tag.
+Ask your questions related to cactoos library on
+[Stackoverflow](https://stackoverflow.com/questions/ask) with
+[cactoos](https://stackoverflow.com/tags/cactoos/info) tag.
 
 ## How to contribute?
 
@@ -91,7 +96,7 @@ Just fork the repo and send us a pull request.
 
 Make sure your branch builds without any warnings/issues:
 
-```
+```bash
 mvn clean install -Pqulice
 ```
 

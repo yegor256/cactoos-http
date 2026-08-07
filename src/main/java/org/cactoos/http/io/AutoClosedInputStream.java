@@ -1,25 +1,6 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2018 Yegor Bugayenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 package org.cactoos.http.io;
 
@@ -28,7 +9,6 @@ import java.io.InputStream;
 
 /**
  * {@link InputStream} that gets closed on EOF.
- *
  * @since 0.1
  */
 public final class AutoClosedInputStream extends InputStream {
@@ -40,8 +20,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     /**
      * Cotr.
-     *
-     * @param origin The origin input.
+     * @param origin The origin input
      */
     public AutoClosedInputStream(final InputStream origin) {
         super();
@@ -61,23 +40,30 @@ public final class AutoClosedInputStream extends InputStream {
     @Override
     public int read(final byte[] bytes, final int off, final int len)
         throws IOException {
-        return new AutoClosed(() -> this.origin.read(bytes, off, len)).value();
+        return new AutoClosedInputStream.AutoClosed(
+            () -> this.origin.read(bytes, off, len)
+        ).value();
     }
 
     @Override
     public int read(final byte[] bytes) throws IOException {
-        return new AutoClosed(() -> this.origin.read(bytes)).value();
+        return new AutoClosedInputStream.AutoClosed(
+            () -> this.origin.read(bytes)
+        ).value();
     }
 
     @Override
     public int read() throws IOException {
-        return new AutoClosed(() -> this.origin.read()).value();
+        return new AutoClosedInputStream.AutoClosed(this.origin::read).value();
     }
 
     /**
      * Primitive Scalar.
+     * @since 0.1
      */
+    @FunctionalInterface
     private interface IntScalar {
+
         /**
          * Convert it to the value.
          * @return The value
@@ -88,6 +74,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     /**
      * Closes the stream if EOF is reached.
+     * @since 0.1
      */
     private final class AutoClosed implements IntScalar {
 
@@ -98,7 +85,7 @@ public final class AutoClosedInputStream extends InputStream {
 
         /**
          * Ctor.
-         * @param origin The read of the stream.
+         * @param origin The read of the stream
          */
         AutoClosed(final IntScalar origin) {
             this.origin = origin;

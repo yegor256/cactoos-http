@@ -1,25 +1,6 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2018 Yegor Bugayenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2026 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 package org.cactoos.http;
 
@@ -35,22 +16,19 @@ import org.cactoos.text.FormattedText;
 import org.cactoos.text.TextOf;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsNot;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
+import org.llorllale.cactoos.matchers.HasString;
 import org.llorllale.cactoos.matchers.IsTrue;
-import org.llorllale.cactoos.matchers.TextHasString;
 import org.mockito.Mockito;
 import org.takes.http.FtRemote;
 import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtWire}.
- *
  * @since 0.1
- * @checkstyle JavadocMethodCheck (500 lines)
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class HtWireTest {
+final class HtWireTest {
 
     /**
      * Default port for HTTP.
@@ -63,17 +41,17 @@ public final class HtWireTest {
     private static final int HTTPS_PORT = 443;
 
     @Test
-    public void guessesCorrectPortForHttp() throws Exception {
+    void guessesCorrectPortForHttp() throws Exception {
         this.checkPorts("http://localhost", HtWireTest.HTTP_PORT);
     }
 
     @Test
-    public void guessesCorrectPortForHttps() throws Exception {
+    void guessesCorrectPortForHttps() throws Exception {
         this.checkPorts("https://localhost", HtWireTest.HTTPS_PORT);
     }
 
     @Test
-    public void guessesCorrectPortForExplicit() throws Exception {
+    void guessesCorrectPortForExplicit() throws Exception {
         final int port = 1234;
         this.checkPorts(
             new FormattedText("https://localhost:%d", port).asString(),
@@ -82,7 +60,7 @@ public final class HtWireTest {
     }
 
     @Test
-    public void worksWithProvidedHostNameAndPort() throws IOException {
+    void worksWithProvidedHostNameAndPort() throws Exception {
         new FtRemote(new TkText("Hello")).exec(
             home -> MatcherAssert.assertThat(
                 new TextOf(
@@ -91,45 +69,53 @@ public final class HtWireTest {
                         new Get(home)
                     )
                 ),
-                new TextHasString("HTTP/1.1 200")
+                new HasString("HTTP/1.1 200")
             )
         );
     }
 
     @Test
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public void closesSocketOnlyAfterResponseIsClosed() throws Exception {
+    void closesSocketOnlyAfterResponseIsClosed() throws Exception {
         new FtRemote(new TkText("Hey")).exec(
-            home -> {
-                @SuppressWarnings("resource")
-                final Socket socket = new Socket(
-                    home.getHost(),
-                    home.getPort()
-                );
-                try (InputStream ins = new HtWire(() -> socket).send(
-                    new Get(home)
-                ).stream()) {
-                    new Assertion<>(
-                        "must have a response",
-                        new TextOf(new ReadBytes(ins)),
-                        new TextHasString("HTTP/1.1 200 OK")
-                    ).affirm();
-                    new Assertion<>(
-                        "must keep the socket open until response is closed",
-                        socket.isClosed(),
-                        new IsNot<>(new IsTrue())
-                    ).affirm();
-                    // @checkstyle IllegalCatchCheck (1 line)
-                } catch (final Exception ex) {
-                    throw new IOException(ex);
-                }
-                new Assertion<>(
-                    "must close the socket once input response is closed",
-                    socket.isClosed(),
-                    new IsTrue()
-                ).affirm();
-            }
+            HtWireTest::closesSocketOnlyAfterResponseCloses
         );
+    }
+
+    /**
+     * Confirms the socket stays open until the response is closed,
+     * and closes only once the response does.
+     * @param home The address of the server
+     * @throws IOException If fails
+     */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private static void closesSocketOnlyAfterResponseCloses(final URI home)
+        throws IOException {
+        try (Socket socket = new Socket(home.getHost(), home.getPort())) {
+            try (
+                InputStream ins = new HtWire(() -> socket).send(
+                    new Get(home)
+                ).stream()
+            ) {
+                new Assertion<>(
+                    "must have a response",
+                    new TextOf(new ReadBytes(ins)),
+                    new HasString("HTTP/1.1 200 OK")
+                ).affirm();
+                new Assertion<>(
+                    "must keep the socket open until response is closed",
+                    socket.isClosed(),
+                    new IsNot<>(new IsTrue())
+                ).affirm();
+                // @checkstyle IllegalCatchCheck (1 line)
+            } catch (final Exception ex) {
+                throw new IOException(ex);
+            }
+            new Assertion<>(
+                "must close the socket once input response is closed",
+                socket.isClosed(),
+                new IsTrue()
+            ).affirm();
+        }
     }
 
     /**
@@ -139,16 +125,16 @@ public final class HtWireTest {
      * @throws Exception In case of error
      */
     @SuppressWarnings("unchecked")
-    private void checkPorts(final String url, final int port)
-        throws Exception {
+    private void checkPorts(final String url, final int port) throws Exception {
         final BiFunc<String, Integer, Socket> function =
             Mockito.mock(BiFunc.class);
-        final Socket socket = this.socket();
-        Mockito.when(function.apply(Mockito.any(), Mockito.any()))
-            .thenReturn(socket);
-        new HtWire(URI.create(url), function)
-            .send(new DeadInput());
-        Mockito.verify(function).apply(Mockito.any(), Mockito.eq(port));
+        try (Socket socket = this.socket()) {
+            Mockito.when(function.apply(Mockito.any(), Mockito.any()))
+                .thenReturn(socket);
+            new HtWire(URI.create(url), function)
+                .send(new DeadInput());
+            Mockito.verify(function).apply(Mockito.any(), Mockito.eq(port));
+        }
     }
 
     /**
