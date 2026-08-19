@@ -148,25 +148,6 @@
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
             <version>0.30.13</version>
-            <configuration>
-              <excludes>
-                <!-- UnitTestShouldIncludeAssert does not recognize
-                     org.llorllale.cactoos.matchers.Assertion#affirm() as
-                     an assertion call:
-                     https://github.com/yegor256/qulice/issues/1698 -->
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/GetTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/HtHeadTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/HtKeepAliveResponseTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/io/AutoClosedInputStreamTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/io/CloseableInputStreamTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/io/ReadBytesTest\.java</exclude>
-                <!-- UnitTestShouldIncludeAssert does not trace into a
-                     private helper method that performs the assertion:
-                     https://github.com/yegor256/qulice/issues/1706 -->
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/HtAutoClosedResponseTest\.java</exclude>
-                <exclude>pmd:.*/src/test/java/org/cactoos/http/HtWireTest\.java</exclude>
-              </excludes>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.jacoco</groupId>

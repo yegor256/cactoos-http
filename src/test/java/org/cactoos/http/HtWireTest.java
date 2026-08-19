@@ -77,45 +77,26 @@ final class HtWireTest {
     @Test
     void closesSocketOnlyAfterResponseIsClosed() throws Exception {
         new FtRemote(new TkText("Hey")).exec(
-            HtWireTest::closesSocketOnlyAfterResponseCloses
-        );
-    }
-
-    /**
-     * Confirms the socket stays open until the response is closed,
-     * and closes only once the response does.
-     * @param home The address of the server
-     * @throws IOException If fails
-     */
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private static void closesSocketOnlyAfterResponseCloses(final URI home)
-        throws IOException {
-        try (Socket socket = new Socket(home.getHost(), home.getPort())) {
-            try (
-                InputStream ins = new HtWire(() -> socket).send(
-                    new Get(home)
-                ).stream()
-            ) {
+            home -> {
+                final Socket socket = new Socket(home.getHost(), home.getPort());
+                try (
+                    InputStream ins = new HtWire(() -> socket).send(new Get(home)).stream()
+                ) {
+                    new Assertion<>(
+                        "must have a response",
+                        new TextOf(new ReadBytes(ins)), new HasString("HTTP/1.1 200 OK")
+                    ).affirm();
+                    new Assertion<>(
+                        "must keep the socket open until response is closed",
+                        socket.isClosed(), new IsNot<>(new IsTrue())
+                    ).affirm();
+                }
                 new Assertion<>(
-                    "must have a response",
-                    new TextOf(new ReadBytes(ins)),
-                    new HasString("HTTP/1.1 200 OK")
+                    "must close the socket once input response is closed",
+                    socket.isClosed(), new IsTrue()
                 ).affirm();
-                new Assertion<>(
-                    "must keep the socket open until response is closed",
-                    socket.isClosed(),
-                    new IsNot<>(new IsTrue())
-                ).affirm();
-                // @checkstyle IllegalCatchCheck (1 line)
-            } catch (final Exception ex) {
-                throw new IOException(ex);
             }
-            new Assertion<>(
-                "must close the socket once input response is closed",
-                socket.isClosed(),
-                new IsTrue()
-            ).affirm();
-        }
+        );
     }
 
     /**
