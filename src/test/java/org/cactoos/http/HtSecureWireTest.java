@@ -70,13 +70,6 @@ final class HtSecureWireTest {
         );
     }
 
-    /**
-     * Creates an instance of secure Front.
-     * @param take Take
-     * @param port Port to bind to, or zero for a random one
-     * @return FtRemote Front
-     * @throws Exception If fails
-     */
     private static FtRemote secure(final Take take, final int port)
         throws Exception {
         return new FtRemote(

@@ -79,10 +79,6 @@ public final class BoundedByteBuffer {
         return true;
     }
 
-    /**
-     * Size of this buffer.
-     * @return This buffer's size
-     */
     private int size() {
         final int size;
         if (this.full) {
@@ -95,10 +91,6 @@ public final class BoundedByteBuffer {
         return size;
     }
 
-    /**
-     * Is this buffer empty?
-     * @return True if empty, otherwise false
-     */
     private boolean empty() {
         return this.end == this.start && !this.full;
     }

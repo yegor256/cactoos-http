@@ -99,12 +99,6 @@ final class HtWireTest {
         );
     }
 
-    /**
-     * Verify correct port is returned for given URL.
-     * @param url URL to check
-     * @param port Port number
-     * @throws Exception In case of error
-     */
     @SuppressWarnings("unchecked")
     private void checkPorts(final String url, final int port) throws Exception {
         final BiFunc<String, Integer, Socket> function =
@@ -118,11 +112,6 @@ final class HtWireTest {
         }
     }
 
-    /**
-     * Create a mock socket.
-     * @return A mock socket
-     * @throws IOException In case of error
-     */
     private Socket socket() throws IOException {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.when(socket.getInputStream()).thenReturn(new DeadInputStream());
