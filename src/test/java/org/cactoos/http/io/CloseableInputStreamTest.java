@@ -16,6 +16,7 @@ import org.llorllale.cactoos.matchers.IsTrue;
 
 /**
  * Test case for {@link CloseableInputStreamTest}.
+ *
  * @since 0.1
  */
 final class CloseableInputStreamTest {

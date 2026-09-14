@@ -22,6 +22,7 @@ import org.llorllale.cactoos.matchers.StartsWith;
 
 /**
  * Test case for {@link HtHead}.
+ *
  * @since 0.1
  */
 final class HtHeadTest {

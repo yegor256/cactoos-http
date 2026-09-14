@@ -17,14 +17,10 @@ import org.cactoos.scalar.Ternary;
 
 /**
  * Wire.
+ *
  * @since 0.1
  */
 public final class HtWire implements Wire {
-
-    /**
-     * Buffer length.
-     */
-    private static final int LENGTH = 16_384;
 
     /**
      * Supplier of sockets.
@@ -33,6 +29,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param uri The address of the server
      */
     public HtWire(final URI uri) {
@@ -41,6 +38,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      */
     public HtWire(final String addr) {
@@ -49,6 +47,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      * @param tcp The TCP port
      */
@@ -58,6 +57,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param uri The address of the server
      * @param spplier Socket supplier
      */
@@ -75,6 +75,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      * @param tcp The TCP port source
      * @param spplier Supplier of sockets
@@ -86,6 +87,7 @@ public final class HtWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param spplier Supplier of sockets
      */
     HtWire(final Scalar<Socket> spplier) {
@@ -100,7 +102,7 @@ public final class HtWire implements Wire {
         @SuppressWarnings("PMD.CloseResource")
         final OutputStream ous = socket.getOutputStream();
         try (InputStream source = input.stream()) {
-            final byte[] buf = new byte[HtWire.LENGTH];
+            final byte[] buf = new byte[16_384];
             while (true) {
                 final int len = source.read(buf);
                 if (len < 0) {

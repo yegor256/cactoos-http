@@ -13,6 +13,7 @@ import org.cactoos.io.Sticky;
 
 /**
  * Automatically redirects request if response status code is 30x.
+ *
  * @since 0.1
  */
 public final class HtAutoRedirect implements Input {
@@ -24,6 +25,7 @@ public final class HtAutoRedirect implements Input {
 
     /**
      * Ctor.
+     *
      * @param rsp Response
      */
     public HtAutoRedirect(final Input rsp) {

@@ -29,6 +29,7 @@ public final class HtContentType implements Scalar<List<String>> {
 
     /**
      * Ctor.
+     *
      * @param head Response head part
      */
     public HtContentType(final Input head) {

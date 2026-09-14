@@ -12,6 +12,7 @@ import org.cactoos.text.Joined;
 
 /**
  * The response which supports <em>Keep-Alive</em> header.
+ *
  * @since 0.1
  */
 public final class HtKeepAliveResponse extends InputEnvelope {
@@ -30,6 +31,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param wre The wire
      * @param mtimeout The timeout for the connection usage in milliseconds
      * @param rmax The maximum quantity of the requests within the connection
@@ -55,6 +57,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param wre The wire
      * @param mtimeout The timeout for the connection usage in milliseconds
      * @param rmax The maximum quantity of the requests within the connection
@@ -80,6 +83,7 @@ public final class HtKeepAliveResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param wre The wire
      * @param req The already-formatted request
      */

@@ -8,6 +8,7 @@ import org.cactoos.Input;
 
 /**
  * Wire that is capable of upgrading itself upon an 101 status code.
+ *
  * @since 0.1
  * @todo #23:30 min As discovered in #53, the upgrade is not a job of the
  *  wire because it need reading the contents of the response (in this case,
@@ -33,6 +34,7 @@ public final class HtUpgradeWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param origin Origin wire
      */
     public HtUpgradeWire(final Wire origin) {

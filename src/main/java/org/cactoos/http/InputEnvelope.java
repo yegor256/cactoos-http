@@ -9,6 +9,7 @@ import org.cactoos.Input;
 
 /**
  * The envelope for {@link Input}.
+ *
  * @since 0.1
  */
 public abstract class InputEnvelope implements Input {
@@ -20,6 +21,7 @@ public abstract class InputEnvelope implements Input {
 
     /**
      * Ctor.
+     *
      * @param origin The request
      */
     public InputEnvelope(final Input origin) {

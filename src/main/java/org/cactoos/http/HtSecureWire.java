@@ -13,6 +13,7 @@ import org.cactoos.scalar.Constant;
 
 /**
  * Wire that supports https.
+ *
  * @since 0.1
  */
 public final class HtSecureWire implements Wire {
@@ -34,6 +35,7 @@ public final class HtSecureWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param uri The address of the server
      */
     public HtSecureWire(final URI uri) {
@@ -42,6 +44,7 @@ public final class HtSecureWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      */
     public HtSecureWire(final String addr) {
@@ -50,6 +53,7 @@ public final class HtSecureWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      * @param tcp The TCP port
      */
@@ -63,6 +67,7 @@ public final class HtSecureWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param addr The address of the server
      * @param tcp The TCP port
      * @param sck Ssl socket

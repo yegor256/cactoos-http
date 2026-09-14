@@ -14,6 +14,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Status of HTTP response.
+ *
  * @since 0.1
  */
 public final class HtStatus extends NumberEnvelope {
@@ -25,17 +26,24 @@ public final class HtStatus extends NumberEnvelope {
 
     /**
      * Ctor.
+     *
      * @param head Response head part
      */
     public HtStatus(final Input head) {
-        super(
-            Double.parseDouble(
-                new UncheckedText(
-                    (Text) () -> new BufferedReader(
+        super(Double.parseDouble(HtStatus.code(head)));
+    }
+
+    private static String code(final Input head) {
+        return new UncheckedText(
+            (Text) () -> {
+                try (
+                    BufferedReader reader = new BufferedReader(
                         new InputStreamReader(head.stream(), StandardCharsets.UTF_8)
-                    ).readLine().split(" ", 3)[1]
-                ).asString()
-            )
-        );
+                    )
+                ) {
+                    return reader.readLine().split(" ", 3)[1];
+                }
+            }
+        ).asString();
     }
 }

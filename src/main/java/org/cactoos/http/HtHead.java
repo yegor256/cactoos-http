@@ -12,15 +12,10 @@ import org.cactoos.io.InputStreamOf;
 
 /**
  * Head of HTTP response.
+ *
  * @since 0.1
  */
 public final class HtHead implements Input {
-
-    /**
-     * Header separator.
-     */
-    // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
-    private static final String DELIMITER = "\r\n\r\n";
 
     /**
      * Charset that is used to read headers.
@@ -34,6 +29,7 @@ public final class HtHead implements Input {
 
     /**
      * Ctor.
+     *
      * @param rsp Response
      */
     public HtHead(final Input rsp) {
@@ -48,7 +44,8 @@ public final class HtHead implements Input {
                 HtHead.CHARSET
             )
         ) {
-            scanner.useDelimiter(HtHead.DELIMITER);
+            // @checkstyle ProhibitLineSeparatorInStringsCheck (1 line)
+            scanner.useDelimiter("\r\n\r\n");
             return new InputStreamOf(scanner.next());
         }
     }

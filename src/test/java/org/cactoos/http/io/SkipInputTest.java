@@ -14,6 +14,7 @@ import org.llorllale.cactoos.matchers.HasString;
 
 /**
  * Test case for {@link SkipInput}.
+ *
  * @since 0.1
  */
 final class SkipInputTest {

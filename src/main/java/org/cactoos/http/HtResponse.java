@@ -12,6 +12,7 @@ import org.cactoos.text.UncheckedText;
 
 /**
  * Response.
+ *
  * @since 0.1
  * @todo #64:30min We need decorators for HtResponse that will automatically
  *  transform the inputstream based on criteria like the Content-Length header,
@@ -22,6 +23,7 @@ public final class HtResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param uri Target URI
      * @since 0.1
      */
@@ -31,6 +33,7 @@ public final class HtResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param uri Target URI
      * @since 0.1
      */
@@ -51,6 +54,7 @@ public final class HtResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param wre The wire
      * @param req The request
      */
@@ -60,6 +64,7 @@ public final class HtResponse extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param wre The wire
      * @param req The request
      */

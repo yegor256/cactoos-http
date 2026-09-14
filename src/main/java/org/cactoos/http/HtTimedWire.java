@@ -9,6 +9,7 @@ import org.cactoos.func.Timed;
 
 /**
  * {@link Wire} that will terminate the connection if it's taking too long.
+ *
  * @since 0.1
  */
 public final class HtTimedWire implements Wire {
@@ -25,6 +26,7 @@ public final class HtTimedWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param wire Original wire
      * @param milliseconds Milliseconds until the connection is terminated
      */

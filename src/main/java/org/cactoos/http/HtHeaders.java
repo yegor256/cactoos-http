@@ -20,12 +20,14 @@ import org.cactoos.text.Trimmed;
 
 /**
  * Headers of HTTP response.
+ *
  * @since 0.1
  */
 public final class HtHeaders extends MapEnvelope<String, List<String>> {
 
     /**
      * Ctor.
+     *
      * @param head Response head part
      */
     public HtHeaders(final Input head) {

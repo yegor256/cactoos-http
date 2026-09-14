@@ -19,12 +19,14 @@ import org.cactoos.text.Split;
 
 /**
  * Cookies.
+ *
  * @since 0.1
  */
 public final class HtCookies extends MapEnvelope<String, List<String>> {
 
     /**
      * Ctor.
+     *
      * @param rsp Response
      */
     public HtCookies(final Input rsp) {

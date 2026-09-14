@@ -18,6 +18,7 @@ import org.llorllale.cactoos.matchers.IsApplicable;
 
 /**
  * Test case for {@link HtRetryWire}.
+ *
  * @since 0.1
  */
 final class HtRetryWireTest {

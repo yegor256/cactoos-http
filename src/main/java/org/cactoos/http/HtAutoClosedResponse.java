@@ -10,6 +10,7 @@ import org.cactoos.http.io.AutoClosedInputStream;
 
 /**
  * Response that gets closed on EOF.
+ *
  * @since 0.1
  */
 public final class HtAutoClosedResponse implements Input {
@@ -21,6 +22,7 @@ public final class HtAutoClosedResponse implements Input {
 
     /**
      * Ctor.
+     *
      * @param rsp The origin response
      */
     public HtAutoClosedResponse(final Input rsp) {

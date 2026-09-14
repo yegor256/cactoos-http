@@ -11,6 +11,7 @@ import org.llorllale.cactoos.matchers.IsTrue;
 
 /**
  * Test case for {@link ReadBytesTest}.
+ *
  * @since 0.1
  */
 final class ReadBytesTest {

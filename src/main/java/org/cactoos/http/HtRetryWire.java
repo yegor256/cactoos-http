@@ -11,7 +11,7 @@ import org.cactoos.func.Retry;
 /**
  * {@link Wire} that will try a few times before throwing an exception.
  *
- * <p>There is no thread-safety guarantee.
+ * <p>There is no thread-safety guarantee.</p>
  *
  * @since 0.1
  */
@@ -29,6 +29,7 @@ public final class HtRetryWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param wire Original wire
      * @param attempts Maximum number of attempts
      */
@@ -38,6 +39,7 @@ public final class HtRetryWire implements Wire {
 
     /**
      * Ctor.
+     *
      * @param wire Original wire
      * @param exit Exit condition, returns TRUE if there is no reason to try
      */

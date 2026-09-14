@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 /**
  * {@link InputStream} that gets closed on EOF.
+ *
  * @since 0.1
  */
 public final class AutoClosedInputStream extends InputStream {
@@ -20,6 +21,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     /**
      * Cotr.
+     *
      * @param origin The origin input
      */
     public AutoClosedInputStream(final InputStream origin) {
@@ -59,6 +61,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     /**
      * Primitive Scalar.
+     *
      * @since 0.1
      */
     @FunctionalInterface
@@ -66,6 +69,7 @@ public final class AutoClosedInputStream extends InputStream {
 
         /**
          * Convert it to the value.
+         *
          * @return The value
          * @throws IOException If fails
          */
@@ -74,6 +78,7 @@ public final class AutoClosedInputStream extends InputStream {
 
     /**
      * Closes the stream if EOF is reached.
+     *
      * @since 0.1
      */
     private final class AutoClosed implements IntScalar {
@@ -85,6 +90,7 @@ public final class AutoClosedInputStream extends InputStream {
 
         /**
          * Ctor.
+         *
          * @param origin The read of the stream
          */
         AutoClosed(final IntScalar origin) {

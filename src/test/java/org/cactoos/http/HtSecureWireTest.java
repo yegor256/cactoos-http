@@ -21,6 +21,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtSecureWire}.
+ *
  * @since 0.1
  */
 final class HtSecureWireTest {
@@ -80,6 +81,7 @@ final class HtSecureWireTest {
 
     /**
      * Request input.
+     *
      * @since 0.1
      */
     private static final class Request implements Input {
@@ -91,6 +93,7 @@ final class HtSecureWireTest {
 
         /**
          * Ctor.
+         *
          * @param domain Host domain
          */
         Request(final String domain) {

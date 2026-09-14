@@ -19,6 +19,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtAutoClosedResponse}.
+ *
  * @since 0.1
  */
 final class HtAutoClosedResponseTest {

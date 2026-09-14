@@ -17,6 +17,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtTimedWire}.
+ *
  * @since 0.1
  */
 final class HtTimedWireTest {

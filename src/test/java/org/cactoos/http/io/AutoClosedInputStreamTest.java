@@ -12,6 +12,7 @@ import org.llorllale.cactoos.matchers.IsTrue;
 
 /**
  * Test case for {@link AutoClosedInputStream}.
+ *
  * @since 0.1
  */
 final class AutoClosedInputStreamTest {

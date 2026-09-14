@@ -13,6 +13,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtKeepAliveResponse}.
+ *
  * @since 0.1
  */
 final class HtKeepAliveResponseTest {

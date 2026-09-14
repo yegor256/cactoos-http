@@ -23,6 +23,7 @@ import org.takes.tk.TkText;
 /**
  * Test for {@link HtUpgradeWire}. Must test if the {@link Wire} returned
  * after an 101 status code is an {@link HtSecureWire}.
+ *
  * @since 0.1
  */
 final class HtUpgradeWireTest {
@@ -30,6 +31,7 @@ final class HtUpgradeWireTest {
     /**
      * Tests if the wire of the response of an 101 code is an
      * {@link HtSecureWire}.
+     *
      * @throws Exception If Something goes wrong.
      */
     @Test
@@ -55,6 +57,7 @@ final class HtUpgradeWireTest {
 
     /**
      * Test of {@link HtUpgradeWire} just to suit coverage standards.
+     *
      * @throws Exception If something goes wrong.
      */
     @Test
@@ -80,6 +83,7 @@ final class HtUpgradeWireTest {
 
     /**
      * Wrap for response which allows access to its wire.
+     *
      * @since 0.1
      */
     private static final class ResponseWrap implements Input, Scalar<Wire> {
@@ -96,6 +100,7 @@ final class HtUpgradeWireTest {
 
         /**
          * Ctor.
+         *
          * @param wire Original wire
          * @param req Request string
          */
@@ -117,6 +122,7 @@ final class HtUpgradeWireTest {
 
     /**
      * Mock which always returns response with 101 code.
+     *
      * @since 0.1
      */
     private static final class TkAlways101Mock implements Take {
@@ -128,6 +134,7 @@ final class HtUpgradeWireTest {
 
         /**
          * Ctor.
+         *
          * @param origin Origin take
          */
         TkAlways101Mock(final Take origin) {

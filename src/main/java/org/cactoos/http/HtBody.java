@@ -11,6 +11,7 @@ import org.cactoos.http.io.SkipInput;
 
 /**
  * Head of HTTP response.
+ *
  * @since 0.1
  */
 public final class HtBody implements Input {
@@ -22,6 +23,7 @@ public final class HtBody implements Input {
 
     /**
      * Ctor.
+     *
      * @param rsp Response
      */
     public HtBody(final Input rsp) {

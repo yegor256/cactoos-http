@@ -6,6 +6,7 @@ package org.cactoos.http.io;
 
 /**
  * A very simple circular buffer of bytes.
+ *
  * @since 0.1
  */
 public final class BoundedByteBuffer {
@@ -32,6 +33,7 @@ public final class BoundedByteBuffer {
 
     /**
      * Ctor.
+     *
      * @param limit The size limit
      */
     BoundedByteBuffer(final int limit) {
@@ -44,6 +46,7 @@ public final class BoundedByteBuffer {
     /**
      * Add a byte to the buffer, potentially by removing the oldest one to
      * satisfy the size limit.
+     *
      * @param add The byte to add
      */
     public void offer(final byte add) {
@@ -59,6 +62,7 @@ public final class BoundedByteBuffer {
 
     /**
      * Test if the buffer contains exactly the {@code bytes}.
+     *
      * @param bytes The bytes to compare to
      * @return The value {@code true} if the buffer contains exactly
      *  the {@code bytes}

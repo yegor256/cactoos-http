@@ -26,28 +26,19 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtWire}.
+ *
  * @since 0.1
  */
 final class HtWireTest {
 
-    /**
-     * Default port for HTTP.
-     */
-    private static final int HTTP_PORT = 80;
-
-    /**
-     * Default port for HTTPS.
-     */
-    private static final int HTTPS_PORT = 443;
-
     @Test
     void guessesCorrectPortForHttp() throws Exception {
-        this.checkPorts("http://localhost", HtWireTest.HTTP_PORT);
+        this.checkPorts("http://localhost", 80);
     }
 
     @Test
     void guessesCorrectPortForHttps() throws Exception {
-        this.checkPorts("https://localhost", HtWireTest.HTTPS_PORT);
+        this.checkPorts("https://localhost", 443);
     }
 
     @Test
@@ -112,6 +103,7 @@ final class HtWireTest {
         }
     }
 
+    @SuppressWarnings("PMD.CloseInlineResourceRule")
     private Socket socket() throws IOException {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.when(socket.getInputStream()).thenReturn(new DeadInputStream());

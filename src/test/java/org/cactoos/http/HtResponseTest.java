@@ -14,6 +14,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtResponse}.
+ *
  * @since 0.1
  */
 final class HtResponseTest {

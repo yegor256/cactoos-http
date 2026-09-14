@@ -13,6 +13,7 @@ import org.llorllale.cactoos.matchers.HasString;
 
 /**
  * Test case for {@link Get}.
+ *
  * @since 0.1
  */
 final class GetTest {

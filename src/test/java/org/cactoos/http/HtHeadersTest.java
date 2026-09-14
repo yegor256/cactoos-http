@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HtHeaders}.
+ *
  * @since 0.1
  */
 final class HtHeadersTest {

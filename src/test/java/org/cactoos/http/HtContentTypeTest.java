@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HtContentType}.
+ *
  * @since 0.1
  */
 final class HtContentTypeTest {

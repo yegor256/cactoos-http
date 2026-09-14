@@ -15,7 +15,7 @@ import org.cactoos.scalar.Sticky;
  * Reads available data from {@link Input} as {@link Bytes} only once
  * and without closing it.
  *
- * <p>There is no thread-safety guarantee.
+ * <p>There is no thread-safety guarantee.</p>
  *
  * @since 0.1
  */
@@ -28,6 +28,7 @@ public final class ReadBytes implements Bytes {
 
     /**
      * Ctor.
+     *
      * @param input The input
      */
     public ReadBytes(final InputStream input) {
@@ -36,6 +37,7 @@ public final class ReadBytes implements Bytes {
 
     /**
      * Ctor.
+     *
      * @param input The input
      * @param max Max length of the buffer for reading
      */

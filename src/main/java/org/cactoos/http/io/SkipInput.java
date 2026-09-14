@@ -10,6 +10,7 @@ import org.cactoos.Input;
 
 /**
  * {@link Input} that skips until it find some defined bytes.
+ *
  * @since 0.1
  */
 public final class SkipInput implements Input {
@@ -26,6 +27,7 @@ public final class SkipInput implements Input {
 
     /**
      * Ctor.
+     *
      * @param origin The input
      * @param delimiter The bytes delimiter to skip until
      */

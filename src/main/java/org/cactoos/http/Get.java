@@ -13,12 +13,14 @@ import org.cactoos.text.TextOf;
 
 /**
  * An {@link Input} to GET an HTTP URI.
+ *
  * @since 0.1
  */
 public final class Get extends InputEnvelope {
 
     /**
      * Ctor.
+     *
      * @param url Url to GET
      */
     public Get(final URI url) {

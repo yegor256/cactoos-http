@@ -16,6 +16,7 @@ import org.takes.tk.TkText;
 
 /**
  * Test case for {@link HtAutoRedirect}.
+ *
  * @since 0.1
  */
 final class HtAutoRedirectTest {

@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * Useful {@link InputStream} implementation for tests.
  *
- * <p>There is no thread-safety guarantee.
+ * <p>There is no thread-safety guarantee.</p>
  *
  * @since 0.1
  */
@@ -28,6 +28,7 @@ public final class CloseableInputStream extends InputStream {
 
     /**
      * Ctor.
+     *
      * @param origin The wrapped stream
      */
     public CloseableInputStream(final InputStream origin) {
@@ -37,6 +38,7 @@ public final class CloseableInputStream extends InputStream {
 
     /**
      * Check if stream is closed.
+     *
      * @return True if the stream was closed
      */
     public boolean wasClosed() {
